@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dashboard Analíticas - CRM GYSFLY</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-card": "#111827",
+                        "primary-container": "#8083ff",
+                        "surface-dim": "#13131b",
+                        "on-secondary-container": "#c4abff",
+                        "surface-variant": "#34343d",
+                        "tertiary": "#ffb783",
+                        "surface-container": "#1f1f27",
+                        "surface-container-lowest": "#0d0d15",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "on-primary-fixed": "#07006c",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-low": "#1b1b23",
+                        "success": "#10B981",
+                        "primary": "#c0c1ff",
+                        "outline-variant": "#464554",
+                        "on-primary-container": "#0d0096",
+                        "background-base": "#090D16",
+                        "on-secondary-fixed-variant": "#5516be",
+                        "on-secondary": "#3c0091",
+                        "on-tertiary-fixed-variant": "#703700",
+                        "on-tertiary-fixed": "#301400",
+                        "surface-bright": "#393841",
+                        "tertiary-fixed-dim": "#ffb783",
+                        "on-tertiary-container": "#452000",
+                        "outline": "#908fa0",
+                        "inverse-surface": "#e4e1ed",
+                        "error": "#ffb4ab",
+                        "on-background": "#e4e1ed",
+                        "secondary": "#d0bcff",
+                        "surface": "#13131b",
+                        "secondary-fixed": "#e9ddff",
+                        "warning": "#F59E0B",
+                        "background": "#13131b",
+                        "on-error": "#690005",
+                        "on-surface-variant": "#c7c4d7",
+                        "on-secondary-fixed": "#23005c",
+                        "tertiary-container": "#d97721",
+                        "error-container": "#93000a",
+                        "secondary-fixed-dim": "#d0bcff",
+                        "border-muted": "#1F2937",
+                        "on-tertiary": "#4f2500",
+                        "on-surface": "#e4e1ed",
+                        "primary-fixed": "#e1e0ff",
+                        "danger": "#EF4444",
+                        "secondary-container": "#571bc1",
+                        "inverse-primary": "#494bd6",
+                        "glass-stroke": "rgba(255, 255, 255, 0.08)",
+                        "on-primary": "#1000a9",
+                        "tertiary-fixed": "#ffdcc5",
+                        "surface-container-high": "#292932",
+                        "surface-container-highest": "#34343d",
+                        "inverse-on-surface": "#303038",
+                        "surface-tint": "#c0c1ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "32px",
+                        "container-max": "1440px",
+                        "unit": "4px",
+                        "gutter": "24px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-xl": ["Outfit"],
+                        "label-caps": ["Outfit"],
+                        "headline-xl-mobile": ["Outfit"],
+                        "body-sm": ["Outfit"],
+                        "headline-md": ["Outfit"],
+                        "body-md": ["Outfit"]
+                    },
+                    "fontSize": {
+                        "headline-xl": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-xl-mobile": ["28px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "body-sm": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "headline-md": ["18px", { "lineHeight": "1.4", "fontWeight": "500" }],
+                        "body-md": ["15px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Outfit', sans-serif; }
+        .glass-panel {
+            background: linear-gradient(145deg, rgba(31, 31, 39, 0.7) 0%, rgba(13, 13, 21, 0.4) 100%);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glow-hover:hover {
+            box-shadow: 0 10px 30px -10px rgba(192, 193, 255, 0.15);
+            transform: translateY(-4px);
+        }
+    </style>
+</head>
+<body class="bg-background-base text-on-surface min-h-screen flex overflow-x-hidden selection:bg-primary/30">
+<!-- SideNavBar (from JSON) -->
+<nav class="hidden md:flex flex-col h-screen py-margin-desktop space-y-6 fixed left-0 top-0 w-64 bg-surface-container-lowest/90 backdrop-blur-2xl border-r border-glass-stroke shadow-2xl shadow-black z-50">
+<!-- Header -->
+<div class="px-6 pb-4 border-b border-glass-stroke">
+<h1 class="font-headline-md text-headline-md font-black text-primary tracking-tight">CRM GYSFLY</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Travel Agency Portal</p>
+</div>
+<!-- CTA -->
+<div class="px-4">
+<button class="w-full py-3 bg-primary text-on-primary font-body-sm text-body-sm font-semibold rounded-xl hover:bg-primary-container transition-colors shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                Nueva Reserva
+            </button>
+</div>
+<!-- Navigation Tabs -->
+<div class="flex-1 overflow-y-auto mt-4 pr-2">
+<ul class="space-y-1">
+<li>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:text-on-surface hover:bg-white/5 hover:translate-x-1 transition-all duration-200 rounded-r-xl font-body-sm text-body-sm" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">inbox</span>
+                        Inbox
+                    </a>
+</li>
+<li>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:text-on-surface hover:bg-white/5 hover:translate-x-1 transition-all duration-200 rounded-r-xl font-body-sm text-body-sm" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">today</span>
+                        Hoy
+                    </a>
+</li>
+<li>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:text-on-surface hover:bg-white/5 hover:translate-x-1 transition-all duration-200 rounded-r-xl font-body-sm text-body-sm" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">group</span>
+                        Clientes
+                    </a>
+</li>
+<li>
+<!-- ACTIVE TAB -->
+<a class="flex items-center gap-3 bg-primary/10 text-primary border-l-4 border-primary px-4 py-3 rounded-r-xl Active: translate-y-[-2px] transition-transform font-body-sm text-body-sm" href="#">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">travel_explore</span>
+                        Analíticas de Viajes
+                    </a>
+</li>
+<li>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:text-on-surface hover:bg-white/5 hover:translate-x-1 transition-all duration-200 rounded-r-xl font-body-sm text-body-sm" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">settings</span>
+                        Ajustes
+                    </a>
+</li>
+</ul>
+</div>
+<!-- Footer Tab -->
+<div class="px-2 mt-auto border-t border-glass-stroke pt-4">
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:text-on-surface hover:bg-white/5 hover:translate-x-1 transition-all duration-200 rounded-r-xl font-body-sm text-body-sm" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">contact_support</span>
+                Soporte
+            </a>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 md:ml-64 flex flex-col min-h-screen">
+<!-- TopNavBar (from JSON, modified for content area) -->
+<header class="docked full-width top-0 sticky z-40 bg-background-base/80 backdrop-blur-xl border-b border-glass-stroke shadow-sm shadow-primary/5 flex justify-between items-center w-full px-margin-desktop py-4">
+<div class="flex items-center gap-4">
+<!-- Search Bar -->
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+<input class="bg-surface-container-low border border-glass-stroke rounded-full py-2 pl-10 pr-4 text-body-sm font-body-sm text-on-surface focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 w-64 lg:w-80 transition-all bg-white/5" placeholder="Buscar destino, cliente o reserva..." type="text"/>
+</div>
+<!-- Mobile brand -->
+<span class="md:hidden font-headline-md text-headline-md font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">CRM GYSFLY</span>
+</div>
+<!-- Actions -->
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:bg-white/5 hover:text-primary transition-all duration-300 p-2 rounded-full scale-95 active:scale-90 relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-danger rounded-full"></span>
+</button>
+<button class="text-on-surface-variant hover:bg-white/5 hover:text-primary transition-all duration-300 p-2 rounded-full scale-95 active:scale-90">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-surface-container-high border border-glass-stroke overflow-hidden cursor-pointer">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="A close-up, high-quality portrait photo of a professional travel agent. The lighting is soft and studio-quality, highlighting a confident expression. The background is a subtle, out-of-focus dark slate grey, aligning with the Obsidian Glass UI aesthetic. The overall mood is reliable and modern." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcvmfQhTUtoVGRoysezyJ6xtQUcUrPvSLavQyO73uakDqsjjkFtR2N7yPjlxw9V5QqPGfEvQSL7t2UcsfMYp31WMsXuO8UCJiLhCI_Miro7LNqf8GzId5joPXq6b9-rNifXJm4NM15d0HtdjAMhEzVse6WlnwxjUek4JCnx0Sv5RyOuXd-ei_9yQzeA-F3u6YrWCqgidteckElRV3Ea8MmMlryIeYWkr6UgpRrnLlThySj9G3K9IRGycLdd8iD_nMYH60_F-dhKwVV"/>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="p-margin-mobile md:p-margin-desktop max-w-container-max mx-auto w-full flex-1">
+<!-- Page Header -->
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-8">
+<div>
+<h2 class="font-headline-xl-mobile md:font-headline-xl text-headline-xl-mobile md:text-headline-xl text-on-surface">Visión General de Viajes</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2 max-w-2xl">Métricas de rendimiento, tendencias de destinos y actividad de asesores en tiempo real.</p>
+</div>
+<button class="flex items-center gap-2 bg-surface-container-low border border-glass-stroke hover:border-primary/50 text-on-surface hover:text-primary px-5 py-2.5 rounded-xl transition-all duration-300 shadow-sm shadow-black/20 group">
+<span class="material-symbols-outlined text-[20px] group-hover:-translate-y-0.5 transition-transform">download</span>
+<span class="font-label-caps text-label-caps">Exportar a Excel</span>
+</button>
+</div>
+<!-- Dashboard Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Section 1: Executive Summary KPIs -->
+<!-- KPI 1: Revenue -->
+<div class="col-span-1 md:col-span-4 glass-panel rounded-xl p-6 glow-hover transition-all duration-500 relative overflow-hidden flex flex-col justify-between min-h-[160px]">
+<div class="flex justify-between items-start z-10">
+<div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-1">Ingresos Totales (Mes)</p>
+<h3 class="font-headline-xl text-headline-xl text-on-surface">$124,500<span class="text-body-md text-on-surface-variant ml-1">USD</span></h3>
+</div>
+<div class="p-2 bg-success/10 rounded-full">
+<span class="material-symbols-outlined text-success text-[20px]">trending_up</span>
+</div>
+</div>
+<div class="z-10 flex items-center gap-2 mt-4">
+<span class="font-label-caps text-label-caps text-success bg-success/10 px-2 py-0.5 rounded-full">+12.5%</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">vs mes anterior</span>
+</div>
+<!-- Decorative background gradient -->
+<div class="absolute bottom-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-2xl -mr-10 -mb-10"></div>
+</div>
+<!-- KPI 2: Active Bookings -->
+<div class="col-span-1 md:col-span-4 glass-panel rounded-xl p-6 glow-hover transition-all duration-500 relative overflow-hidden flex flex-col justify-between min-h-[160px]">
+<div class="flex justify-between items-start z-10">
+<div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-1">Reservas Activas</p>
+<h3 class="font-headline-xl text-headline-xl text-on-surface">342</h3>
+</div>
+<div class="p-2 bg-secondary/10 rounded-full">
+<span class="material-symbols-outlined text-secondary text-[20px]">flight_takeoff</span>
+</div>
+</div>
+<div class="z-10 mt-4 w-full bg-surface-variant rounded-full h-1.5 overflow-hidden">
+<div class="bg-gradient-to-r from-primary to-secondary h-full rounded-full" style="width: 78%"></div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2 z-10">78% de la meta mensual</p>
+</div>
+<!-- KPI 3: Top Destination Highlight -->
+<div class="col-span-1 md:col-span-4 glass-panel rounded-xl p-0 glow-hover transition-all duration-500 relative overflow-hidden min-h-[160px] group cursor-pointer">
+<!-- Background Image (Placeholder styling simulating image) -->
+<div class="absolute inset-0 bg-cover bg-center opacity-40 group-hover:opacity-60 transition-opacity duration-700" data-alt="A stunning, high-contrast aerial photograph of Dubai's skyline at twilight. The city lights glow warmly against the deep, obsidian-like blues of the night sky and ocean. The composition is dynamic and expansive, fitting a luxury travel aesthetic. The mood is aspirational, emphasizing premium international travel destinations." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAX4-mvM83ynVZn-fn2nswYjUDPO8wpbSPBtSTB6JI3fnklleOpuG0xIUXQHDBDusQYRl5dnltfwFCHI1HFE9Mi2lXskp7nzQBoNAk4tkjhU5lsX_8P68PWPCh06eWHxnFfOjJm3sLcl9i2L6t8muhiyv9pnPz9U1NSJ8CAWaM5ZIAwRNuEiZiOHZLdHaZToSAknmQNlH_k-2a8ORrWKU5a6WfLE0_aup-GpjzZuC2jIDnCKJkmrQKdpCQPZXqbRY8E_xFaQtP6zuwn');"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-background-base via-background-base/80 to-transparent"></div>
+<div class="relative h-full p-6 flex flex-col justify-end">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-tertiary text-[16px]">local_fire_department</span>
+<span class="font-label-caps text-label-caps text-tertiary">Destino Top Actual</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface font-bold">Dubai, EAU</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">45 paquetes vendidos esta semana</p>
+</div>
+</div>
+<!-- Section 2: Destination Trends Chart (Large Area) -->
+<div class="col-span-1 md:col-span-8 glass-panel rounded-xl p-6 relative overflow-hidden">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-md text-headline-md text-on-surface">Tendencias de Destinos</h3>
+<select class="bg-surface-container-high border border-glass-stroke text-on-surface font-body-sm text-body-sm rounded-lg px-3 py-1.5 focus:ring-primary focus:border-primary outline-none">
+<option>Últimos 6 meses</option>
+<option>Este Año</option>
+</select>
+</div>
+<!-- Simulated Chart Area -->
+<div class="h-[250px] w-full flex items-end justify-between relative pt-8">
+<!-- Y Axis labels -->
+<div class="absolute left-0 top-0 bottom-0 flex flex-col justify-between text-[10px] text-on-surface-variant h-full pb-8">
+<span>100</span><span>75</span><span>50</span><span>25</span><span>0</span>
+</div>
+<!-- Grid lines -->
+<div class="absolute left-8 right-0 top-0 bottom-8 flex flex-col justify-between">
+<div class="w-full h-px bg-glass-stroke"></div>
+<div class="w-full h-px bg-glass-stroke"></div>
+<div class="w-full h-px bg-glass-stroke"></div>
+<div class="w-full h-px bg-glass-stroke"></div>
+<div class="w-full h-px bg-glass-stroke"></div>
+</div>
+<!-- Bar chart placeholder for aesthetic data viz -->
+<div class="flex-1 flex justify-around items-end h-[calc(100%-2rem)] ml-8 z-10 relative">
+<!-- SVG Line overlay simulation -->
+<svg class="absolute inset-0 w-full h-full" preserveaspectratio="none">
+<path class="text-primary opacity-50" d="M 10,150 Q 80,100 150,180 T 300,90 T 450,120 T 600,40" fill="none" stroke="currentColor" stroke-width="3" vector-effect="non-scaling-stroke"></path>
+<path class="text-secondary opacity-30" d="M 10,180 Q 80,200 150,120 T 300,160 T 450,80 T 600,100" fill="none" stroke="currentColor" stroke-dasharray="4" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+</svg>
+<!-- Month columns -->
+<div class="w-1/6 flex flex-col items-center group">
+<div class="w-full max-w-[24px] h-[40%] bg-surface-container-high rounded-t-md group-hover:bg-primary/20 transition-colors relative">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-surface-bright text-on-surface text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">40</div>
+</div>
+<span class="text-[12px] text-on-surface-variant mt-3">Ene</span>
+</div>
+<div class="w-1/6 flex flex-col items-center group">
+<div class="w-full max-w-[24px] h-[60%] bg-surface-container-high rounded-t-md group-hover:bg-primary/20 transition-colors relative">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-surface-bright text-on-surface text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">60</div>
+</div>
+<span class="text-[12px] text-on-surface-variant mt-3">Feb</span>
+</div>
+<div class="w-1/6 flex flex-col items-center group">
+<div class="w-full max-w-[24px] h-[45%] bg-surface-container-high rounded-t-md group-hover:bg-primary/20 transition-colors relative"></div>
+<span class="text-[12px] text-on-surface-variant mt-3">Mar</span>
+</div>
+<div class="w-1/6 flex flex-col items-center group">
+<div class="w-full max-w-[24px] h-[80%] bg-primary/40 rounded-t-md relative">
+<div class="absolute -top-3 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-primary border-2 border-background-base"></div>
+</div>
+<span class="text-[12px] text-primary font-bold mt-3">Abr</span>
+</div>
+<div class="w-1/6 flex flex-col items-center group">
+<div class="w-full max-w-[24px] h-[65%] bg-surface-container-high rounded-t-md group-hover:bg-primary/20 transition-colors"></div>
+<span class="text-[12px] text-on-surface-variant mt-3">May</span>
+</div>
+<div class="w-1/6 flex flex-col items-center group">
+<div class="w-full max-w-[24px] h-[95%] bg-surface-container-high rounded-t-md group-hover:bg-primary/20 transition-colors"></div>
+<span class="text-[12px] text-on-surface-variant mt-3">Jun</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 3: Client Origins (Small Donut Area) -->
+<div class="col-span-1 md:col-span-4 glass-panel rounded-xl p-6 flex flex-col">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-6">Origen de Clientes</h3>
+<div class="flex-1 flex flex-col items-center justify-center">
+<!-- Simulated Donut Chart using CSS conic-gradient -->
+<div class="relative w-40 h-40 rounded-full flex items-center justify-center" style="background: conic-gradient(
+                            from 0deg, 
+                            #c0c1ff 0% 45%, 
+                            #d0bcff 45% 75%, 
+                            #ffb783 75% 90%, 
+                            #34343d 90% 100%
+                        );">
+<!-- Inner cutout for donut -->
+<div class="absolute w-28 h-28 bg-surface-container-lowest rounded-full flex flex-col items-center justify-center shadow-inner">
+<span class="font-headline-xl text-headline-xl text-on-surface">1.2k</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Total</span>
+</div>
+</div>
+<!-- Legend -->
+<div class="w-full mt-8 space-y-3">
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-primary"></div>
+<span class="text-on-surface">América del Norte</span>
+</div>
+<span class="text-on-surface-variant">45%</span>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-secondary"></div>
+<span class="text-on-surface">Europa</span>
+</div>
+<span class="text-on-surface-variant">30%</span>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-tertiary"></div>
+<span class="text-on-surface">Latinoamérica</span>
+</div>
+<span class="text-on-surface-variant">15%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 4: Advisor Performance -->
+<div class="col-span-1 md:col-span-6 glass-panel rounded-xl p-6">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-md text-headline-md text-on-surface">Rendimiento de Asesores</h3>
+<button class="text-primary font-body-sm text-body-sm hover:underline">Ver todos</button>
+</div>
+<div class="space-y-5">
+<!-- Agent 1 -->
+<div class="flex items-center gap-4">
+<img alt="Avatar" class="w-10 h-10 rounded-full border-2 border-primary/30" data-alt="A professional headshot of a female travel agent in her 30s. She is smiling warmly. The lighting is bright and modern, set against a dark obsidian glass background. High resolution, clear details." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMjWA4NBsiqs1mVJ9NIAhEDF4X3eWm0BOUsO0V9Q-UD-w7ptE4RKrixkGo2iVsYJ5J4AAidZ-_hjDdRg3KoMizqm4BTUNzI-pZbWjyAyfrQjQRm_U0YBfGOVb0k5fSunOK7atlJni7uV4nOBPWvg3ARbk5dcL60Lvb4QVpXmTZrhX3-kamriOT7rIUpTlayOCyYX1HkgAquFOWY8K62FgSriD7RKVaRaBXrszuqpQk1Hp16GzDi7er_Y8ClKsB8eCE5v9HZ7xLVcyI"/>
+<div class="flex-1">
+<div class="flex justify-between items-end mb-1">
+<span class="font-body-md text-body-md text-on-surface font-medium">Elena Rojas</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">124 Ventas</span>
+</div>
+<div class="w-full bg-surface-variant rounded-full h-2">
+<div class="bg-primary h-full rounded-full" style="width: 85%"></div>
+</div>
+</div>
+</div>
+<!-- Agent 2 -->
+<div class="flex items-center gap-4">
+<img alt="Avatar" class="w-10 h-10 rounded-full border-2 border-secondary/30" data-alt="A professional headshot of a male travel agent in his 40s. He looks competent and approachable. The studio lighting casts a soft glow on his face. The background matches the dark UI aesthetic, a deep charcoal gray." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBeahM-vWBkdJfmKqHAl_qthxOO-SNPHUnmmWxpcVPPMmfYgAqthYtoR92X7fmUnwOvE_YYjV0X53nKilj7zxC8Wtga405ST9sVd-BfwxJp2-6f7M_IpsPL_WmCmX8QRYKYkt1M4VQ6uov_SrUP4GVnZjni5nEWzuQzQSYRFrL0tMbwzU42Fey_SGZOgYqUVkfpVq-GMYi6JEKsYfA_YAS-b3b-JGxrlyUAjuuiIrGEhf5SlQsb2p08IvJNd6Gfwfq8DE59pYNP-tcj"/>
+<div class="flex-1">
+<div class="flex justify-between items-end mb-1">
+<span class="font-body-md text-body-md text-on-surface font-medium">Carlos Méndez</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">98 Ventas</span>
+</div>
+<div class="w-full bg-surface-variant rounded-full h-2">
+<div class="bg-secondary h-full rounded-full" style="width: 65%"></div>
+</div>
+</div>
+</div>
+<!-- Agent 3 -->
+<div class="flex items-center gap-4">
+<img alt="Avatar" class="w-10 h-10 rounded-full border-2 border-surface-variant" data-alt="A professional headshot of a young female travel advisor. She has a bright, engaging expression. Illuminated by clean, cool white light. The backdrop is a seamless dark surface, ensuring she stands out in a dark mode interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3QUl0zy3y0DyRWI1c45YjEv7tePNlNE0dZOVL2bAHo-xVtyY3rdLItnVLVBVeEDkA0rKMxgtlGsmROW942HWZPAHxq5fuNR030Vhr__MzEszc89JFDUQ1JVmDFP1KYPlhBRdgIhPWGvhtvgpmtMiOb7BPpwEdrbZXkorwMluyVdBjfmsFBdc9AP32j4ymc5q57NkTKlGAD1zQkAsZUY95DKhxtMCz3Se4aIaFg8I2emNHsOJKLkLdQ8f19Fc22UtnzA1B6_O_5Wn-"/>
+<div class="flex-1">
+<div class="flex justify-between items-end mb-1">
+<span class="font-body-md text-body-md text-on-surface font-medium">Sofía Castillo</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">76 Ventas</span>
+</div>
+<div class="w-full bg-surface-variant rounded-full h-2">
+<div class="bg-outline h-full rounded-full" style="width: 45%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 5: Rising Destinations List -->
+<div class="col-span-1 md:col-span-6 glass-panel rounded-xl p-6">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-6">Destinos en Alza</h3>
+<ul class="space-y-4">
+<li class="flex items-center justify-between p-3 rounded-lg hover:bg-white/5 transition-colors group cursor-default">
+<div class="flex items-center gap-4">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high text-on-surface-variant flex items-center justify-center font-bold text-body-sm group-hover:bg-primary group-hover:text-background-base transition-colors">1</div>
+<div>
+<h4 class="font-body-md text-body-md text-on-surface">Tokio, Japón</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-[12px]">Cultura &amp; Gastronomía</p>
+</div>
+</div>
+<div class="flex items-center gap-1 text-success bg-success/10 px-2.5 py-1 rounded-full">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span>
+<span class="font-label-caps text-label-caps">24%</span>
+</div>
+</li>
+<li class="flex items-center justify-between p-3 rounded-lg hover:bg-white/5 transition-colors group cursor-default">
+<div class="flex items-center gap-4">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high text-on-surface-variant flex items-center justify-center font-bold text-body-sm group-hover:bg-primary group-hover:text-background-base transition-colors">2</div>
+<div>
+<h4 class="font-body-md text-body-md text-on-surface">Reykjavik, Islandia</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-[12px]">Naturaleza &amp; Aventura</p>
+</div>
+</div>
+<div class="flex items-center gap-1 text-success bg-success/10 px-2.5 py-1 rounded-full">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span>
+<span class="font-label-caps text-label-caps">18%</span>
+</div>
+</li>
+<li class="flex items-center justify-between p-3 rounded-lg hover:bg-white/5 transition-colors group cursor-default">
+<div class="flex items-center gap-4">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high text-on-surface-variant flex items-center justify-center font-bold text-body-sm group-hover:bg-primary group-hover:text-background-base transition-colors">3</div>
+<div>
+<h4 class="font-body-md text-body-md text-on-surface">Cartagena, Colombia</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-[12px]">Playa &amp; Historia</p>
+</div>
+</div>
+<div class="flex items-center gap-1 text-success bg-success/10 px-2.5 py-1 rounded-full">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span>
+<span class="font-label-caps text-label-caps">12%</span>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<!-- End Bento Grid -->
+</div>
+</main>
+</body></html>

@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CRM GYSFLY - Gestión de Pasajeros</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-card": "#111827",
+                        "primary-container": "#8083ff",
+                        "surface-dim": "#13131b",
+                        "on-secondary-container": "#c4abff",
+                        "surface-variant": "#34343d",
+                        "tertiary": "#ffb783",
+                        "surface-container": "#1f1f27",
+                        "surface-container-lowest": "#0d0d15",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "on-primary-fixed": "#07006c",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-low": "#1b1b23",
+                        "success": "#10B981",
+                        "primary": "#c0c1ff",
+                        "outline-variant": "#464554",
+                        "on-primary-container": "#0d0096",
+                        "background-base": "#090D16",
+                        "on-secondary-fixed-variant": "#5516be",
+                        "on-secondary": "#3c0091",
+                        "on-tertiary-fixed-variant": "#703700",
+                        "on-tertiary-fixed": "#301400",
+                        "surface-bright": "#393841",
+                        "tertiary-fixed-dim": "#ffb783",
+                        "on-tertiary-container": "#452000",
+                        "outline": "#908fa0",
+                        "inverse-surface": "#e4e1ed",
+                        "error": "#ffb4ab",
+                        "on-background": "#e4e1ed",
+                        "secondary": "#d0bcff",
+                        "surface": "#13131b",
+                        "secondary-fixed": "#e9ddff",
+                        "warning": "#F59E0B",
+                        "background": "#13131b",
+                        "on-error": "#690005",
+                        "on-surface-variant": "#c7c4d7",
+                        "on-secondary-fixed": "#23005c",
+                        "tertiary-container": "#d97721",
+                        "error-container": "#93000a",
+                        "secondary-fixed-dim": "#d0bcff",
+                        "border-muted": "#1F2937",
+                        "on-tertiary": "#4f2500",
+                        "on-surface": "#e4e1ed",
+                        "primary-fixed": "#e1e0ff",
+                        "danger": "#EF4444",
+                        "secondary-container": "#571bc1",
+                        "inverse-primary": "#494bd6",
+                        "glass-stroke": "rgba(255, 255, 255, 0.08)",
+                        "on-primary": "#1000a9",
+                        "tertiary-fixed": "#ffdcc5",
+                        "surface-container-high": "#292932",
+                        "surface-container-highest": "#34343d",
+                        "inverse-on-surface": "#303038",
+                        "surface-tint": "#c0c1ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "32px",
+                        "container-max": "1440px",
+                        "unit": "4px",
+                        "gutter": "24px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-xl": ["Outfit"],
+                        "label-caps": ["Outfit"],
+                        "headline-xl-mobile": ["Outfit"],
+                        "body-sm": ["Outfit"],
+                        "headline-md": ["Outfit"],
+                        "body-md": ["Outfit"]
+                    },
+                    "fontSize": {
+                        "headline-xl": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-xl-mobile": ["28px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "body-sm": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "headline-md": ["18px", { "lineHeight": "1.4", "fontWeight": "500" }],
+                        "body-md": ["15px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: linear-gradient(145deg, rgba(19, 19, 27, 0.7) 0%, rgba(13, 13, 21, 0.9) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-stroke, rgba(255, 255, 255, 0.08));
+        }
+        
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1); 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #34343d; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #464554; 
+        }
+    </style>
+</head>
+<body class="bg-background-base text-on-surface font-body-md font-body-md h-screen w-full flex overflow-hidden selection:bg-primary selection:text-on-primary">
+<!-- DESKTOP SIDENAV (From JSON) -->
+<aside class="hidden md:flex flex-col h-screen py-margin-desktop space-y-6 bg-surface-container-lowest/90 backdrop-blur-2xl border-r border-glass-stroke shadow-2xl shadow-black fixed left-0 top-0 w-64 z-50">
+<!-- Header -->
+<div class="px-6 flex flex-col gap-2">
+<h1 class="font-headline-md text-headline-md font-black text-primary">CRM GYSFLY</h1>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest opacity-80">Travel Agency Portal</span>
+</div>
+<!-- CTA -->
+<div class="px-4 mt-4">
+<button class="w-full bg-primary text-on-primary font-body-md text-body-md py-2.5 rounded-xl hover:bg-white/90 hover:translate-y-[-2px] transition-all duration-300 shadow-lg shadow-primary/20 flex justify-center items-center gap-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+                Nueva Reserva
+            </button>
+</div>
+<!-- Navigation Links -->
+<nav class="flex-1 flex flex-col gap-1 mt-6">
+<!-- Inbox -->
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:text-on-surface hover:bg-white/5 hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">inbox</span>
+<span class="font-body-sm text-body-sm">Inbox</span>
+</a>
+<!-- Hoy -->
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:text-on-surface hover:bg-white/5 hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">today</span>
+<span class="font-body-sm text-body-sm">Hoy</span>
+</a>
+<!-- Clientes (ACTIVE TAB - Maps to Passenger Management) -->
+<a class="flex items-center gap-3 bg-primary/10 text-primary border-l-4 border-primary px-4 py-3 rounded-r-xl translate-y-[-2px] transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+<span class="font-body-sm text-body-sm font-medium">Clientes</span>
+</a>
+<!-- Analíticas de Viajes -->
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:text-on-surface hover:bg-white/5 hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">travel_explore</span>
+<span class="font-body-sm text-body-sm">Analíticas de Viajes</span>
+</a>
+<!-- Ajustes -->
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:text-on-surface hover:bg-white/5 hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-sm text-body-sm">Ajustes</span>
+</a>
+</nav>
+<!-- Footer Links -->
+<div class="mt-auto">
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:text-on-surface hover:bg-white/5 hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">contact_support</span>
+<span class="font-body-sm text-body-sm">Soporte</span>
+</a>
+</div>
+</aside>
+<!-- MOBILE TOPNAV (From JSON fallback structural elements) -->
+<header class="md:hidden flex justify-between items-center w-full px-margin-mobile py-4 bg-background-base/80 backdrop-blur-xl border-b border-glass-stroke shadow-sm shadow-primary/5 docked full-width top-0 sticky z-40">
+<h1 class="font-headline-md text-headline-md font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">CRM GYSFLY</h1>
+<div class="flex gap-4 items-center">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">search</span>
+</button>
+<img alt="User profile" class="w-8 h-8 rounded-full border border-glass-stroke object-cover" data-alt="A close up studio portrait of a professional woman with dark hair, wearing glasses and a dark blazer. The lighting is soft and cinematic, fitting a premium corporate aesthetic. The background is a subtle, dark obsidian gradient to match the UI theme." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5jklhbYXVfi1WYL0djt7Xclly0CpJsz4y9pNF-pwNtpGhsd2xyqM1JIi3RtcrXhf995lHs3hXxhN9r1n4b-xuzXdZNY_k-ojr8cTWtRWnh9G6Wv9hjUHEBfZh_RAGX73HkqV-Oh427x5yj8pfoRkkI1diLPynTbGeGzWIosZXPYHNBbz_weOL7AYjD1t758QGyHKXZzgFxalWiYZlPf4JqiCBNUvb3wtMWl4O4yoqytdFKVgVnYevMcYSFFqb31fYJ47yB_6ZR6o-"/>
+</div>
+</header>
+<!-- MAIN CANVAS -->
+<main class="flex-1 flex flex-col md:ml-64 h-full relative overflow-hidden">
+<!-- Scrollable Content Area -->
+<div class="flex-1 overflow-y-auto px-margin-mobile md:px-margin-desktop py-6 md:py-margin-desktop">
+<!-- Page Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+<div>
+<h2 class="font-headline-xl-mobile md:font-headline-xl text-headline-xl-mobile md:text-headline-xl text-on-surface mb-2">Gestión de Pasajeros</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Monitorea y administra el flujo de viajeros activos e históricos.</p>
+</div>
+<!-- Desktop Actions -->
+<div class="hidden md:flex items-center gap-4">
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg border border-glass-stroke text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all duration-300 font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                        Exportar Excel
+                    </button>
+<!-- Magic Add Button (Desktop) -->
+<button class="group flex items-center justify-center w-10 h-10 rounded-full bg-primary text-on-primary hover:bg-primary-container shadow-lg shadow-primary/20 transition-all duration-300 hover:scale-105 active:scale-95">
+<span class="material-symbols-outlined transition-transform duration-300 group-hover:rotate-90">add</span>
+</button>
+</div>
+</div>
+<!-- Filters Section (Glassmorphism Bento Grid style) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+<div class="glass-panel p-4 rounded-xl flex flex-col gap-2 relative group hover:-translate-y-1 transition-transform duration-300">
+<label class="font-label-caps text-label-caps text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">calendar_month</span> Mes de Viaje
+                    </label>
+<select class="bg-transparent border-none text-on-surface font-body-md text-body-md focus:ring-0 p-0 cursor-pointer appearance-none">
+<option class="bg-surface-container text-on-surface" value="all">Todos los meses</option>
+<option class="bg-surface-container text-on-surface" selected="" value="october">Octubre 2023</option>
+<option class="bg-surface-container text-on-surface" value="november">Noviembre 2023</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none group-hover:text-primary transition-colors">expand_more</span>
+</div>
+<div class="glass-panel p-4 rounded-xl flex flex-col gap-2 relative group hover:-translate-y-1 transition-transform duration-300">
+<label class="font-label-caps text-label-caps text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">location_on</span> Destino
+                    </label>
+<select class="bg-transparent border-none text-on-surface font-body-md text-body-md focus:ring-0 p-0 cursor-pointer appearance-none">
+<option class="bg-surface-container text-on-surface" value="all">Todos los destinos</option>
+<option class="bg-surface-container text-on-surface" value="paris">París, Francia</option>
+<option class="bg-surface-container text-on-surface" value="tokyo">Tokio, Japón</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none group-hover:text-primary transition-colors">expand_more</span>
+</div>
+<div class="glass-panel p-4 rounded-xl flex flex-col gap-2 relative group hover:-translate-y-1 transition-transform duration-300">
+<label class="font-label-caps text-label-caps text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">support_agent</span> Asesor
+                    </label>
+<select class="bg-transparent border-none text-on-surface font-body-md text-body-md focus:ring-0 p-0 cursor-pointer appearance-none">
+<option class="bg-surface-container text-on-surface" value="all">Cualquier Asesor</option>
+<option class="bg-surface-container text-on-surface" value="carlos">Carlos Mendoza</option>
+<option class="bg-surface-container text-on-surface" value="ana">Ana Silva</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none group-hover:text-primary transition-colors">expand_more</span>
+</div>
+</div>
+<!-- Mobile Export Action -->
+<div class="md:hidden mb-6 flex justify-end">
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg border border-glass-stroke text-on-surface-variant hover:text-on-surface bg-surface-container-low font-body-sm text-body-sm w-full justify-center">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                    Exportar Excel
+                </button>
+</div>
+<!-- Data Table Card -->
+<div class="glass-panel rounded-xl overflow-hidden shadow-xl shadow-black/40">
+<div class="overflow-x-auto">
+<table class="w-full text-left whitespace-nowrap">
+<thead class="bg-surface-container/50 border-b border-glass-stroke">
+<tr>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Pasajero</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Destino Actual</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Asesor Asignado</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Fecha de Viaje</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Estado</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider text-right">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-glass-stroke">
+<!-- Row 1 -->
+<tr class="hover:bg-white/5 transition-colors duration-200 group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="relative">
+<img alt="Avatar" class="w-10 h-10 rounded-full border border-glass-stroke object-cover" data-alt="A studio headshot of a smiling young woman with curly brown hair, wearing a light blue linen shirt. The lighting is soft and neutral, typical of a professional but approachable profile picture. The background is a clean, dark obsidian hue." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkpLaAAaPtwUCGEQryYwILaELQNTTgUZKaXvS7kqdGA3pdQkUqqZMbFbYloBftlkWuCF_P0AGPQeQHzl66jjnEioJP_DhIYJkO_A9oWkSiRxOrbmDfm9RXz4gtLAdYHgqENocO3U5PlGLUgL3yAwve5io2Us5gE0PINJYc_0zDEQUsKZ_eCDh7qheZ0NOLBKOSZqvGrOTWPbz4rHHOYPyjQKsnse2mny3H9WeiNOFoQa-fo9PD0nk-kJNX01s4WoL0ITmN4pydbJvs"/>
+<div class="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-primary rounded-full border-2 border-background-base"></div>
+</div>
+<div>
+<p class="font-body-sm text-body-sm font-medium text-on-surface group-hover:text-primary transition-colors">Elena Rodríguez</p>
+<p class="font-body-sm text-[12px] text-on-surface-variant">elena.r@email.com</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 font-body-sm text-body-sm text-on-surface flex items-center gap-2 mt-2">
+<span class="material-symbols-outlined text-[16px] text-primary">flight_takeoff</span>
+                                    París, Francia
+                                </td>
+<td class="px-6 py-4 font-body-sm text-body-sm text-on-surface-variant">
+                                    Carlos Mendoza
+                                </td>
+<td class="px-6 py-4 font-body-sm text-body-sm text-on-surface">
+                                    12 Oct 2023
+                                </td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wide bg-primary/10 text-primary border border-primary/20">
+                                        En Ruta
+                                    </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-1">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-white/5 transition-colors duration-200 group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="relative">
+<img alt="Avatar" class="w-10 h-10 rounded-full border border-glass-stroke object-cover" data-alt="A portrait of a middle-aged man with short grey hair and a neat beard, wearing a dark turtleneck. He has a serious but calm expression. The lighting highlights his facial features against a dark, moody background consistent with the obsidian theme." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLUHA50ONBSkqRKZUw1OXAzdRrkcUWV50i5eCPzAIgeDtjIH73NgNIVSeLmmhZo0A30JTIXLXaPoD_jxw7RxyB53bRCdfbOs5KYLdNVcTtotNcIcpZ7bGToYy2c-aviJR4M_ahnim3ORHcFPnPzL8jq7KfMeZ73iMEORE3z27aRqB2wI_VQksmx8vOJgP3i4O_sgHEst6tb9rNN1eQcQpW9roqriYEEHWLiKRYoISGAzKa6cBudhUvbbPl2g9p6Ljot35VXLowCCCN"/>
+</div>
+<div>
+<p class="font-body-sm text-body-sm font-medium text-on-surface group-hover:text-primary transition-colors">Roberto Silva</p>
+<p class="font-body-sm text-[12px] text-on-surface-variant">rsilva_99@email.com</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 font-body-sm text-body-sm text-on-surface flex items-center gap-2 mt-2">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">luggage</span>
+                                    Tokio, Japón
+                                </td>
+<td class="px-6 py-4 font-body-sm text-body-sm text-on-surface-variant">
+                                    Ana Silva
+                                </td>
+<td class="px-6 py-4 font-body-sm text-body-sm text-on-surface">
+                                    05 Nov 2023
+                                </td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wide bg-warning/10 text-warning border border-warning/20">
+                                        Pendiente
+                                    </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-1">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-white/5 transition-colors duration-200 group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="relative">
+<div class="w-10 h-10 rounded-full border border-glass-stroke bg-surface-container-high flex items-center justify-center text-primary font-bold">
+                                                LM
+                                            </div>
+</div>
+<div>
+<p class="font-body-sm text-body-sm font-medium text-on-surface group-hover:text-primary transition-colors">Laura Martínez</p>
+<p class="font-body-sm text-[12px] text-on-surface-variant">laura.mtz@email.com</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 font-body-sm text-body-sm text-on-surface flex items-center gap-2 mt-2">
+<span class="material-symbols-outlined text-[16px] text-success">done_all</span>
+                                    Roma, Italia
+                                </td>
+<td class="px-6 py-4 font-body-sm text-body-sm text-on-surface-variant">
+                                    Carlos Mendoza
+                                </td>
+<td class="px-6 py-4 font-body-sm text-body-sm text-on-surface">
+                                    28 Sep 2023
+                                </td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wide bg-success/10 text-success border border-success/20">
+                                        Finalizado
+                                    </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-1">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer / Pagination -->
+<div class="px-6 py-4 border-t border-glass-stroke flex justify-between items-center bg-surface-container-lowest/50">
+<span class="font-body-sm text-[13px] text-on-surface-variant">Mostrando 1 a 3 de 124 pasajeros</span>
+<div class="flex gap-2">
+<button class="w-8 h-8 rounded-lg border border-glass-stroke flex items-center justify-center text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded-lg border border-primary bg-primary/10 flex items-center justify-center text-primary font-body-sm text-body-sm transition-colors">
+                            1
+                        </button>
+<button class="w-8 h-8 rounded-lg border border-glass-stroke flex items-center justify-center text-on-surface-variant hover:bg-white/5 hover:text-on-surface font-body-sm text-body-sm transition-colors">
+                            2
+                        </button>
+<button class="w-8 h-8 rounded-lg border border-glass-stroke flex items-center justify-center text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Spacer for mobile FAB -->
+<div class="h-24 md:hidden"></div>
+</div>
+<!-- MOBILE MAGIC ADD FAB -->
+<button class="md:hidden fixed bottom-6 right-6 w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg shadow-primary/30 flex items-center justify-center z-50 hover:scale-105 active:scale-95 transition-all duration-300 group">
+<span class="material-symbols-outlined text-[28px] group-hover:rotate-45 transition-transform duration-300">add</span>
+</button>
+<!-- Ambient Glow Elements (Background) -->
+<div class="fixed top-[-10%] right-[-5%] w-[40vw] h-[40vw] bg-primary/5 rounded-full blur-[100px] pointer-events-none -z-10"></div>
+<div class="fixed bottom-[-10%] left-[-5%] w-[30vw] h-[30vw] bg-secondary/5 rounded-full blur-[100px] pointer-events-none -z-10"></div>
+</main>
+</body></html>

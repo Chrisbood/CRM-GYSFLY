@@ -1433,6 +1433,19 @@
                     </div>
                     <p class="text-[9px] text-on-surface-variant/50 text-center">Conectando con servidores redundantes de GYSFLY Cloud...</p>
                 </div>
+
+                <!-- Success Panel with direct download buttons to bypass popup blocker -->
+                <div id="transfer-success-panel" class="hidden p-5 bg-success/10 border border-success/20 rounded-2xl flex flex-col items-center text-center space-y-4">
+                    <span class="material-symbols-outlined text-success text-[48px] animate-bounce">check_circle</span>
+                    <div>
+                        <h4 class="text-sm font-bold text-white">¡Operación Completada con Éxito!</h4>
+                        <p class="text-[10px] text-on-surface-variant/75 mt-1">El documento ha sido emitido de forma segura en la base de datos de Gysfly Travels.</p>
+                    </div>
+                    <button id="transfer-download-btn" class="w-full py-2.5 px-4 bg-gradient-to-r from-primary to-primary-g text-white text-xs font-bold rounded-xl hover:opacity-95 shadow-md active-glow flex items-center justify-center gap-1.5 transition-all">
+                        <span class="material-symbols-outlined text-[16px]">print</span>
+                        <span id="transfer-download-btn-text">Imprimir / Guardar PDF</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -2434,7 +2447,7 @@
                                 <p class="text-[9px] text-on-surface-variant/50">${doc.date} • ${doc.size}</p>
                             </div>
                         </div>
-                        <button onclick="downloadSimulatedFile('${doc.name}')" class="text-primary hover:text-white p-1" title="Descargar archivo">
+                        <button onclick="downloadSimulatedFile(${client.id}, '${doc.name}')" class="text-primary hover:text-white p-1" title="Descargar archivo">
                             <span class="material-symbols-outlined text-[16px]">download</span>
                         </button>
                     </div>
@@ -2462,11 +2475,636 @@
             startTransferSimulation('upload');
         }
 
-        function downloadSimulatedFile(fileName) {
-            showNotification('Descargando', `Descargando: ${fileName} desde GYSFLY Cloud...`, 'warning');
-            setTimeout(() => {
-                showNotification('Descarga Completa', `Se guardó ${fileName} correctamente.`, 'success');
-            }, 1000);
+        function downloadSimulatedFile(clientId, fileName) {
+            const client = clients.find(c => c.id === clientId);
+            if (!client) {
+                showNotification('Error', 'Cliente no encontrado.', 'danger');
+                return;
+            }
+            generateRealTravelDocument(client, fileName);
+            showNotification('Emisión Éxito', `Se emitió ${fileName} correctamente.`, 'success');
+        }
+
+        function getAirportCode(destination) {
+            if (!destination) return "DPS";
+            const dest = destination.toLowerCase().trim();
+            if (dest.includes("bali")) return "DPS";
+            if (dest.includes("parís") || dest.includes("paris")) return "CDG";
+            if (dest.includes("maldivas")) return "MLE";
+            if (dest.includes("singapur")) return "SIN";
+            if (dest.includes("roma")) return "FCO";
+            if (dest.includes("tokio") || dest.includes("tokyo")) return "NRT";
+            if (dest.includes("tailandia") || dest.includes("bangkok")) return "BKK";
+            if (dest.includes("caribe") || dest.includes("cancún") || dest.includes("cancun")) return "CUN";
+            return "DPS";
+        }
+
+        function generateRealTravelDocument(client, documentName) {
+            const docWindow = window.open("", "_blank", "width=800,height=900");
+            if (!docWindow) {
+                showNotification('Permisos Requeridos', 'El navegador bloqueó la ventana emergente. Por favor, permite ventanas emergentes para emitir el PDF.', 'danger');
+                return;
+            }
+            
+            let title = "Documento de Viaje - Gysfly Travels";
+            let badgeText = "GYSFLY TRAVELS";
+            let isFlight = documentName.toLowerCase().includes("billete") || documentName.toLowerCase().includes("vuelo");
+            let isHotel = documentName.toLowerCase().includes("voucher") || documentName.toLowerCase().includes("hotel");
+            
+            let contentHtml = "";
+            const amount = client.volume ? `$${client.volume.toLocaleString('en-US')} USD` : "$3,500 USD";
+            const localizer = "GYS-" + (100000 + client.id);
+            const dateStr = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+            
+            if (isFlight) {
+                title = `Billete Aéreo VIP - ${client.name}`;
+                badgeText = "CABINA BUSINESS CLASS";
+                contentHtml = `
+                    <div class="ticket-header">
+                        <div>
+                            <h1 class="brand">GYSFLY TRAVELS</h1>
+                            <p class="brand-sub">Luxury Worldwide Flights</p>
+                        </div>
+                        <div class="ticket-badge">${badgeText}</div>
+                    </div>
+                    
+                    <div class="ticket-body">
+                        <div class="grid-3">
+                            <div>
+                                <span class="label">PASAJERO</span>
+                                <p class="val">${client.name}</p>
+                            </div>
+                            <div>
+                                <span class="label">NÚMERO DE VUELO</span>
+                                <p class="val">GY-${100 + client.id}</p>
+                            </div>
+                            <div>
+                                <span class="label">LOCALIZADOR</span>
+                                <p class="val">${localizer}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="route-block">
+                            <div class="route-city">
+                                <h3>MAD</h3>
+                                <p>Madrid, España</p>
+                            </div>
+                            <div class="route-arrow">
+                                <span class="material-symbols-outlined text-[32px] text-gold">flight_takeoff</span>
+                                <div class="line"></div>
+                            </div>
+                            <div class="route-city text-right">
+                                <h3>${getAirportCode(client.destination)}</h3>
+                                <p>${client.destination}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="grid-4 mt-6">
+                            <div>
+                                <span class="label">FECHA</span>
+                                <p class="val">${dateStr}</p>
+                            </div>
+                            <div>
+                                <span class="label">EMBARQUE</span>
+                                <p class="val">08:45 AM</p>
+                            </div>
+                            <div>
+                                <span class="label">ASIENTO</span>
+                                <p class="val">${10 + client.id}A</p>
+                            </div>
+                            <div>
+                                <span class="label">PUERTA</span>
+                                <p class="val">B-${20 + client.id}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="ticket-footer">
+                        <div class="barcode-container">
+                            <div class="barcode"></div>
+                            <span class="barcode-text">*${localizer}*</span>
+                        </div>
+                        <div class="legal-notice">
+                            <p><strong>INFORMACIÓN DE EMBARQUE:</strong> Presentarse en el mostrador de Gysfly Travels 3 horas antes de la salida. La franquicia de equipaje de Business Class incluye 2 piezas de 32kg cada una y acceso gratuito a la sala Lounge VIP. Buen viaje.</p>
+                        </div>
+                    </div>
+                `;
+            } else if (isHotel) {
+                title = `Voucher de Alojamiento VIP - ${client.name}`;
+                badgeText = "BONO DE HOTEL EXCLUSIVO";
+                contentHtml = `
+                    <div class="ticket-header hotel-bg">
+                        <div>
+                            <h1 class="brand">GYSFLY TRAVELS</h1>
+                            <p class="brand-sub">Luxury Resorts & Spas</p>
+                        </div>
+                        <div class="ticket-badge hotel-badge">${badgeText}</div>
+                    </div>
+                    
+                    <div class="ticket-body">
+                        <div class="grid-3">
+                            <div>
+                                <span class="label">TITULAR DE RESERVA</span>
+                                <p class="val">${client.name}</p>
+                            </div>
+                            <div>
+                                <span class="label">CÓDIGO DE RESERVA</span>
+                                <p class="val">GYS-HOT-${300 + client.id}</p>
+                            </div>
+                            <div>
+                                <span class="label">PRECIO VOUCHER</span>
+                                <p class="val">${amount}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="hotel-details-block">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-[36px] text-gold" style="font-size:32px;">holiday_village</span>
+                                <div>
+                                    <h3 class="hotel-title">Luxury Water Villa Resort</h3>
+                                    <p class="hotel-sub">${client.destination} — Ubicación Preferente Gysfly</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid-3 mt-6">
+                            <div>
+                                <span class="label">RÉGIMEN</span>
+                                <p class="val">Todo Incluido Premium</p>
+                            </div>
+                            <div>
+                                <span class="label">TIPO DE HABITACIÓN</span>
+                                <p class="val">Villa sobre el Agua con Piscina Privada</p>
+                            </div>
+                            <div>
+                                <span class="label">TRANSFER INCLUIDO</span>
+                                <p class="val">Sí (Lancha Rápida VIP)</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="ticket-footer">
+                        <div class="legal-notice" style="border-top: none; padding-top: 0;">
+                            <p><strong>REGLAS DEL VOUCHER:</strong> Al llegar al establecimiento, presente este voucher impreso o en su dispositivo móvil junto con el pasaporte de los viajeros. La reserva incluye mayordomo las 24 horas y atenciones especiales Gysfly Platinum a la llegada.</p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                title = `Ficha Técnica de Viajero - ${client.name}`;
+                badgeText = "FICHA TÉCNICA OFICIAL";
+                contentHtml = `
+                    <div class="ticket-header profile-bg">
+                        <div>
+                            <h1 class="brand">GYSFLY TRAVELS</h1>
+                            <p class="brand-sub">Traveler Official Profile</p>
+                        </div>
+                        <div class="ticket-badge profile-badge">${badgeText}</div>
+                    </div>
+                    
+                    <div class="ticket-body">
+                        <div class="grid-3">
+                            <div>
+                                <span class="label">NOMBRE VIAJERO</span>
+                                <p class="val">${client.name}</p>
+                            </div>
+                            <div>
+                                <span class="label">TELÉFONO</span>
+                                <p class="val">${client.phone}</p>
+                            </div>
+                            <div>
+                                <span class="label">CORREO ELECTRÓNICO</span>
+                                <p class="val">${client.email}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="profile-info-block">
+                            <h4 style="color: #ffffff; font-size: 13px; font-weight: bold; margin-bottom: 8px;">Detalles Generales del Cliente</h4>
+                            <table class="profile-table">
+                                <tr>
+                                    <td><strong>País de Residencia:</strong></td>
+                                    <td>${client.country || 'España'}</td>
+                                    <td><strong>Código Postal:</strong></td>
+                                    <td>${client.postal_code || '28001'}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Destino Favorito:</strong></td>
+                                    <td>${client.destination || 'Bali'}</td>
+                                    <td><strong>Estado del Viaje:</strong></td>
+                                    <td>${client.status}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Gasto Acumulado:</strong></td>
+                                    <td>${amount}</td>
+                                    <td><strong>Costo de Proveedores:</strong></td>
+                                    <td>$${(client.cost !== undefined ? client.cost : Math.round(client.volume * 0.7)).toLocaleString('en-US')} USD</td>
+                                </tr>
+                            </table>
+                        </div>
+                        
+                        <div class="mt-6">
+                            <span class="label">NOTAS DE LA AGENCIA</span>
+                            <p class="val" style="font-weight: normal; font-size: 11px; color: #e2e8f0; line-height: 1.5; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); margin-top: 4px;">
+                                ${client.notes || 'No se han registrado observaciones adicionales.'}
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="ticket-footer">
+                        <p style="font-size: 9px; color: rgba(255,255,255,0.4); text-align: center; width: 100%;">Gysfly Travels S.L. • Registro de Ficha técnica segura en local • Copia de seguridad encriptada</p>
+                    </div>
+                `;
+            }
+            
+            // Write full HTML content to document preview popup window
+            docWindow.document.write(`
+                <!DOCTYPE html>
+                <html lang="es">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>${title}</title>
+                    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Material+Symbols+Outlined&display=swap" rel="stylesheet">
+                    <style>
+                        * {
+                            box-sizing: border-box;
+                            margin: 0;
+                            padding: 0;
+                        }
+                        body {
+                            font-family: 'Outfit', sans-serif;
+                            background-color: #0b0f17;
+                            color: #ffffff;
+                            padding: 40px 20px;
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            min-height: 100vh;
+                        }
+                        .print-container {
+                            background: linear-gradient(135deg, #131a26 0%, #0d131f 100%);
+                            border: 1px solid rgba(197, 160, 89, 0.3);
+                            border-radius: 24px;
+                            width: 100%;
+                            max-width: 700px;
+                            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+                            overflow: hidden;
+                            position: relative;
+                        }
+                        .controls {
+                            display: flex;
+                            gap: 12px;
+                            margin-bottom: 24px;
+                            width: 100%;
+                            max-width: 700px;
+                            justify-content: flex-end;
+                        }
+                        .btn {
+                            padding: 10px 20px;
+                            border-radius: 12px;
+                            font-size: 12px;
+                            font-weight: bold;
+                            cursor: pointer;
+                            display: flex;
+                            align-items: center;
+                            gap: 6px;
+                            transition: all 0.2s;
+                            border: none;
+                        }
+                        .btn-print {
+                            background: linear-gradient(135deg, #c5a059 0%, #a37f37 100%);
+                            color: #0b0f17;
+                        }
+                        .btn-print:hover {
+                            opacity: 0.95;
+                            transform: translateY(-1px);
+                        }
+                        .btn-close {
+                            background: rgba(255, 255, 255, 0.08);
+                            color: #ffffff;
+                            border: 1px solid rgba(255, 255, 255, 0.12);
+                        }
+                        .btn-close:hover {
+                            background: rgba(255, 255, 255, 0.15);
+                        }
+                        .ticket-header {
+                            background: linear-gradient(90deg, #1a2333 0%, #151d2a 100%);
+                            padding: 24px 32px;
+                            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                        }
+                        .brand {
+                            font-size: 22px;
+                            font-weight: 700;
+                            letter-spacing: 2px;
+                            background: linear-gradient(135deg, #f5d085 0%, #c5a059 100%);
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;
+                        }
+                        .brand-sub {
+                            font-size: 9px;
+                            text-transform: uppercase;
+                            letter-spacing: 4px;
+                            color: rgba(255, 255, 255, 0.4);
+                            margin-top: 2px;
+                        }
+                        .ticket-badge {
+                            font-size: 9px;
+                            font-weight: 700;
+                            letter-spacing: 1px;
+                            padding: 6px 12px;
+                            border-radius: 8px;
+                            background: rgba(197, 160, 89, 0.15);
+                            color: #f5d085;
+                            border: 1px solid rgba(197, 160, 89, 0.3);
+                        }
+                        .hotel-bg {
+                            background: linear-gradient(90deg, #0e271a 0%, #081d11 100%);
+                        }
+                        .hotel-badge {
+                            background: rgba(16, 185, 129, 0.15);
+                            color: #34d399;
+                            border: 1px solid rgba(16, 185, 129, 0.3);
+                        }
+                        .profile-bg {
+                            background: linear-gradient(90deg, #17253d 0%, #0f1a2e 100%);
+                        }
+                        .profile-badge {
+                            background: rgba(59, 130, 246, 0.15);
+                            color: #60a5fa;
+                            border: 1px solid rgba(59, 130, 246, 0.3);
+                        }
+                        .ticket-body {
+                            padding: 32px;
+                        }
+                        .grid-3 {
+                            display: grid;
+                            grid-template-columns: repeat(3, 1fr);
+                            gap: 16px;
+                        }
+                        .grid-4 {
+                            display: grid;
+                            grid-template-columns: repeat(4, 1fr);
+                            gap: 16px;
+                        }
+                        .label {
+                            font-size: 8px;
+                            text-transform: uppercase;
+                            color: rgba(255, 255, 255, 0.4);
+                            font-weight: 600;
+                            letter-spacing: 1px;
+                            display: block;
+                        }
+                        .val {
+                            font-size: 13px;
+                            font-weight: 600;
+                            color: #ffffff;
+                            margin-top: 4px;
+                        }
+                        .route-block {
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            margin-top: 28px;
+                            padding: 20px;
+                            background: rgba(255, 255, 255, 0.02);
+                            border: 1px solid rgba(255, 255, 255, 0.04);
+                            border-radius: 16px;
+                        }
+                        .route-city h3 {
+                            font-size: 32px;
+                            font-weight: 700;
+                            letter-spacing: 1px;
+                            color: #ffffff;
+                        }
+                        .route-city p {
+                            font-size: 10px;
+                            color: rgba(255, 255, 255, 0.5);
+                            margin-top: 2px;
+                        }
+                        .route-arrow {
+                            flex-grow: 1;
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            position: relative;
+                            margin: 0 20px;
+                        }
+                        .route-arrow .line {
+                            height: 1px;
+                            border-top: 1px dashed rgba(197, 160, 89, 0.4);
+                            width: 100%;
+                            position: absolute;
+                            top: 50%;
+                            z-index: 1;
+                        }
+                        .route-arrow span {
+                            position: relative;
+                            z-index: 2;
+                            background: #111823;
+                            padding: 0 8px;
+                        }
+                        .text-gold {
+                            color: #f5d085;
+                        }
+                        .hotel-details-block {
+                            margin-top: 28px;
+                            padding: 20px;
+                            background: rgba(16, 185, 129, 0.03);
+                            border: 1px solid rgba(16, 185, 129, 0.08);
+                            border-radius: 16px;
+                        }
+                        .hotel-title {
+                            font-size: 18px;
+                            font-weight: 700;
+                            color: #ffffff;
+                        }
+                        .hotel-sub {
+                            font-size: 11px;
+                            color: rgba(255, 255, 255, 0.5);
+                            margin-top: 2px;
+                        }
+                        .profile-info-block {
+                            margin-top: 28px;
+                            padding: 20px;
+                            background: rgba(59, 130, 246, 0.03);
+                            border: 1px solid rgba(59, 130, 246, 0.08);
+                            border-radius: 16px;
+                        }
+                        .profile-table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            font-size: 11px;
+                            color: rgba(255, 255, 255, 0.8);
+                        }
+                        .profile-table td {
+                            padding: 6px 4px;
+                        }
+                        .ticket-footer {
+                            background: rgba(0, 0, 0, 0.2);
+                            padding: 24px 32px;
+                            border-top: 1px solid rgba(255, 255, 255, 0.05);
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            gap: 16px;
+                        }
+                        .barcode-container {
+                            text-align: center;
+                        }
+                        .barcode {
+                            height: 45px;
+                            width: 250px;
+                            background: linear-gradient(90deg, 
+                                #ffffff 0%, #ffffff 3%, 
+                                #000000 3%, #000000 5%, 
+                                #ffffff 5%, #ffffff 6%, 
+                                #000000 6%, #000000 10%, 
+                                #ffffff 10%, #ffffff 11%, 
+                                #000000 11%, #000000 13%,
+                                #ffffff 13%, #ffffff 16%,
+                                #000000 16%, #000000 20%,
+                                #ffffff 20%, #ffffff 23%,
+                                #000000 23%, #000000 24%,
+                                #ffffff 24%, #ffffff 28%,
+                                #000000 28%, #000000 34%,
+                                #ffffff 34%, #ffffff 37%,
+                                #000000 37%, #000000 42%,
+                                #ffffff 42%, #ffffff 45%,
+                                #000000 45%, #000000 46%,
+                                #ffffff 46%, #ffffff 50%,
+                                #000000 50%, #000000 53%,
+                                #ffffff 53%, #ffffff 55%,
+                                #000000 55%, #000000 60%,
+                                #ffffff 60%, #ffffff 63%,
+                                #000000 63%, #000000 67%,
+                                #ffffff 67%, #ffffff 69%,
+                                #000000 69%, #000000 75%,
+                                #ffffff 75%, #ffffff 78%,
+                                #000000 78%, #000000 84%,
+                                #ffffff 84%, #ffffff 87%,
+                                #000000 87%, #000000 91%,
+                                #ffffff 91%, #ffffff 94%,
+                                #000000 94%, #000000 97%,
+                                #ffffff 97%, #ffffff 100%
+                            );
+                            border-radius: 4px;
+                        }
+                        .barcode-text {
+                            font-size: 9px;
+                            color: rgba(255, 255, 255, 0.4);
+                            letter-spacing: 4px;
+                            margin-top: 6px;
+                            display: block;
+                        }
+                        .legal-notice {
+                            font-size: 9px;
+                            color: rgba(255, 255, 255, 0.45);
+                            text-align: justify;
+                            line-height: 1.4;
+                            border-top: 1px solid rgba(255, 255, 255, 0.05);
+                            padding-top: 16px;
+                        }
+                        @media print {
+                            body {
+                                background-color: #ffffff !important;
+                                color: #000000 !important;
+                                padding: 0 !important;
+                            }
+                            .controls {
+                                display: none !important;
+                            }
+                            .print-container {
+                                border: none !important;
+                                box-shadow: none !important;
+                                max-width: 100% !important;
+                                width: 100% !important;
+                                background: #ffffff !important;
+                                color: #000000 !important;
+                            }
+                            .ticket-header {
+                                background: #f3f4f6 !important;
+                                border-bottom: 2px solid #000000 !important;
+                            }
+                            .brand {
+                                -webkit-text-fill-color: #000000 !important;
+                                color: #000000 !important;
+                            }
+                            .brand-sub {
+                                color: #4b5563 !important;
+                            }
+                            .ticket-badge {
+                                background: #ffffff !important;
+                                color: #000000 !important;
+                                border: 1.5px solid #000000 !important;
+                            }
+                            .label {
+                                color: #4b5563 !important;
+                            }
+                            .val {
+                                color: #000000 !important;
+                            }
+                            .route-block {
+                                background: #f9fafb !important;
+                                border: 1px solid #e5e7eb !important;
+                            }
+                            .route-city h3, .route-city p {
+                                color: #000000 !important;
+                            }
+                            .route-arrow span {
+                                background: #ffffff !important;
+                                color: #000000 !important;
+                            }
+                            .hotel-details-block {
+                                background: #f9fafb !important;
+                                border: 1px solid #e5e7eb !important;
+                            }
+                            .hotel-title, .hotel-sub {
+                                color: #000000 !important;
+                            }
+                            .profile-info-block {
+                                background: #f9fafb !important;
+                                border: 1px solid #e5e7eb !important;
+                            }
+                            .profile-table {
+                                color: #000000 !important;
+                            }
+                            .barcode {
+                                background: #000000 !important;
+                                filter: invert(0) !important;
+                            }
+                            .barcode-text {
+                                color: #000000 !important;
+                            }
+                            .legal-notice {
+                                color: #4b5563 !important;
+                                border-top: 1px solid #e5e7eb !important;
+                            }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="controls">
+                        <button onclick="window.print()" class="btn btn-print">
+                            <span class="material-symbols-outlined text-[14px]">print</span>
+                            <span>Imprimir / Guardar PDF</span>
+                        </button>
+                        <button onclick="window.close()" class="btn btn-close">
+                            <span class="material-symbols-outlined text-[14px]">close</span>
+                            <span>Cerrar Vista</span>
+                        </button>
+                    </div>
+                    
+                    <div class="print-container">
+                        ${contentHtml}
+                    </div>
+                    <script>
+                        setTimeout(() => { window.print(); }, 450);
+                    </script>
+                </body>
+                </html>
+            `);
+            docWindow.document.close();
         }
 
         // IMPORT / EXCEL / CSV / DATA DRAG & DROP ENGINE
@@ -3056,6 +3694,7 @@
                 badge.className = 'inline-block mt-1 px-2.5 py-0.5 font-bold text-[10px] rounded-full ' + getStatusBadgeClass(client.status);
                 
                 document.getElementById('transfer-progress-panel').classList.add('hidden');
+                document.getElementById('transfer-success-panel').classList.add('hidden');
                 document.getElementById('transfer-progress-bar').style.width = '0%';
                 
                 document.getElementById('modal-transfer').classList.remove('hidden');
@@ -3093,12 +3732,14 @@
                     setTimeout(() => {
                         const addedDollars = Math.floor(Math.random() * 1500) + 500;
                         if(!client.files) client.files = [];
+                        let newFileName = "";
                         
                         if(type === 'upload') {
                             client.volume += addedDollars;
                             client.status = 'Viaje Activo';
+                            newFileName = `Billete_Aereo_Business_${Math.floor(Math.random()*900 + 100)}.pdf`;
                             client.files.push({
-                                name: `Billete_Aereo_Business_${Math.floor(Math.random()*900 + 100)}.pdf`,
+                                name: newFileName,
                                 size: '1.4 MB',
                                 date: new Date().toLocaleDateString('es-ES')
                             });
@@ -3106,8 +3747,9 @@
                         } else {
                             client.volume += addedDollars;
                             client.status = 'Reserva Confirmada';
+                            newFileName = `Voucher_Hotel_Resort_${Math.floor(Math.random()*900 + 100)}.pdf`;
                             client.files.push({
-                                name: `Voucher_Hotel_Resort_${Math.floor(Math.random()*900 + 100)}.pdf`,
+                                name: newFileName,
                                 size: '890 KB',
                                 date: new Date().toLocaleDateString('es-ES')
                             });
@@ -3115,7 +3757,6 @@
                         }
                         
                         saveDatabase();
-                        closeTransferModal();
                         renderUI();
                         updateCharts();
                         
@@ -3123,6 +3764,21 @@
                         if(currentProfileClientId === client.id) {
                             openClientProfileModal(client.id);
                         }
+
+                        // Hide progress panel and show success panel
+                        progressPanel.classList.add('hidden');
+                        
+                        const successPanel = document.getElementById('transfer-success-panel');
+                        const downloadBtn = document.getElementById('transfer-download-btn');
+                        const downloadBtnText = document.getElementById('transfer-download-btn-text');
+                        
+                        downloadBtnText.innerText = type === 'upload' ? 'Ver e Imprimir Billete Aéreo' : 'Ver e Imprimir Bono de Hotel';
+                        successPanel.classList.remove('hidden');
+                        
+                        downloadBtn.onclick = () => {
+                            generateRealTravelDocument(client, newFileName);
+                            closeTransferModal();
+                        };
                     }, 500);
                 }
                 
