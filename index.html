@@ -1561,11 +1561,17 @@
             
             // Check session
             if(localStorage.getItem('gysfly_session') === 'active') {
-                currentUser = JSON.parse(localStorage.getItem('gysfly_current_user'));
-                if (currentUser) {
+                try {
+                    currentUser = JSON.parse(localStorage.getItem('gysfly_current_user'));
+                } catch(e) {
+                    currentUser = null;
+                }
+                if (currentUser && currentUser.name) {
                     applyUserPermissions();
                 } else {
                     localStorage.removeItem('gysfly_session');
+                    localStorage.removeItem('gysfly_current_user');
+                    currentUser = null;
                     location.reload();
                     return;
                 }
@@ -1581,137 +1587,158 @@
 
         // DATABASE SEEDING & SYNC
         function initDatabase() {
+            const getValidArray = (key, defaultVal) => {
+                try {
+                    const val = localStorage.getItem(key);
+                    if (!val) return defaultVal;
+                    const parsed = JSON.parse(val);
+                    return Array.isArray(parsed) ? parsed : defaultVal;
+                } catch(e) {
+                    console.error("Failed to parse localStorage key:", key, e);
+                    return defaultVal;
+                }
+            };
+
             // 1. Clientes (with Notes & Tags & File systems)
-            if(!localStorage.getItem('gysfly_clients')) {
-                const defaultClients = [
-                    { 
-                        id: 1, 
-                        name: 'Christian Durán', 
-                        email: 'christian@gysfly.com', 
-                        phone: '+34 600 123 456', 
-                        status: 'Viaje Activo', 
-                        volume: 4850,
-                        cost: 3395,
-                        country: 'España',
-                        postal_code: '28001',
-                        destination: 'Bali',
-                        tags: ['VIP', 'Playa', 'Business'],
-                        notes: 'Viajero VIP preferente. Solicita villas frente al mar con piscina infinity y chofer privado en Bali. Vuelos emitidos en clase Business.',
-                        files: [
-                            { name: 'Itinerario_Bali_VIP_Duran.pdf', size: '2.4 MB', date: '12/05/2026' },
-                            { name: 'Billete_Iberia_Business.pdf', size: '1.8 MB', date: '12/05/2026' }
-                        ]
-                    },
-                    { 
-                        id: 2, 
-                        name: 'Laura Mendoza', 
-                        email: 'laura@gysfly.com', 
-                        phone: '+34 600 987 654', 
-                        status: 'Reserva Confirmada', 
-                        volume: 3200,
-                        cost: 2240,
-                        country: 'México',
-                        postal_code: '11000',
-                        destination: 'París',
-                        tags: ['Luna de Miel', 'Europa'],
-                        notes: 'Viaje de aniversario en suite de lujo con vistas a la Torre Eiffel. Confirmadas entradas exclusivas sin colas para el Museo del Louvre.',
-                        files: [
-                            { name: 'Voucher_Hotel_Le_Bristol.pdf', size: '890 KB', date: '15/05/2026' }
-                        ]
-                    },
-                    { 
-                        id: 3, 
-                        name: 'Carlos Gómez', 
-                        email: 'carlos@gysfly.com', 
-                        phone: '+34 611 222 333', 
-                        status: 'Cotización Pendiente', 
-                        volume: 6700,
-                        cost: 4690,
-                        country: 'Colombia',
-                        postal_code: '08002',
-                        destination: 'Maldivas',
-                        tags: ['Exótico', 'Alerta Visa'],
-                        notes: 'Interesado en un resort Overwater Bungalow de 5 estrellas todo incluido en Maldivas. Alerta: Pendiente confirmar trámite de visado de escala en EE.UU.',
-                        files: [
-                            { name: 'Propuesta_Maldivas_Resort.pdf', size: '3.4 MB', date: '10/05/2026' }
-                        ]
-                    },
-                    { 
-                        id: 4, 
-                        name: 'Sofía Reyes', 
-                        email: 'sofia@gysfly.com', 
-                        phone: '+34 622 444 555', 
-                        status: 'Inactivo', 
-                        volume: 0,
-                        cost: 0,
-                        country: 'Argentina',
-                        postal_code: 'C1001',
-                        destination: 'Tokio',
-                        tags: ['Asia', 'Primavera'],
-                        notes: 'Cliente potencial que cotizó viaje a Japón en temporada de cerezos en flor. Sin reservas activas de momento.',
-                        files: []
-                    }
-                ];
-                localStorage.setItem('gysfly_clients', JSON.stringify(defaultClients));
-            }
-            clients = JSON.parse(localStorage.getItem('gysfly_clients'));
+            const defaultClients = [
+                { 
+                    id: 1, 
+                    name: 'Christian Durán', 
+                    email: 'christian@gysfly.com', 
+                    phone: '+34 600 123 456', 
+                    status: 'Viaje Activo', 
+                    volume: 4850,
+                    cost: 3395,
+                    country: 'España',
+                    postal_code: '28001',
+                    destination: 'Bali',
+                    tags: ['VIP', 'Playa', 'Business'],
+                    notes: 'Viajero VIP preferente. Solicita villas frente al mar con piscina infinity y chofer privado en Bali. Vuelos emitidos en clase Business.',
+                    files: [
+                        { name: 'Itinerario_Bali_VIP_Duran.pdf', size: '2.4 MB', date: '12/05/2026' },
+                        { name: 'Billete_Iberia_Business.pdf', size: '1.8 MB', date: '12/05/2026' }
+                    ]
+                },
+                { 
+                    id: 2, 
+                    name: 'Laura Mendoza', 
+                    email: 'laura@gysfly.com', 
+                    phone: '+34 600 987 654', 
+                    status: 'Reserva Confirmada', 
+                    volume: 3200,
+                    cost: 2240,
+                    country: 'México',
+                    postal_code: '11000',
+                    destination: 'París',
+                    tags: ['Luna de Miel', 'Europa'],
+                    notes: 'Viaje de aniversario en suite de lujo con vistas a la Torre Eiffel. Confirmadas entradas exclusivas sin colas para el Museo del Louvre.',
+                    files: [
+                        { name: 'Voucher_Hotel_Le_Bristol.pdf', size: '890 KB', date: '15/05/2026' }
+                    ]
+                },
+                { 
+                    id: 3, 
+                    name: 'Carlos Gómez', 
+                    email: 'carlos@gysfly.com', 
+                    phone: '+34 611 222 333', 
+                    status: 'Cotización Pendiente', 
+                    volume: 6700,
+                    cost: 4690,
+                    country: 'Colombia',
+                    postal_code: '08002',
+                    destination: 'Maldivas',
+                    tags: ['Exótico', 'Alerta Visa'],
+                    notes: 'Interesado en un resort Overwater Bungalow de 5 estrellas todo incluido en Maldivas. Alerta: Pendiente confirmar trámite de visado de escala en EE.UU.',
+                    files: [
+                        { name: 'Propuesta_Maldivas_Resort.pdf', size: '3.4 MB', date: '10/05/2026' }
+                    ]
+                },
+                { 
+                    id: 4, 
+                    name: 'Sofía Reyes', 
+                    email: 'sofia@gysfly.com', 
+                    phone: '+34 622 444 555', 
+                    status: 'Inactivo', 
+                    volume: 0,
+                    cost: 0,
+                    country: 'Argentina',
+                    postal_code: 'C1001',
+                    destination: 'Tokio',
+                    tags: ['Asia', 'Primavera'],
+                    notes: 'Cliente potencial que cotizó viaje a Japón en temporada de cerezos en flor. Sin reservas activas de momento.',
+                    files: []
+                }
+            ];
+            
+            clients = getValidArray('gysfly_clients', defaultClients);
+            clients = clients.map(c => {
+                if (!c.name) c.name = 'Viajero Sin Nombre';
+                if (!c.email) c.email = 'correo@gysfly.com';
+                if (!c.status) c.status = 'Viaje Activo';
+                if (c.volume === undefined) c.volume = 0;
+                if (!c.tags) c.tags = [];
+                if (!c.files) c.files = [];
+                return c;
+            });
+            localStorage.setItem('gysfly_clients', JSON.stringify(clients));
 
             // 2. Tareas
-            if(!localStorage.getItem('gysfly_tasks')) {
-                const defaultTasks = [
-                    { id: 1, title: 'Confirmar chófer en Bali para Christian D.', assignee: 'Christian Durán', due: 'Hoy', priority: 'hoy', done: false },
-                    { id: 2, title: 'Revisar visado de escala urgente para Carlos Gómez', assignee: 'Carlos Gómez', due: 'Hoy', priority: 'hoy', done: false },
-                    { id: 3, title: 'Enviar voucher de hotel Le Bristol a Laura M.', assignee: 'Laura Mendoza', due: 'Completado', priority: 'hoy', done: true },
-                    { id: 4, title: 'Cotizar paquete aéreo a Tokio para Sofía Reyes', assignee: 'Sofía Reyes', due: 'Mañana', priority: 'inbox', done: false },
-                    { id: 5, title: 'Generar itinerario personalizado para Carlos G.', assignee: 'Carlos Gómez', due: 'Hoy', priority: 'inbox', done: false }
-                ];
-                localStorage.setItem('gysfly_tasks', JSON.stringify(defaultTasks));
-            }
-            tasks = JSON.parse(localStorage.getItem('gysfly_tasks'));
+            const defaultTasks = [
+                { id: 1, title: 'Confirmar chófer en Bali para Christian D.', assignee: 'Christian Durán', due: 'Hoy', priority: 'hoy', done: false },
+                { id: 2, title: 'Revisar visado de escala urgente para Carlos Gómez', assignee: 'Carlos Gómez', due: 'Hoy', priority: 'hoy', done: false },
+                { id: 3, title: 'Enviar voucher de hotel Le Bristol a Laura M.', assignee: 'Laura Mendoza', due: 'Completado', priority: 'hoy', done: true },
+                { id: 4, title: 'Cotizar paquete aéreo a Tokio para Sofía Reyes', assignee: 'Sofía Reyes', due: 'Mañana', priority: 'inbox', done: false },
+                { id: 5, title: 'Generar itinerario personalizado para Carlos G.', assignee: 'Carlos Gómez', due: 'Hoy', priority: 'inbox', done: false }
+            ];
+            
+            tasks = getValidArray('gysfly_tasks', defaultTasks);
+            tasks = tasks.map(t => {
+                if (!t.title) t.title = 'Nueva Tarea';
+                if (t.done === undefined) t.done = false;
+                if (!t.priority) t.priority = 'hoy';
+                return t;
+            });
+            localStorage.setItem('gysfly_tasks', JSON.stringify(tasks));
 
             // 3. Campañas
-            if(!localStorage.getItem('gysfly_campaigns')) {
-                const defaultCampaigns = [
-                    { id: 1, subject: 'Boletín Exclusivo: Escapadas de Lujo en Maldivas & Bali', segment: 'all', size: 1248, date: '17/05/2026', status: 'Enviado', openRate: 74 },
-                    { id: 2, subject: 'Propuestas de Cotización de Verano 2026', segment: 'cotizacion', size: 532, date: '16/05/2026', status: 'Enviado', openRate: 88 }
-                ];
-                localStorage.setItem('gysfly_campaigns', JSON.stringify(defaultCampaigns));
-            }
-            campaigns = JSON.parse(localStorage.getItem('gysfly_campaigns'));
+            const defaultCampaigns = [
+                { id: 1, subject: 'Boletín Exclusivo: Escapadas de Lujo en Maldivas & Bali', segment: 'all', size: 1248, date: '17/05/2026', status: 'Enviado', openRate: 74 },
+                { id: 2, subject: 'Propuestas de Cotización de Verano 2026', segment: 'cotizacion', size: 532, date: '16/05/2026', status: 'Enviado', openRate: 88 }
+            ];
+            campaigns = getValidArray('gysfly_campaigns', defaultCampaigns);
+            localStorage.setItem('gysfly_campaigns', JSON.stringify(campaigns));
 
             // 4. Usuarios y Permisos (ACL)
-            if(!localStorage.getItem('gysfly_users')) {
-                const defaultUsers = [
-                    {
-                        name: 'Gerente Gysfly',
-                        email: 'admin@gysfly.com',
-                        password: 'admin123',
-                        role: 'admin',
-                        permissions: {
-                            readClients: true,
-                            writeClients: true,
-                            deleteClients: true,
-                            manageCampaigns: true,
-                            accessSettings: true
-                        }
-                    },
-                    {
-                        name: 'Agente Junior',
-                        email: 'agente@gysfly.com',
-                        password: 'agente123',
-                        role: 'agent',
-                        permissions: {
-                            readClients: true,
-                            writeClients: true,
-                            deleteClients: false,
-                            manageCampaigns: true,
-                            accessSettings: false
-                        }
+            const defaultUsers = [
+                {
+                    name: 'Gerente Gysfly',
+                    email: 'admin@gysfly.com',
+                    password: 'admin123',
+                    role: 'admin',
+                    permissions: {
+                        readClients: true,
+                        writeClients: true,
+                        deleteClients: true,
+                        manageCampaigns: true,
+                        accessSettings: true
                     }
-                ];
-                localStorage.setItem('gysfly_users', JSON.stringify(defaultUsers));
-            }
-            users = JSON.parse(localStorage.getItem('gysfly_users'));
+                },
+                {
+                    name: 'Agente Junior',
+                    email: 'agente@gysfly.com',
+                    password: 'agente123',
+                    role: 'agent',
+                    permissions: {
+                        readClients: true,
+                        writeClients: true,
+                        deleteClients: false,
+                        manageCampaigns: true,
+                        accessSettings: false
+                    }
+                }
+            ];
+            users = getValidArray('gysfly_users', defaultUsers);
+            localStorage.setItem('gysfly_users', JSON.stringify(users));
         }
 
         function saveDatabase() {
@@ -1822,7 +1849,7 @@
             
             if(avatarEl) {
                 // Get initials (up to 2 characters)
-                const parts = currentUser.name.trim().split(/\s+/);
+                const parts = (currentUser.name || 'Gerente Gysfly').trim().split(/\s+/);
                 const initials = parts.map(p => p[0]).join('').slice(0, 2).toUpperCase();
                 avatarEl.innerText = initials || 'GF';
             }
@@ -2187,7 +2214,7 @@
                 recentClientsTbody.innerHTML += `
                     <tr onclick="openClientProfileModal(${c.id})" class="hover:bg-surface-variant/10 transition-colors group cursor-pointer">
                         <td class="px-6 py-4 flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-[12px]">${c.name.split(' ').map(n => n[0]).join('')}</div>
+                            <div class="w-8 h-8 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-[12px]">${(c.name || 'Viajero').split(' ').map(n => n[0] || '').join('').slice(0, 2).toUpperCase()}</div>
                             <span class="font-medium text-white group-hover:text-primary transition-colors">${c.name}</span>
                         </td>
                         <td class="px-6 py-4 text-on-surface-variant">${c.email}</td>
@@ -2277,7 +2304,7 @@
                     dbList.innerHTML += `
                         <tr onclick="openClientProfileModal(${c.id})" class="hover:bg-surface-variant/10 transition-colors cursor-pointer group">
                             <td class="px-6 py-4 flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-primary/25 text-primary flex items-center justify-center font-bold text-[12px]">${c.name.split(' ').map(n => n[0]).join('')}</div>
+                                <div class="w-8 h-8 rounded-full bg-primary/25 text-primary flex items-center justify-center font-bold text-[12px]">${(c.name || 'Viajero').split(' ').map(n => n[0] || '').join('').slice(0, 2).toUpperCase()}</div>
                                 <div>
                                     <p class="font-semibold text-white text-xs group-hover:text-primary transition-colors">${c.name}</p>
                                     <p class="text-[9px] text-on-surface-variant/60">ID: GYS-${1000 + c.id}</p>
@@ -2306,7 +2333,7 @@
                                         <span class="material-symbols-outlined text-[18px]">cloud_sync</span>
                                     </button>
                                     <!-- Delete client -->
-                                    ${currentUser && currentUser.permissions.deleteClients ? `
+                                    ${currentUser && currentUser.permissions && currentUser.permissions.deleteClients ? `
                                     <button onclick="deleteClient(${c.id})" class="w-8 h-8 rounded-lg hover:bg-surface-container-low text-on-surface-variant hover:text-danger flex items-center justify-center transition-all" title="Eliminar Cliente">
                                         <span class="material-symbols-outlined text-[18px]">delete</span>
                                     </button>
@@ -2396,7 +2423,7 @@
                 }
                 
                 // Avatar letters
-                document.getElementById('profile-avatar').innerText = client.name.split(' ').map(n => n[0]).join('');
+                document.getElementById('profile-avatar').innerText = (client.name || 'GF').split(' ').map(n => n[0] || '').join('').slice(0, 2).toUpperCase();
 
                 // Status
                 const statusBadge = document.getElementById('profile-status');
@@ -3100,7 +3127,7 @@
                     </div>
                     <script>
                         setTimeout(() => { window.print(); }, 450);
-                    </script>
+                    <\/script>
                 </body>
                 </html>
             `);
