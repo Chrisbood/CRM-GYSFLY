@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>GYSFLY TRAVELS — Consola de Control de la Agencia</title>
+    <title>Panel de Agente — Consola de Control de la Agencia</title>
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
@@ -16,6 +16,9 @@
     
     <!-- Chart.js CDN for executive analytics -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- html2pdf for real PDF downloads -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
     <!-- Custom Tailwind Configuration -->
     <script id="tailwind-config">
@@ -149,6 +152,43 @@
             from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        @keyframes loginEntrance {
+            from { opacity: 0; transform: scale(0.95) translateY(16px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* Animated gradient text and glow for the project name */
+        @keyframes brandGlow {
+            0% {
+                background-position: 0% 50%;
+                filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.3));
+            }
+            50% {
+                background-position: 100% 50%;
+                filter: drop-shadow(0 0 15px rgba(139, 92, 246, 0.6));
+            }
+            100% {
+                background-position: 0% 50%;
+                filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.3));
+            }
+        }
+
+        .animated-brand-title {
+            background: linear-gradient(
+                90deg,
+                #6366F1 0%,
+                #a78bfa 25%,
+                #f472b6 50%,
+                #a78bfa 75%,
+                #6366F1 100%
+            );
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: brandGlow 6s ease infinite;
+            display: inline-block;
+        }
     </style>
 </head>
 <body class="bg-background-base text-on-surface select-none relative min-h-screen custom-scrollbar">
@@ -160,45 +200,65 @@
     <!-- TOASTS CONTAINER -->
     <div id="toast-container" class="fixed bottom-6 left-6 z-[200] flex flex-col gap-3 max-w-sm pointer-events-none"></div>
 
-    <!-- ========================================= -->
-    <!-- 1. LOGIN SCREEN -->
-    <!-- ========================================= -->
-    <div id="login-screen" class="min-h-screen w-full flex items-center justify-center relative z-50 bg-[#040815] p-4">
-        <div class="glass-card w-full max-w-md p-8 rounded-3xl relative overflow-hidden flex flex-col text-center">
+    <div id="login-screen" class="min-h-screen w-full flex items-center justify-center relative z-50 bg-[#040815] p-4 overflow-hidden">
+        <!-- Animated Background Orbs for Login Screen -->
+        <div class="absolute top-[-10%] right-[-10%] w-[50vw] h-[50vw] rounded-full blur-[120px] pointer-events-none" 
+             style="background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.05) 50%, transparent 100%); animation: floatMesh 20s infinite alternate;"></div>
+        <div class="absolute bottom-[-10%] left-[-10%] w-[45vw] h-[45vw] rounded-full blur-[120px] pointer-events-none" 
+             style="background: radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, rgba(99, 102, 241, 0.02) 50%, transparent 100%); animation: floatMesh 25s infinite alternate-reverse; animation-delay: -5s;"></div>
+             
+        <!-- Glassmorphism Login Card with Entrance Animation -->
+        <div class="glass-card w-full max-w-md p-8 rounded-3xl relative overflow-hidden flex flex-col text-center" 
+             style="animation: loginEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; border: 1px solid rgba(192, 193, 255, 0.15); box-shadow: 0 20px 50px rgba(0,0,0,0.6);">
+            
             <!-- Brand Logo -->
             <div class="mb-8">
-                <div class="w-16 h-16 bg-gradient-to-tr from-primary to-primary-g rounded-2xl mx-auto flex items-center justify-center shadow-lg active-glow mb-4">
-                    <span class="material-symbols-outlined text-[36px] text-white">explore</span>
+                <div class="w-16 h-16 bg-gradient-to-tr from-primary to-primary-g rounded-2xl mx-auto flex items-center justify-center shadow-lg active-glow mb-4 group hover:scale-105 transition-transform duration-300">
+                    <svg class="w-10 h-10 text-white animate-pulse" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="logoGradLogin" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#ffffff" />
+                                <stop offset="100%" stop-color="#c0c1ff" />
+                            </linearGradient>
+                        </defs>
+                        <path d="M15 45L85 15L55 85L45 55L15 45Z" fill="url(#logoGradLogin)" stroke="rgba(255,255,255,0.4)" stroke-width="2" stroke-linejoin="round"/>
+                        <path d="M85 15L45 55" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
                 </div>
-                <h1 class="text-3xl font-bold text-white tracking-tight font-headline-xl">GYSFLY TRAVELS</h1>
-                <p class="text-on-surface-variant text-sm mt-1 opacity-70">Consola de Control de la Agencia de Viajes</p>
+                <h1 id="logo-label-login" class="text-3xl font-bold tracking-tight font-headline-xl animated-brand-title">PANEL DE AGENTE</h1>
+                <p class="text-on-surface-variant text-sm mt-1 opacity-70">Consola de Control del Panel de Agente</p>
             </div>
             
             <!-- Login Form -->
             <form id="login-form" class="space-y-5 text-left" onsubmit="handleLogin(event)">
                 <div class="space-y-1.5">
-                    <label class="text-xs uppercase tracking-wider text-on-surface-variant font-medium" for="email">Usuario del Administrador</label>
-                    <div class="relative">
-                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">mail</span>
-                        <input class="w-full bg-surface-container-low/50 border border-glass-stroke rounded-xl py-3 pl-11 pr-4 text-sm focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all text-white" id="email" placeholder="admin@gysfly.com" type="text" value="admin@gysfly.com" required/>
+                    <label class="text-xs uppercase tracking-wider text-on-surface-variant/80 font-semibold" for="email">Usuario del Administrador</label>
+                    <div class="relative group">
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant group-hover:text-primary transition-colors text-[20px]">mail</span>
+                        <input class="w-full bg-surface-container-low/50 border border-glass-stroke hover:border-primary/30 rounded-xl py-3 pl-11 pr-4 text-sm focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all text-white" id="email" placeholder="Introduce tu email de agente" type="text" required/>
                     </div>
                 </div>
                 
                 <div class="space-y-1.5">
-                    <label class="text-xs uppercase tracking-wider text-on-surface-variant font-medium" for="password">Contraseña de Acceso</label>
-                    <div class="relative">
-                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">lock</span>
-                        <input class="w-full bg-surface-container-low/50 border border-glass-stroke rounded-xl py-3 pl-11 pr-4 text-sm focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all text-white" id="password" placeholder="••••••••" type="password" value="admin123" required/>
+                    <label class="text-xs uppercase tracking-wider text-on-surface-variant/80 font-semibold" for="password">Contraseña de Acceso</label>
+                    <div class="relative group">
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant group-hover:text-primary transition-colors text-[20px]">lock</span>
+                        <input class="w-full bg-surface-container-low/50 border border-glass-stroke hover:border-primary/30 rounded-xl py-3 pl-11 pr-12 text-sm focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all text-white" id="password" placeholder="••••••••" type="password" required/>
+                        <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-white transition-colors" title="Mostrar/ocultar contraseña">
+                            <span id="password-visibility-icon" class="material-symbols-outlined text-[20px]">visibility</span>
+                        </button>
                     </div>
                 </div>
                 
-                <button type="submit" class="w-full py-3 bg-gradient-to-r from-primary to-primary-g text-white font-medium rounded-xl hover:opacity-95 transition-all shadow-md active-glow flex items-center justify-center gap-2 mt-6">
+                <button type="submit" class="w-full py-3 bg-gradient-to-r from-primary to-primary-g text-white font-semibold rounded-xl hover:translate-y-[-1px] hover:shadow-lg hover:shadow-primary/10 transition-all shadow-md active-glow flex items-center justify-center gap-2 mt-6">
                     <span>Acceder al Portal de la Agencia</span>
                     <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
                 </button>
             </form>
-            <div class="mt-6 pt-6 border-t border-glass-stroke/50 text-center">
-                <p class="text-xs text-on-surface-variant/50">Demo Credentials: <span class="text-primary font-medium">admin@gysfly.com</span> / <span class="text-primary font-medium">admin123</span></p>
+            
+            <div class="mt-6 pt-5 border-t border-glass-stroke/30 flex items-center justify-center gap-2 text-on-surface-variant/40">
+                <span class="material-symbols-outlined text-[14px]">lock_person</span>
+                <span class="text-[10px] tracking-wider uppercase font-medium">Acceso Seguro Auditado SSL</span>
             </div>
         </div>
     </div>
@@ -211,12 +271,21 @@
         <!-- SIDEBAR NAVIGATION (Things 3 Style) -->
         <aside class="w-64 fixed h-full left-0 top-0 glass-sidebar border-r border-glass-stroke flex flex-col py-8 px-4 z-40">
             <div class="mb-10 px-4 flex items-center gap-3">
-                <div class="w-10 h-10 bg-gradient-to-tr from-primary to-primary-g rounded-xl flex items-center justify-center shadow-md">
-                    <span class="material-symbols-outlined text-white text-[24px]">explore</span>
+                <div class="w-10 h-10 bg-gradient-to-tr from-primary to-primary-g rounded-xl flex items-center justify-center shadow-md group">
+                    <svg class="w-6 h-6 text-white" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="logoGradSidebar" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#ffffff" />
+                                <stop offset="100%" stop-color="#c0c1ff" />
+                            </linearGradient>
+                        </defs>
+                        <path d="M15 45L85 15L55 85L45 55L15 45Z" fill="url(#logoGradSidebar)" stroke="rgba(255,255,255,0.4)" stroke-width="2" stroke-linejoin="round"/>
+                        <path d="M85 15L45 55" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
                 </div>
                 <div>
-                    <h1 class="font-bold text-white tracking-tight text-base">GYSFLY TRAVELS</h1>
-                    <p class="text-[9px] text-on-surface-variant uppercase tracking-wider opacity-60">Consola de Viajes</p>
+                    <h1 id="logo-label-sidebar" class="font-bold tracking-tight text-base animated-brand-title">PANEL DE AGENTE</h1>
+                    <p class="text-[9px] text-on-surface-variant uppercase tracking-wider opacity-60">Consola de Agente</p>
                 </div>
             </div>
             
@@ -282,7 +351,7 @@
                     <div class="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary font-bold text-sm">T</div>
                     <div class="flex-1 overflow-hidden">
                         <p class="font-bold text-xs truncate">Travel Workspace</p>
-                        <p class="text-[9px] text-on-surface-variant/60">Gysfly Travels</p>
+                        <p class="text-[9px] text-on-surface-variant/60">Panel de Agente</p>
                     </div>
                     <button onclick="handleLogout()" class="text-on-surface-variant hover:text-danger transition-colors" title="Cerrar sesión">
                         <span class="material-symbols-outlined text-[20px]">logout</span>
@@ -297,7 +366,7 @@
             <!-- Header bar -->
             <header class="flex justify-between items-center h-16 px-8 bg-background-base/80 backdrop-blur-xl border-b border-glass-stroke sticky top-0 z-30">
                 <div class="flex items-center gap-8">
-                    <h2 id="view-title" class="font-bold text-white text-base">GYSFLY TRAVELS — Consola Gerencial</h2>
+                    <h2 id="view-title" class="font-bold text-white text-base"><span class="animated-brand-title">PANEL DE AGENTE</span> — Consola Gerencial</h2>
                     <div class="relative hidden lg:block group">
                         <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px] group-focus-within:text-primary transition-colors">search</span>
                         <input id="global-search" oninput="handleGlobalSearch(this.value)" class="bg-surface-container-low/50 border border-glass-stroke rounded-full py-1.5 pl-9 pr-4 w-60 text-xs focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all text-white placeholder-on-surface-variant/40" placeholder="Buscar clientes o notas..." type="text"/>
@@ -316,11 +385,11 @@
                     <!-- Admin Avatar Dropdown -->
                     <div class="flex items-center gap-3 cursor-pointer group">
                         <div class="text-right hidden sm:block">
-                            <p id="header-user-name" class="font-semibold text-xs group-hover:text-primary transition-colors">Gerente Gysfly</p>
+                            <p id="header-user-name" class="font-semibold text-xs group-hover:text-primary transition-colors">Gerente de Agente</p>
                             <p id="header-user-role" class="text-[9px] text-on-surface-variant/60 uppercase tracking-widest">Administrador de Viajes</p>
                         </div>
                         <div id="header-user-avatar" class="w-9 h-9 rounded-full border border-primary/40 flex items-center justify-center font-bold text-xs bg-primary/20 text-primary uppercase shadow-inner">
-                            GG
+                            GA
                         </div>
                     </div>
                 </div>
@@ -406,7 +475,7 @@
                         <div class="flex justify-between items-center">
                             <div>
                                 <h4 class="text-lg font-bold text-white">Flujo Global de Viajes y Ventas ($)</h4>
-                                <p class="text-xs text-on-surface-variant/60">Histórico de ingresos mensuales y reservas emitidas de Gysfly Travels.</p>
+                                <p class="text-xs text-on-surface-variant/60">Histórico de ingresos mensuales y reservas emitidas del Panel de Agente.</p>
                             </div>
                             <div class="flex gap-2 bg-surface-container-low p-1 rounded-xl">
                                 <button class="px-3 py-1.5 text-xs font-bold bg-primary text-white rounded-lg shadow-sm">Semanal</button>
@@ -490,6 +559,62 @@
                         <button onclick="openMagicAddModal('cliente')" class="group flex items-center justify-center w-9 h-9 rounded-full bg-primary text-white hover:bg-primary-g shadow-lg shadow-primary/20 transition-all duration-300 hover:scale-105 active:scale-95">
                             <span class="material-symbols-outlined transition-transform duration-300 group-hover:rotate-90">add</span>
                         </button>
+                </div>
+                
+                <!-- PASSENGERS PREMIUM EXPANDABLE MODULE -->
+                <div onclick="toggleStitchPasajeros()" class="relative cursor-pointer group select-none overflow-hidden rounded-2xl transition-all duration-500" style="background: linear-gradient(135deg, rgba(192,193,255,0.07) 0%, rgba(208,188,255,0.04) 50%, rgba(192,193,255,0.09) 100%); border: 1px solid rgba(192,193,255,0.18); box-shadow: 0 0 0 0 rgba(192,193,255,0.0); transition: box-shadow 0.4s ease, border-color 0.4s ease;"
+                    onmouseenter="this.style.boxShadow='0 0 32px 0 rgba(192,193,255,0.18), inset 0 0 24px rgba(192,193,255,0.04)'; this.style.borderColor='rgba(192,193,255,0.42)';"
+                    onmouseleave="this.style.boxShadow='0 0 0 0 rgba(192,193,255,0)'; this.style.borderColor='rgba(192,193,255,0.18)';">
+                    
+                    <!-- Animated neon glow blobs -->
+                    <div class="absolute -top-6 -left-6 w-32 h-32 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" style="background: radial-gradient(circle, rgba(192,193,255,0.18) 0%, transparent 70%);"></div>
+                    <div class="absolute -bottom-6 -right-6 w-24 h-24 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" style="background: radial-gradient(circle, rgba(208,188,255,0.14) 0%, transparent 70%);"></div>
+                    
+                    <div class="relative flex items-center justify-between p-5 gap-4">
+                        <div class="flex items-center gap-4">
+                            <!-- Animated icon container -->
+                            <div class="relative flex-shrink-0">
+                                <div class="w-12 h-12 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300" style="background: linear-gradient(135deg, rgba(192,193,255,0.2), rgba(208,188,255,0.12)); border: 1px solid rgba(192,193,255,0.3); box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);">
+                                    <span class="material-symbols-outlined text-[26px] text-primary group-hover:text-white transition-colors duration-300" style="font-variation-settings: 'FILL' 1;">flight_takeoff</span>
+                                </div>
+                                <!-- Pulsating ring -->
+                                <div class="absolute inset-0 rounded-2xl border border-primary/30 scale-100 group-hover:scale-125 opacity-100 group-hover:opacity-0 transition-all duration-600 pointer-events-none"></div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex items-center gap-2 mb-0.5">
+                                    <h3 class="text-sm font-bold text-white group-hover:text-primary transition-colors duration-300">Vista Avanzada de Pasajeros</h3>
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold tracking-widest uppercase" style="background: rgba(192,193,255,0.12); border: 1px solid rgba(192,193,255,0.3); color: #c0c1ff;">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-primary inline-block animate-pulse"></span>
+                                        En Vivo
+                                    </span>
+                                </div>
+                                <p class="text-[10px] text-on-surface-variant/70 leading-relaxed">Explora el tablero completo · Filtros avanzados · Métricas de vuelo en tiempo real</p>
+                                <div class="flex items-center gap-3 mt-1.5">
+                                    <span class="flex items-center gap-1 text-[9px] text-on-surface-variant/50">
+                                        <span class="material-symbols-outlined text-[11px] text-success">check_circle</span>
+                                        <span id="banner-passengers-count">— pasajeros activos</span>
+                                    </span>
+                                    <span class="text-on-surface-variant/25 text-[9px]">·</span>
+                                    <span class="flex items-center gap-1 text-[9px] text-on-surface-variant/50">
+                                        <span class="material-symbols-outlined text-[11px] text-primary">tune</span>
+                                        Filtros disponibles
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right side CTA -->
+                        <div class="flex-shrink-0 flex flex-col items-center gap-2">
+                            <button id="stitch-pasajeros-toggle-btn" class="flex items-center gap-1.5 px-3 py-2 rounded-xl font-bold text-[10px] text-primary group-hover:text-white group-hover:bg-primary transition-all duration-300" style="border: 1px solid rgba(192,193,255,0.3); background: rgba(192,193,255,0.08);">
+                                <span class="material-symbols-outlined text-[15px] transition-transform duration-300">unfold_more</span>
+                                <span>Expandir</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="stitch-pasajeros-container" class="hidden mx-5 mb-5 mt-0 overflow-hidden rounded-xl shadow-2xl transition-all duration-500 max-h-0 opacity-0 scale-95" style="transition-property: max-height, margin, opacity, transform; border: 1px solid rgba(192,193,255,0.12);">
+                        <iframe src="stitch_pasajeros.html" class="w-full h-[760px] border-none bg-background-base rounded-xl" style="color-scheme: dark;"></iframe>
                     </div>
                 </div>
                     
@@ -698,20 +823,124 @@
                         <p class="text-[10px] text-warning mt-1 font-medium" id="stat-critical-count">0 Reservas VIP (>$4k)</p>
                     </div>
                 </div>
-                
+
+                <!-- ============================================= -->
+                <!-- STITCH MODULE: Tendencias + Origen de Clientes -->
+                <!-- ============================================= -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                    <!-- Tendencias de Destinos (8 cols) -->
+                    <div class="col-span-1 md:col-span-8 glass-card rounded-2xl p-6 relative overflow-hidden">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary text-[18px]">show_chart</span>
+                                Tendencias de Destinos
+                            </h3>
+                            <select id="stitch-trends-period" onchange="applyAnalyticsFilters()" class="bg-surface-container-high border border-glass-stroke text-on-surface text-xs rounded-lg px-3 py-1.5 focus:ring-primary focus:border-primary outline-none cursor-pointer">
+                                <option value="6">Últimos 6 meses</option>
+                                <option value="12">Este Año</option>
+                            </select>
+                        </div>
+                        <div class="h-[260px] w-full flex items-end justify-between relative pt-8">
+                            <!-- Y Axis labels -->
+                            <div class="absolute left-0 top-0 bottom-0 flex flex-col justify-between text-[10px] text-on-surface-variant h-full pb-8">
+                                <span id="stitch-y-4">$100k</span>
+                                <span id="stitch-y-3">$75k</span>
+                                <span id="stitch-y-2">$50k</span>
+                                <span id="stitch-y-1">$25k</span>
+                                <span>$0</span>
+                            </div>
+                            <!-- Grid lines -->
+                            <div class="absolute left-10 right-0 top-0 bottom-8 flex flex-col justify-between pointer-events-none">
+                                <div class="w-full h-px bg-glass-stroke/50"></div>
+                                <div class="w-full h-px bg-glass-stroke/50"></div>
+                                <div class="w-full h-px bg-glass-stroke/50"></div>
+                                <div class="w-full h-px bg-glass-stroke/50"></div>
+                                <div class="w-full h-px bg-glass-stroke/50"></div>
+                            </div>
+                            <!-- SVG trend line overlay -->
+                            <svg id="stitch-trend-svg" class="absolute left-10 right-0 top-0 bottom-8 w-[calc(100%-2.5rem)] h-[calc(100%-2rem)] pointer-events-none z-20" preserveAspectRatio="none">
+                                <polyline id="stitch-trend-line" fill="none" stroke="#6366F1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.6" points=""/>
+                                <polyline id="stitch-trend-line-glow" fill="none" stroke="#6366F1" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.1" points=""/>
+                            </svg>
+                            <!-- Bar columns container -->
+                            <div id="stitch-trends-bars" class="flex-1 flex justify-around items-end h-[calc(100%-2rem)] ml-10 z-10 relative gap-1">
+                                <!-- JS populated bars -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Origen de Clientes Donut (4 cols) -->
+                    <div class="col-span-1 md:col-span-4 glass-card rounded-2xl p-6 flex flex-col">
+                        <h3 class="text-sm font-bold text-white flex items-center gap-2 mb-6">
+                            <span class="material-symbols-outlined text-secondary text-[18px]">donut_large</span>
+                            Origen de Clientes
+                        </h3>
+                        <div class="flex-1 flex flex-col items-center justify-center">
+                            <!-- CSS Donut Chart -->
+                            <div id="stitch-donut-ring" class="relative w-40 h-40 rounded-full flex items-center justify-center transition-all duration-700" style="background: conic-gradient(from 0deg, #6366F1 0% 45%, #d0bcff 45% 75%, #F59E0B 75% 90%, #34343d 90% 100%);">
+                                <div class="absolute w-28 h-28 rounded-full flex flex-col items-center justify-center shadow-inner" style="background: #090D16;">
+                                    <span id="stitch-donut-total" class="text-2xl font-bold text-white transition-all duration-300">0</span>
+                                    <span class="text-[10px] uppercase font-bold tracking-wider text-on-surface-variant">Total</span>
+                                </div>
+                            </div>
+                            <!-- Legend -->
+                            <div id="stitch-donut-legend" class="w-full mt-8 space-y-3">
+                                <!-- JS populated legend -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Stitch Premium Widgets Grid -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <!-- Destino Top Card -->
-                    <div class="glass-card rounded-2xl p-0 overflow-hidden relative min-h-[180px] group cursor-pointer">
-                        <div class="absolute inset-0 bg-cover bg-center opacity-40 group-hover:opacity-60 transition-opacity duration-700" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAX4-mvM83ynVZn-fn2nswYjUDPO8wpbSPBtSTB6JI3fnklleOpuG0xIUXQHDBDusQYRl5dnltfwFCHI1HFE9Mi2lXskp7nzQBoNAk4tkjhU5lsX_8P68PWPCh06eWHxnFfOjJm3sLcl9i2L6t8muhiyv9pnPz9U1NSJ8CAWaM5ZIAwRNuEiZiOHZLdHaZToSAknmQNlH_k-2a8ORrWKU5a6WfLE0_aup-GpjzZuC2jIDnCKJkmrQKdpCQPZXqbRY8E_xFaQtP6zuwn');"></div>
-                        <div class="absolute inset-0 bg-gradient-to-t from-[#090D16] via-[#090D16]/50 to-transparent"></div>
-                        <div class="relative h-full p-6 flex flex-col justify-end min-h-[180px]">
-                            <div class="flex items-center gap-1.5 mb-1">
-                                <span class="material-symbols-outlined text-warning text-[16px]">local_fire_department</span>
-                                <span class="text-[10px] uppercase font-bold tracking-wider text-warning">Destino Top Actual</span>
+                    <!-- Destino Top Card — Interactive & Dynamic -->
+                    <div onclick="openTopDestinoModal()" class="glass-card rounded-2xl p-0 overflow-hidden relative min-h-[220px] group cursor-pointer transition-all duration-500 hover:shadow-2xl hover:shadow-warning/10" style="border: 1px solid rgba(245,158,11,0.15);"
+                        onmouseenter="this.style.borderColor='rgba(245,158,11,0.45)';"
+                        onmouseleave="this.style.borderColor='rgba(245,158,11,0.15)';">
+                        <!-- Background photo -->
+                        <div class="absolute inset-0 bg-cover bg-center opacity-35 group-hover:opacity-55 group-hover:scale-105 transition-all duration-700" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAX4-mvM83ynVZn-fn2nswYjUDPO8wpbSPBtSTB6JI3fnklleOpuG0xIUXQHDBDusQYRl5dnltfwFCHI1HFE9Mi2lXskp7nzQBoNAk4tkjhU5lsX_8P68PWPCh06eWHxnFfOjJm3sLcl9i2L6t8muhiyv9pnPz9U1NSJ8CAWaM5ZIAwRNuEiZiOHZLdHaZToSAknmQNlH_k-2a8ORrWKU5a6WfLE0_aup-GpjzZuC2jIDnCKJkmrQKdpCQPZXqbRY8E_xFaQtP6zuwn');"></div>
+                        <!-- Gradient overlay -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#090D16] via-[#090D16]/60 to-transparent"></div>
+                        <!-- Top glow on hover -->
+                        <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style="background: linear-gradient(135deg, rgba(245,158,11,0.06) 0%, transparent 60%);"></div>
+                        
+                        <!-- Content -->
+                        <div class="relative h-full p-6 flex flex-col justify-between min-h-[220px]">
+                            <!-- Top row: label + live badge -->
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="material-symbols-outlined text-warning text-[16px]" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+                                    <span class="text-[10px] uppercase font-bold tracking-wider text-warning">Destino Top Actual</span>
+                                </div>
+                                <span class="flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full" style="background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.35); color: #F59E0B;">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-warning inline-block animate-pulse"></span>
+                                    En Tiempo Real
+                                </span>
                             </div>
-                            <h3 class="text-xl font-bold text-white">Dubai, EAU</h3>
-                            <p class="text-xs text-on-surface-variant mt-1">45 paquetes VIP vendidos esta semana</p>
+                            
+                            <!-- Destination name (dynamic) -->
+                            <div>
+                                <h3 id="top-destino-name" class="text-2xl font-bold text-white mb-0.5 group-hover:text-warning transition-colors duration-300">Calculando…</h3>
+                                <p id="top-destino-sub" class="text-xs text-on-surface-variant">—</p>
+                                
+                                <!-- Micro stats row -->
+                                <div class="flex items-center gap-4 mt-3">
+                                    <div class="flex items-center gap-1.5 text-[10px] text-on-surface-variant/70">
+                                        <span class="material-symbols-outlined text-[13px] text-success">groups</span>
+                                        <span id="top-destino-count">—</span>
+                                    </div>
+                                    <div class="flex items-center gap-1.5 text-[10px] text-on-surface-variant/70">
+                                        <span class="material-symbols-outlined text-[13px] text-primary">payments</span>
+                                        <span id="top-destino-revenue">—</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- CTA hint -->
+                                <div class="flex items-center gap-1.5 mt-3 text-[10px] font-semibold text-warning/70 group-hover:text-warning transition-colors duration-300">
+                                    <span class="material-symbols-outlined text-[13px]">touch_app</span>
+                                    <span>Toca para ver analíticas completas</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -724,45 +953,10 @@
                             </h3>
                             <span class="text-[9px] uppercase font-bold text-on-surface-variant/60">Ventas</span>
                         </div>
-                        <div class="space-y-3">
-                            <!-- Advisor 1 -->
-                            <div class="flex items-center gap-3">
-                                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMjWA4NBsiqs1mVJ9NIAhEDF4X3eWm0BOUsO0V9Q-UD-w7ptE4RKrixkGo2iVsYJ5J4AAidZ-_hjDdRg3KoMizqm4BTUNzI-pZbWjyAyfrQjQRm_U0YBfGOVb0k5fSunOK7atlJni7uV4nOBPWvg3ARbk5dcL60Lvb4QVpXmTZrhX3-kamriOT7rIUpTlayOCyYX1HkgAquFOWY8K62FgSriD7RKVaRaBXrszuqpQk1Hp16GzDi7er_Y8ClKsB8eCE5v9HZ7xLVcyI" class="w-8 h-8 rounded-full border border-glass-stroke object-cover" alt="Elena Rojas"/>
-                                <div class="flex-1">
-                                    <div class="flex justify-between text-[11px] font-semibold text-white mb-0.5">
-                                        <span>Elena Rojas</span>
-                                        <span>124</span>
-                                    </div>
-                                    <div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
-                                        <div class="bg-primary h-full rounded-full" style="width: 85%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Advisor 2 -->
-                            <div class="flex items-center gap-3">
-                                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBeahM-vWBkdJfmKqHAl_qthxOO-SNPHUnmmWxpcVPPMmfYgAqthYtoR92X7fmUnwOvE_YYjV0X53nKilj7zxC8Wtga405ST9sVd-BfwxJp2-6f7M_IpsPL_WmCmX8QRYKYkt1M4VQ6uov_SrUP4GVnZjni5nEWzuQzQSYRFrL0tMbwzU42Fey_SGZOgYqUVkfpVq-GMYi6JEKsYfA_YAS-b3b-JGxrlyUAjuuiIrGEhf5SlQsb2p08IvJNd6Gfwfq8DE59pYNP-tcj" class="w-8 h-8 rounded-full border border-glass-stroke object-cover" alt="Carlos Méndez"/>
-                                <div class="flex-1">
-                                    <div class="flex justify-between text-[11px] font-semibold text-white mb-0.5">
-                                        <span>Carlos Méndez</span>
-                                        <span>98</span>
-                                    </div>
-                                    <div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
-                                        <div class="bg-secondary h-full rounded-full" style="width: 65%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Advisor 3 -->
-                            <div class="flex items-center gap-3">
-                                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3QUl0zy3y0DyRWI1c45YjEv7tePNlNE0dZOVL2bAHo-xVtyY3rdLItnVLVBVeEDkA0rKMxgtlGsmROW942HWZPAHxq5fuNR030Vhr__MzEszc89JFDUQ1JVmDFP1KYPlhBRdgIhPWGvhtvgpmtMiOb7BPpwEdrbZXkorwMluyVdBjfmsFBdc9AP32j4ymc5q57NkTKlGAD1zQkAsZUY95DKhxtMCz3Se4aIaFg8I2emNHsOJKLkLdQ8f19Fc22UtnzA1B6_O_5Wn-" class="w-8 h-8 rounded-full border border-glass-stroke object-cover" alt="Sofía Castillo"/>
-                                <div class="flex-1">
-                                    <div class="flex justify-between text-[11px] font-semibold text-white mb-0.5">
-                                        <span>Sofía Castillo</span>
-                                        <span>76</span>
-                                    </div>
-                                    <div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
-                                        <div class="bg-on-surface-variant/40 h-full rounded-full" style="width: 45%"></div>
-                                    </div>
-                                </div>
+                        <div id="dashboard-advisors-performance" class="space-y-3 min-h-[140px] flex flex-col justify-center">
+                            <!-- Populated dynamically by JS -->
+                            <div class="text-center py-4 text-on-surface-variant/40 text-[10px] italic">
+                                Cargando rendimiento...
                             </div>
                         </div>
                     </div>
@@ -776,48 +970,10 @@
                             </h3>
                             <span class="text-[9px] uppercase font-bold text-success">Crecimiento</span>
                         </div>
-                        <div class="space-y-2">
-                            <!-- Dest 1 -->
-                            <div class="flex items-center justify-between p-1.5 rounded-xl hover:bg-white/5 transition-colors">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-6 h-6 rounded-lg bg-surface-container flex items-center justify-center font-bold text-xs text-primary">1</div>
-                                    <div>
-                                        <p class="text-xs font-semibold text-white">Tokio, Japón</p>
-                                        <p class="text-[9px] text-on-surface-variant/60">Gastronomía y Cultura</p>
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-0.5 text-success bg-success/15 px-2 py-0.5 rounded-full text-[10px] font-bold">
-                                    <span class="material-symbols-outlined text-[12px]">arrow_upward</span>
-                                    <span>24%</span>
-                                </div>
-                            </div>
-                            <!-- Dest 2 -->
-                            <div class="flex items-center justify-between p-1.5 rounded-xl hover:bg-white/5 transition-colors">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-6 h-6 rounded-lg bg-surface-container flex items-center justify-center font-bold text-xs text-primary">2</div>
-                                    <div>
-                                        <p class="text-xs font-semibold text-white">Reykjavik, Islandia</p>
-                                        <p class="text-[9px] text-on-surface-variant/60">Aventura y Auroras</p>
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-0.5 text-success bg-success/15 px-2 py-0.5 rounded-full text-[10px] font-bold">
-                                    <span class="material-symbols-outlined text-[12px]">arrow_upward</span>
-                                    <span>18%</span>
-                                </div>
-                            </div>
-                            <!-- Dest 3 -->
-                            <div class="flex items-center justify-between p-1.5 rounded-xl hover:bg-white/5 transition-colors">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-6 h-6 rounded-lg bg-surface-container flex items-center justify-center font-bold text-xs text-primary">3</div>
-                                    <div>
-                                        <p class="text-xs font-semibold text-white">Cartagena, Colombia</p>
-                                        <p class="text-[9px] text-on-surface-variant/60">Playa e Historia Colonial</p>
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-0.5 text-success bg-success/15 px-2 py-0.5 rounded-full text-[10px] font-bold">
-                                    <span class="material-symbols-outlined text-[12px]">arrow_upward</span>
-                                    <span>12%</span>
-                                </div>
+                        <div id="dashboard-rising-destinations" class="space-y-2 min-h-[140px] flex flex-col justify-center">
+                            <!-- Populated dynamically by JS -->
+                            <div class="text-center py-4 text-on-surface-variant/40 text-[10px] italic">
+                                Cargando destinos...
                             </div>
                         </div>
                     </div>
@@ -829,7 +985,7 @@
                     <div class="lg:col-span-2 glass-card p-6 rounded-2xl space-y-4">
                         <div class="flex justify-between items-center">
                             <h4 class="text-sm font-bold text-white">Tendencia Mensual de Reservas ($)</h4>
-                            <span class="text-[10px] bg-primary/20 text-primary px-2 py-0.5 rounded font-bold">Consola Gysfly Travels</span>
+                            <span class="text-[10px] bg-primary/20 text-primary px-2 py-0.5 rounded font-bold">Consola Panel de Agente</span>
                         </div>
                         <div class="h-64 relative w-full">
                             <canvas id="analyticsLineChart"></canvas>
@@ -987,7 +1143,7 @@
                                 <div class="space-y-1.5">
                                     <label class="text-xs font-semibold text-on-surface-variant/75" for="campaign-template">Plantilla de Viaje</label>
                                     <select id="campaign-template" onchange="loadTemplate(this.value)" class="w-full bg-surface-container-low/70 border border-glass-stroke rounded-xl py-2 px-3 text-xs text-white focus:ring-2 focus:ring-primary/45 focus:border-primary">
-                                        <option value="newsletter">Boletín Gysfly: Novedades del Destino</option>
+                                        <option value="newsletter">Boletín de Agente: Novedades del Destino</option>
                                         <option value="promo">Promo Especial: Vuelo Directo a Maldivas</option>
                                         <option value="update">Aviso Importante: Trámites de Visado</option>
                                         <option value="blank">Diseño en Blanco (Escribir personalizado)</option>
@@ -1008,8 +1164,8 @@
                             
                             <!-- Campaign Subject -->
                             <div class="space-y-1.5">
-                                <label class="text-xs font-semibold text-on-surface-variant/75" for="campaign-subject">Asunto de Campaña</label>
-                                <input id="campaign-subject" oninput="updateLivePreview()" class="w-full bg-surface-container-low/70 border border-glass-stroke rounded-xl py-2 px-3 text-xs text-white focus:ring-2 focus:ring-primary/45 focus:border-primary" type="text" value="GYSFLY TRAVELS - Novedades importantes de tu próximo viaje"/>
+                                <label class="text-xs font-semibold text-on-surface-variant/75" for="campaign-subject">Asunto del Correo</label>
+                                <input id="campaign-subject" oninput="updateLivePreview()" class="w-full bg-surface-container-low/70 border border-glass-stroke rounded-xl py-2 px-3 text-xs text-white focus:ring-2 focus:ring-primary/45 focus:border-primary" type="text" value="PANEL DE AGENTE - Novedades importantes de tu próximo viaje"/>
                             </div>
                             
                             <!-- Email Body (Editor) -->
@@ -1041,14 +1197,15 @@
                                         <span class="w-2.5 h-2.5 rounded-full bg-danger/55"></span>
                                         <span class="w-2.5 h-2.5 rounded-full bg-warning/55"></span>
                                         <span class="w-2.5 h-2.5 rounded-full bg-success/55"></span>
-                                        <span class="ml-2 font-semibold">Gysfly Mail Client</span>
+                                        <span class="material-symbols-outlined text-primary text-[18px]">drafts</span>
+                                        <span class="ml-2 font-semibold">Mail Client</span>
                                     </div>
-                                    <span class="opacity-60">gysfly.travels@gysfly.com</span>
+                                    <span class="opacity-60">soporte@agente.com</span>
                                 </div>
                                 <!-- Email Headers -->
                                 <div class="p-4 border-b border-glass-stroke space-y-1.5 text-xs text-on-surface-variant/70">
-                                    <p><span class="font-semibold text-white">De:</span> Gysfly Travels &lt;reservas@gysfly.com&gt;</p>
-                                    <p><span class="font-semibold text-white">Para:</span> <span id="preview-to-segment" class="text-primary font-medium">Todos los viajeros (Gysfly DB)</span></p>
+                                    <p><span class="font-semibold text-white">De:</span> Panel de Agente &lt;reservas@agente.com&gt;</p>
+                                    <p><span class="font-semibold text-white">Para:</span> <span id="preview-to-segment" class="text-primary font-medium">Todos los viajeros (DB)</span></p>
                                     <p><span class="font-semibold text-white">Asunto:</span> <span id="preview-subject" class="text-white font-medium">[Asunto de Campaña]</span></p>
                                 </div>
                                 <!-- Email Body Viewport -->
@@ -1056,8 +1213,8 @@
                                     <!-- Travel agency logo header in email -->
                                     <div class="flex items-center justify-between border-b border-gray-100 pb-3">
                                         <span class="text-md font-bold tracking-wider text-slate-800 flex items-center gap-1.5">
-                                            <span class="text-teal-600 font-extrabold">GYSFLY</span> 
-                                            <span class="text-sky-600 font-light">TRAVELS</span>
+                                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary-g font-extrabold">PANEL DE</span> 
+                                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-g to-secondary font-light">AGENTE</span>
                                         </span>
                                         <span class="text-[9px] text-gray-400 font-medium uppercase tracking-widest">Portal de Viajero</span>
                                     </div>
@@ -1067,8 +1224,8 @@
                                     <!-- Travel agency signature in email -->
                                     <div class="pt-6 border-t border-gray-100 mt-6 text-[10px] text-gray-400 space-y-1">
                                         <p class="font-semibold text-gray-600">Christian Durán — Director Ejecutivo</p>
-                                        <p>GYSFLY Travels S.L. | Edificio Continental Madrid</p>
-                                        <p>Tlf: +34 600 123 456 | web: gysfly.com</p>
+                                        <p>Panel de Agente S.L. | Edificio Continental Madrid</p>
+                                        <p>Tlf: +34 600 123 456 | web: panelagente.com</p>
                                         <p class="text-[9px] text-gray-300 italic mt-2">Nota: Este es un correo automatizado de su asesor de viajes preferente. Si desea dejar de recibir actualizaciones, por favor póngase en contacto con nosotros.</p>
                                     </div>
                                 </div>
@@ -1119,7 +1276,7 @@
                         <span class="material-symbols-outlined text-primary text-[28px]">settings</span>
                         <span>Ajustes del Sistema & Seguridad</span>
                     </h2>
-                    <p class="text-xs text-on-surface-variant/60">Configuración global de Gysfly Travels, administración de credenciales y asignación de permisos.</p>
+                    <p class="text-xs text-on-surface-variant/60">Configuración global del Panel de Agente, administración de credenciales y asignación de permisos.</p>
                 </div>
                 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -1138,7 +1295,7 @@
                                         <p class="text-xs font-semibold text-white">Nombre de la Agencia</p>
                                         <p class="text-[10px] text-on-surface-variant/60">Modificar el título global de la marca.</p>
                                     </div>
-                                    <input id="settings-company-name" class="bg-surface-container-low border border-glass-stroke rounded-xl px-3 py-1.5 text-xs text-white focus:ring-2 focus:ring-primary/45 w-40" type="text" value="GYSFLY Travels S.L."/>
+                                    <input id="settings-company-name" class="bg-surface-container-low border border-glass-stroke rounded-xl px-3 py-1.5 text-xs text-white focus:ring-2 focus:ring-primary/45 w-40" type="text" value="Panel de Agente S.L."/>
                                 </div>
                                 
                                 <div class="flex items-center justify-between">
@@ -1147,10 +1304,14 @@
                                         <p class="text-[10px] text-on-surface-variant/60">Simular alertas por correo ante eventos del sistema.</p>
                                     </div>
                                     <div class="relative inline-flex items-center cursor-pointer">
-                                        <input type="checkbox" checked class="sr-only peer">
+                                        <input type="checkbox" id="settings-email-alerts" checked class="sr-only peer">
                                         <div class="w-9 h-5 bg-surface-container-low peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-on-surface-variant after:border-glass-stroke after:border after:rounded-full after:h-4 after:w-4 -translate-y-px after:transition-all peer-checked:bg-primary"></div>
                                     </div>
                                 </div>
+
+                                <button onclick="saveGeneralSettings()" class="w-full py-2 bg-primary/20 hover:bg-primary border border-primary/40 text-primary hover:text-white rounded-xl text-xs font-bold transition-all mt-4">
+                                    Guardar Ajustes
+                                </button>
                             </div>
                         </div>
 
@@ -1183,6 +1344,57 @@
                             </form>
                         </div>
 
+                        <!-- STITCH ADVISOR MANAGEMENT CARD -->
+                        <div class="glass-card p-6 rounded-2xl space-y-4">
+                            <h3 class="text-base font-bold text-white flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary">support_agent</span>
+                                        <span>Gestión de Asesores</span>
+                            </h3>
+                            <p class="text-[10px] text-on-surface-variant/60">Crea nuevos asesores de viajes o elimina los existentes para asignarlos a las reservas de tus pasajeros.</p>
+                            
+                            <!-- Create Advisor Form -->
+                            <form onsubmit="handleCreateAdvisor(event)" class="space-y-3">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <div class="space-y-1">
+                                        <label class="text-[10px] font-semibold text-on-surface-variant/75" for="adv-name">Nombre del Asesor</label>
+                                        <input id="adv-name" required class="w-full bg-surface-container-low/70 border border-glass-stroke rounded-xl py-2 px-3 text-xs text-white focus:ring-2 focus:ring-primary/45" type="text" placeholder="Ej. Elena Rojas" oninput="previewAdvisorAvatar(this.value)"/>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="text-[10px] font-semibold text-on-surface-variant/75" for="adv-email">Correo Electrónico</label>
+                                        <input id="adv-email" required class="w-full bg-surface-container-low/70 border border-glass-stroke rounded-xl py-2 px-3 text-xs text-white focus:ring-2 focus:ring-primary/45" type="email" placeholder="elena@agente.com"/>
+                                    </div>
+                                </div>
+                                <!-- Gender selector with avatar preview -->
+                                <div class="flex items-center gap-3">
+                                    <img id="adv-avatar-preview" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face" class="w-10 h-10 rounded-full border-2 border-primary/50 object-cover flex-shrink-0 transition-all duration-300" alt="Vista previa"/>
+                                    <div class="flex-1 space-y-1">
+                                        <label class="text-[10px] font-semibold text-on-surface-variant/75">Género del Asesor</label>
+                                        <div class="flex gap-2">
+                                            <button type="button" id="adv-gender-male" onclick="selectAdvisorGender('male')" class="flex-1 py-1.5 text-[10px] font-bold rounded-lg border border-primary/60 bg-primary/20 text-primary transition-all" title="Masculino">
+                                                <span class="material-symbols-outlined text-[13px] align-middle">male</span> Hombre
+                                            </button>
+                                            <button type="button" id="adv-gender-female" onclick="selectAdvisorGender('female')" class="flex-1 py-1.5 text-[10px] font-bold rounded-lg border border-glass-stroke/50 bg-transparent text-on-surface-variant/60 transition-all" title="Femenino">
+                                                <span class="material-symbols-outlined text-[13px] align-middle">female</span> Mujer
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="adv-gender" value="male"/>
+                                <button type="submit" class="w-full py-2 bg-gradient-to-r from-primary to-primary-g text-white text-xs font-bold rounded-xl hover:opacity-95 shadow-md active-glow transition-all">
+                                    <span class="material-symbols-outlined text-[13px] align-middle mr-1">person_add</span>
+                                    Añadir Nuevo Asesor
+                                </button>
+                            </form>
+
+                            <!-- Advisors List -->
+                            <div class="space-y-2 pt-2 border-t border-glass-stroke/50">
+                                <p class="text-[10px] font-bold text-white uppercase tracking-wider">Asesores Activos</p>
+                                <div id="settings-advisors-list" class="space-y-2 max-h-48 overflow-y-auto custom-scrollbar pr-1">
+                                    <!-- Rendered dynamically -->
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Data Management Setting -->
                         <div class="glass-card p-6 rounded-2xl space-y-4">
                             <h3 class="text-base font-bold text-white flex items-center gap-2">
@@ -1211,7 +1423,7 @@
                                     <span class="material-symbols-outlined text-primary-g">person_add</span>
                                     <span>Crear Nuevo Usuario & Permisos</span>
                                 </h3>
-                                <p class="text-[10px] text-on-surface-variant/60">Da de alta nuevos agentes con roles específicos y accesos controlados a los módulos de Gysfly Travels.</p>
+                                <p class="text-[10px] text-on-surface-variant/60">Da de alta nuevos agentes con roles específicos y accesos controlados a los módulos del Panel de Agente.</p>
                                 
                                 <form onsubmit="handleCreateUser(event)" class="space-y-4">
                                     <div class="space-y-3">
@@ -1222,7 +1434,7 @@
                                             </div>
                                             <div class="space-y-1">
                                                 <label class="text-[10px] font-semibold text-on-surface-variant/75" for="usr-email">Correo Electrónico</label>
-                                                <input id="usr-email" required class="w-full bg-surface-container-low/70 border border-glass-stroke rounded-xl py-2 px-3 text-xs text-white focus:ring-2 focus:ring-primary/45" type="email" placeholder="Ej. juan@gysfly.com"/>
+                                                <input id="usr-email" required class="w-full bg-surface-container-low/70 border border-glass-stroke rounded-xl py-2 px-3 text-xs text-white focus:ring-2 focus:ring-primary/45" type="email" placeholder="Ej. juan@agente.com"/>
                                             </div>
                                         </div>
                                         
@@ -1234,7 +1446,7 @@
                                             <div class="space-y-1">
                                                 <label class="text-[10px] font-semibold text-on-surface-variant/75" for="usr-role">Rol Asignado</label>
                                                 <select id="usr-role" class="w-full bg-surface-container-low/70 border border-glass-stroke rounded-xl py-2 px-3 text-xs text-white focus:ring-2 focus:ring-primary/45 focus:border-primary">
-                                                    <option value="agent">Agente Gysfly</option>
+                                                    <option value="agent">Agente de Ventas</option>
                                                     <option value="admin">Administrador / Gerente</option>
                                                 </select>
                                             </div>
@@ -1304,7 +1516,7 @@
 
             <!-- Footer -->
             <footer class="mt-auto py-6 px-8 border-t border-glass-stroke/50 flex justify-between items-center text-[10px] text-on-surface-variant/40 bg-background-base/20">
-                <p>© 2026 CRM GYSFLY. Portal del Administrador General.</p>
+                <p>© 2026 Panel de Agente. Portal del Administrador General.</p>
                 <p>Estética Things 3 & Carga/Descarga de Excel</p>
             </footer>
         </main>
@@ -1344,7 +1556,7 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div class="space-y-1.5">
                         <label class="text-xs font-semibold text-on-surface-variant/75" for="client-email">Correo Electrónico</label>
-                        <input id="client-email" class="w-full bg-surface-container-low/70 border border-glass-stroke rounded-xl py-2 px-3 text-xs text-white focus:ring-2 focus:ring-primary/45" type="email" placeholder="correo@gysfly.com" required/>
+                        <input id="client-email" class="w-full bg-surface-container-low/70 border border-glass-stroke rounded-xl py-2 px-3 text-xs text-white focus:ring-2 focus:ring-primary/45" type="email" placeholder="correo@agente.com" required/>
                     </div>
                     <div class="space-y-1.5">
                         <label class="text-xs font-semibold text-on-surface-variant/75" for="client-phone">Teléfono</label>
@@ -1394,9 +1606,20 @@
                     </div>
                 </div>
 
-                <div class="space-y-1.5">
-                    <label class="text-xs font-semibold text-on-surface-variant/75" for="client-tags">Etiquetas / Tags (Separadas por comas)</label>
-                    <input id="client-tags" class="w-full bg-surface-container-low/70 border border-glass-stroke rounded-xl py-2 px-3 text-xs text-white focus:ring-2 focus:ring-primary/45" type="text" placeholder="Ej. VIP, Importante, Campaña"/>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold text-on-surface-variant/75" for="client-advisor">Asesor Asignado</label>
+                        <select id="client-advisor" class="w-full bg-surface-container-low/70 border border-glass-stroke rounded-xl py-2 px-3 text-xs text-white focus:ring-2 focus:ring-primary/45">
+                            <option value="Carlos Mendoza">Carlos Mendoza</option>
+                            <option value="Ana Silva">Ana Silva</option>
+                            <option value="Laura Mendoza">Laura Mendoza</option>
+                            <option value="Elena Rojas">Elena Rojas</option>
+                        </select>
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold text-on-surface-variant/75" for="client-tags">Etiquetas / Tags (Separadas por comas)</label>
+                        <input id="client-tags" class="w-full bg-surface-container-low/70 border border-glass-stroke rounded-xl py-2 px-3 text-xs text-white focus:ring-2 focus:ring-primary/45" type="text" placeholder="Ej. VIP, Importante, Campaña"/>
+                    </div>
                 </div>
 
                 <div class="space-y-1.5">
@@ -1473,7 +1696,7 @@
                         <div class="space-y-2 text-xs">
                             <div class="flex justify-between">
                                 <span class="text-on-surface-variant/60">Correo:</span>
-                                <a id="profile-email" class="text-primary hover:underline" href="#">correo@gysfly.com</a>
+                                <a id="profile-email" class="text-primary hover:underline" href="#">correo@agente.com</a>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-on-surface-variant/60">Teléfono:</span>
@@ -1606,7 +1829,7 @@
                     <button onclick="startTransferSimulation('download')" class="p-4 bg-surface-container-low hover:bg-surface-container-low/80 border border-glass-stroke hover:border-success/40 rounded-2xl flex flex-col items-center justify-center text-center transition-all group">
                         <span class="material-symbols-outlined text-success text-[32px] mb-2 group-hover:scale-110 transition-transform">cloud_download</span>
                         <p class="text-xs font-bold text-white">Simular Descarga de Datos</p>
-                        <p class="text-[10px] text-on-surface-variant/50 mt-1">Simula descargas de datos de servidores de Gysfly Cloud.</p>
+                        <p class="text-[10px] text-on-surface-variant/50 mt-1">Simula descargas de datos de servidores de Agent Cloud.</p>
                     </button>
                 </div>
                 
@@ -1619,7 +1842,7 @@
                     <div class="h-2 w-full bg-surface-container-low rounded-full overflow-hidden">
                         <div id="transfer-progress-bar" class="h-full bg-gradient-to-r from-primary to-primary-g rounded-full w-0 transition-all duration-300"></div>
                     </div>
-                    <p class="text-[9px] text-on-surface-variant/50 text-center">Conectando con servidores redundantes de GYSFLY Cloud...</p>
+                    <p class="text-[9px] text-on-surface-variant/50 text-center">Conectando con servidores redundantes de Agent Cloud...</p>
                 </div>
 
                 <!-- Success Panel with direct download buttons to bypass popup blocker -->
@@ -1627,7 +1850,7 @@
                     <span class="material-symbols-outlined text-success text-[48px] animate-bounce">check_circle</span>
                     <div>
                         <h4 class="text-sm font-bold text-white">¡Operación Completada con Éxito!</h4>
-                        <p class="text-[10px] text-on-surface-variant/75 mt-1">El documento ha sido emitido de forma segura en la base de datos de Gysfly Travels.</p>
+                        <p class="text-[10px] text-on-surface-variant/75 mt-1">El documento ha sido emitido de forma segura en la base de datos de Panel de Agente.</p>
                     </div>
                     <button id="transfer-download-btn" class="w-full py-2.5 px-4 bg-gradient-to-r from-primary to-primary-g text-white text-xs font-bold rounded-xl hover:opacity-95 shadow-md active-glow flex items-center justify-center gap-1.5 transition-all">
                         <span class="material-symbols-outlined text-[16px]">print</span>
@@ -1638,6 +1861,193 @@
         </div>
     </div>
     
+    <!-- TOP DESTINO ANALYTICS MODAL -->
+    <div id="modal-top-destino" class="hidden fixed inset-0 z-[160] items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+        <div class="glass-card w-full max-w-lg rounded-3xl relative overflow-hidden border border-warning/20 shadow-2xl shadow-warning/10">
+            <div class="absolute -top-16 -right-16 w-48 h-48 rounded-full pointer-events-none" style="background: radial-gradient(circle, rgba(245,158,11,0.12) 0%, transparent 70%);"></div>
+            <div class="flex items-start justify-between p-6 pb-4 border-b border-glass-stroke">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.3);">
+                        <span class="material-symbols-outlined text-warning text-[22px]" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-bold text-white">Analíticas del Destino Top</h3>
+                        <p class="text-[10px] text-on-surface-variant/60">Datos calculados en tiempo real desde tu base de viajeros</p>
+                    </div>
+                </div>
+                <button onclick="closeTopDestinoModal()" class="w-8 h-8 flex items-center justify-center rounded-xl hover:bg-surface-container-low text-on-surface-variant hover:text-white transition-all">
+                    <span class="material-symbols-outlined text-[20px]">close</span>
+                </button>
+            </div>
+            <div class="p-6 pb-4">
+                <div class="rounded-2xl overflow-hidden relative mb-5" style="height: 100px;">
+                    <div class="absolute inset-0 bg-cover bg-center opacity-50" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAX4-mvM83ynVZn-fn2nswYjUDPO8wpbSPBtSTB6JI3fnklleOpuG0xIUXQHDBDusQYRl5dnltfwFCHI1HFE9Mi2lXskp7nzQBoNAk4tkjhU5lsX_8P68PWPCh06eWHxnFfOjJm3sLcl9i2L6t8muhiyv9pnPz9U1NSJ8CAWaM5ZIAwRNuEiZiOHZLdHaZToSAknmQNlH_k-2a8ORrWKU5a6WfLE0_aup-GpjzZuC2jIDnCKJkmrQKdpCQPZXqbRY8E_xFaQtP6zuwn');"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#090D16] via-[#090D16]/40 to-transparent"></div>
+                    <div class="relative p-4 flex items-end h-full">
+                        <div>
+                            <p class="text-[10px] uppercase font-bold tracking-wider text-warning mb-0.5"># 1 Destino Global Panel</p>
+                            <h2 id="modal-destino-title" class="text-2xl font-bold text-white">—</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-3 mb-5">
+                    <div class="rounded-xl p-3 text-center" style="background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.2);">
+                        <p id="modal-destino-pasajeros" class="text-xl font-bold text-success">—</p>
+                        <p class="text-[9px] uppercase tracking-wider text-on-surface-variant/60 mt-0.5">Pasajeros</p>
+                    </div>
+                    <div class="rounded-xl p-3 text-center" style="background: rgba(192,193,255,0.08); border: 1px solid rgba(192,193,255,0.2);">
+                        <p id="modal-destino-ingresos" class="text-xl font-bold text-primary">—</p>
+                        <p class="text-[9px] uppercase tracking-wider text-on-surface-variant/60 mt-0.5">Ingresos</p>
+                    </div>
+                    <div class="rounded-xl p-3 text-center" style="background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2);">
+                        <p id="modal-destino-share" class="text-xl font-bold text-warning">—</p>
+                        <p class="text-[9px] uppercase tracking-wider text-on-surface-variant/60 mt-0.5">% Cuota</p>
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <p class="text-[10px] uppercase font-bold tracking-wider text-on-surface-variant/60 mb-3">Desglose por Destino</p>
+                    <div id="modal-destino-bars" class="space-y-2.5 max-h-44 overflow-y-auto custom-scrollbar pr-1"></div>
+                </div>
+            </div>
+            <div class="px-6 pb-6">
+                <button onclick="closeTopDestinoModal()" class="w-full py-2.5 font-bold text-xs rounded-xl hover:opacity-95 transition-all text-on-primary" style="background: linear-gradient(135deg, #F59E0B, #FBBF24);">
+                    Entendido
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADVISOR PERFORMANCE DETAILS MODAL -->
+    <div id="modal-advisor-performance" class="hidden fixed inset-0 z-[160] items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+        <div class="glass-card w-full max-w-2xl rounded-3xl relative overflow-hidden border border-primary/20 shadow-2xl shadow-primary/10 flex flex-col md:flex-row">
+            <!-- Left Info Panel -->
+            <div class="w-full md:w-5/12 p-6 border-b md:border-b-0 md:border-r border-glass-stroke bg-surface-container-low/30">
+                <div class="flex justify-between items-center md:hidden mb-4">
+                    <h3 class="text-sm font-bold text-white flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-primary text-[18px]">support_agent</span>
+                        <span>Asesor</span>
+                    </h3>
+                    <button onclick="closeAdvisorPerformanceModal()" class="w-8 h-8 flex items-center justify-center rounded-xl hover:bg-surface-container-low text-on-surface-variant hover:text-white transition-all">
+                        <span class="material-symbols-outlined text-[20px]">close</span>
+                    </button>
+                </div>
+                <div class="flex flex-col items-center text-center space-y-4">
+                    <div class="relative">
+                        <img id="modal-advisor-avatar" src="" class="w-20 h-20 rounded-full border-2 border-primary object-cover active-glow" alt="Asesor"/>
+                        <span class="absolute bottom-0 right-0 w-4 h-4 bg-success rounded-full border-2 border-background-base"></span>
+                    </div>
+                    <div>
+                        <h3 id="modal-advisor-name" class="text-lg font-bold text-white">—</h3>
+                        <p id="modal-advisor-email" class="text-xs text-on-surface-variant/60">—</p>
+                        <span class="inline-block mt-2 px-2.5 py-0.5 font-bold text-[9px] bg-primary/10 text-primary border border-primary/25 rounded-full uppercase tracking-wider">Asesor</span>
+                    </div>
+                    
+                    <div class="w-full grid grid-cols-2 gap-3 pt-4">
+                        <div class="rounded-xl p-3 text-center bg-success/5 border border-success/15">
+                            <p id="modal-advisor-revenue" class="text-base font-bold text-success">—</p>
+                            <p class="text-[9px] uppercase tracking-wider text-on-surface-variant/50 mt-0.5">Ventas</p>
+                        </div>
+                        <div class="rounded-xl p-3 text-center bg-primary/5 border border-primary/15">
+                            <p id="modal-advisor-clients-count" class="text-base font-bold text-primary">—</p>
+                            <p class="text-[9px] uppercase tracking-wider text-on-surface-variant/50 mt-0.5">Viajeros</p>
+                        </div>
+                    </div>
+
+                    <div class="w-full pt-4 text-left">
+                        <span class="text-[9px] uppercase font-bold tracking-wider text-on-surface-variant/50 block mb-2">Desglose de Estados de Reserva</span>
+                        <div id="modal-advisor-status-distribution" class="space-y-2">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Right Travelers List Panel -->
+            <div class="w-full md:w-7/12 p-6 flex flex-col justify-between">
+                <div class="hidden md:flex justify-between items-center mb-4">
+                    <h3 class="text-sm font-bold text-white flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-primary text-[18px]">group</span>
+                        <span>Viajeros Asignados</span>
+                    </h3>
+                    <button onclick="closeAdvisorPerformanceModal()" class="w-8 h-8 flex items-center justify-center rounded-xl hover:bg-surface-container-low text-on-surface-variant hover:text-white transition-all">
+                        <span class="material-symbols-outlined text-[20px]">close</span>
+                    </button>
+                </div>
+                <div class="flex-1 overflow-y-auto max-h-72 custom-scrollbar pr-1 space-y-2.5" id="modal-advisor-travelers-list">
+                    <!-- Dynamic client items -->
+                </div>
+                <div class="pt-4 border-t border-glass-stroke mt-4">
+                    <button onclick="closeAdvisorPerformanceModal()" class="w-full py-2 px-4 bg-gradient-to-r from-primary to-primary-g text-white text-xs font-bold rounded-xl hover:opacity-95 shadow-md active-glow flex items-center justify-center gap-1 transition-all">
+                        <span>Cerrar Panel</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DESTINATION INSIGHTS MODAL -->
+    <div id="modal-destination-insights" class="hidden fixed inset-0 z-[160] items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+        <div class="glass-card w-full max-w-2xl rounded-3xl relative overflow-hidden border border-success/20 shadow-2xl shadow-success/10 flex flex-col md:flex-row">
+            <!-- Left Panel -->
+            <div class="w-full md:w-6/12 p-6 border-b md:border-b-0 md:border-r border-glass-stroke bg-surface-container-low/30 flex flex-col justify-between relative">
+                <!-- Cover Photo Banner (Architecture / Landscape) -->
+                <div id="modal-destination-cover" class="w-full h-32 rounded-2xl bg-cover bg-center mb-4 border border-glass-stroke relative overflow-hidden flex items-end p-3 group">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#090D16] via-black/30 to-transparent z-0"></div>
+                    <!-- Top glow on hover -->
+                    <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style="background: linear-gradient(135deg, rgba(16,185,129,0.15) 0%, transparent 60%);"></div>
+                    <div class="relative z-10 flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-success text-[16px] animate-pulse">location_on</span>
+                        <span id="modal-destination-title-text" class="text-xs font-bold text-white uppercase tracking-wider">—</span>
+                    </div>
+                    <!-- Close button in mobile inside cover -->
+                    <button onclick="closeDestinationInsightsModal()" class="md:hidden absolute top-2 right-2 w-7 h-7 rounded-lg bg-black/60 backdrop-blur-md border border-glass-stroke flex items-center justify-center text-on-surface-variant hover:text-white transition-all z-20">
+                        <span class="material-symbols-outlined text-[16px]">close</span>
+                    </button>
+                </div>
+                <div class="space-y-4 flex-1 flex flex-col justify-between">
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="rounded-xl p-3 bg-success/5 border border-success/15 text-center">
+                            <p id="modal-destination-revenue-text" class="text-lg font-bold text-success">—</p>
+                            <p class="text-[9px] uppercase tracking-wider text-on-surface-variant/50 mt-0.5">Ingresos Totales</p>
+                        </div>
+                        <div class="rounded-xl p-3 bg-primary/5 border border-primary/15 text-center">
+                            <p id="modal-destination-clients-text" class="text-lg font-bold text-primary">—</p>
+                            <p class="text-[9px] uppercase tracking-wider text-on-surface-variant/50 mt-0.5">Viajeros Totales</p>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <span class="text-[9px] uppercase font-bold tracking-wider text-on-surface-variant/50 block mb-2">Viajeros en esta Ruta</span>
+                        <div id="modal-destination-travelers-list" class="space-y-2 max-h-52 overflow-y-auto custom-scrollbar pr-1">
+                            <!-- Dynamic clients -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Right Interactive Graphic Panel -->
+            <div class="w-full md:w-6/12 p-6 flex flex-col justify-between">
+                <div class="hidden md:flex justify-between items-center mb-4">
+                    <h3 class="text-sm font-bold text-white flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-success text-[18px]">donut_large</span>
+                        <span>Gráfico de Distribución</span>
+                    </h3>
+                    <button onclick="closeDestinationInsightsModal()" class="w-8 h-8 flex items-center justify-center rounded-xl hover:bg-surface-container-low text-on-surface-variant hover:text-white transition-all">
+                        <span class="material-symbols-outlined text-[20px]">close</span>
+                    </button>
+                </div>
+                <div class="flex-1 flex flex-col justify-center items-center py-4 relative">
+                    <div class="w-full h-44 flex justify-center">
+                        <canvas id="destinationInsightsChart" class="max-w-full max-h-full"></canvas>
+                    </div>
+                    <p class="text-[9px] text-on-surface-variant/50 text-center mt-3">Gráfico dinámico e interactivo en base a reservas reales</p>
+                </div>
+                <div class="pt-4 border-t border-glass-stroke mt-4">
+                    <button onclick="closeDestinationInsightsModal()" class="w-full py-2 px-4 bg-gradient-to-r from-success to-emerald-500 text-white text-xs font-bold rounded-xl hover:opacity-95 shadow-md active-glow flex items-center justify-center gap-1 transition-all">
+                        <span>Cerrar Análisis</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- 3.4 EMAIL WRITER MODAL -->
     <div id="modal-email" class="hidden fixed inset-0 z-[160] items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
         <div class="glass-card w-full max-w-md p-6 rounded-3xl relative overflow-hidden">
@@ -1685,7 +2095,7 @@
                     <span class="material-symbols-outlined text-primary text-[28px] animate-spin">sync</span>
                     <div>
                         <h3 class="text-base font-bold text-white">Despachador SMTP Masivo</h3>
-                        <p class="text-[10px] text-on-surface-variant/70">Conectando y transmitiendo a servidores de correo de Gysfly Travels</p>
+                        <p class="text-[10px] text-on-surface-variant/70">Conectando y transmitiendo a servidores de correo de Panel de Agente</p>
                     </div>
                 </div>
                 <span id="sending-badge" class="bg-primary/20 text-primary text-[9px] font-bold px-2 py-0.5 rounded-full border border-primary/20">Transmitiendo...</span>
@@ -1729,6 +2139,7 @@
         let tasks = [];
         let campaigns = [];
         let users = [];
+        let advisors = [];
         let currentUser = null;
         let clientFilter = 'all';
         let currentTransferClientId = null;
@@ -1742,10 +2153,25 @@
             return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(val);
         }
 
+        function togglePasswordVisibility() {
+            const pwdInput = document.getElementById('password');
+            const icon = document.getElementById('password-visibility-icon');
+            if (pwdInput && icon) {
+                if (pwdInput.type === 'password') {
+                    pwdInput.type = 'text';
+                    icon.innerText = 'visibility_off';
+                } else {
+                    pwdInput.type = 'password';
+                    icon.innerText = 'visibility';
+                }
+            }
+        }
+
         // INITIALIZATION
         window.addEventListener('DOMContentLoaded', () => {
             // Load state from localStorage or populate default
             initDatabase();
+            applySavedBranding();
             
             // Check session
             if(localStorage.getItem('gysfly_session') === 'active') {
@@ -1766,15 +2192,74 @@
                 
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('app-interface').classList.remove('hidden');
+                populateAdvisorsDropdowns();
                 renderUI();
                 initCharts();
                 updateCampaignStats();
                 updateCampaignChart();
+
+                // Load saved settings values into elements
+                const compNameInput = document.getElementById('settings-company-name');
+                const emailAlertsInput = document.getElementById('settings-email-alerts');
+                if (compNameInput) compNameInput.value = localStorage.getItem('company_name') || 'Panel de Agente S.L.';
+                if (emailAlertsInput) emailAlertsInput.checked = localStorage.getItem('email_alerts_enabled') !== 'false';
             }
         });
 
+        function applySavedBranding() {
+            const savedCompanyName = localStorage.getItem('company_name') || 'Panel de Agente';
+            const cleanName = savedCompanyName.replace(/\s+S\.L\.$/i, '').toUpperCase();
+            
+            const loginLogo = document.getElementById('logo-label-login');
+            const sidebarLogo = document.getElementById('logo-label-sidebar');
+            if (loginLogo) loginLogo.innerText = cleanName;
+            if (sidebarLogo) sidebarLogo.innerText = cleanName;
+        }
+
+        function saveGeneralSettings() {
+            const compNameInput = document.getElementById('settings-company-name');
+            const emailAlertsInput = document.getElementById('settings-email-alerts');
+            if (!compNameInput || !emailAlertsInput) return;
+
+            const companyName = compNameInput.value.trim() || 'Panel de Agente';
+            const emailAlerts = emailAlertsInput.checked;
+            
+            localStorage.setItem('company_name', companyName);
+            localStorage.setItem('email_alerts_enabled', emailAlerts);
+            
+            applySavedBranding();
+            showQuickToast('Ajustes Guardados', 'Los ajustes generales de la agencia se han actualizado.');
+        }
+
         // DATABASE SEEDING & SYNC
         function initDatabase() {
+            // Cleanup legacy Gysfly strings from existing localStorage data
+            try {
+                let savedCurrentUser = localStorage.getItem('gysfly_current_user');
+                if (savedCurrentUser && savedCurrentUser.includes('Gysfly')) {
+                    let parsed = JSON.parse(savedCurrentUser);
+                    if (parsed.name && parsed.name.includes('Gysfly')) {
+                        parsed.name = parsed.name.replace(/Gysfly/gi, 'de Agente');
+                        localStorage.setItem('gysfly_current_user', JSON.stringify(parsed));
+                    }
+                }
+                let savedUsers = localStorage.getItem('gysfly_users');
+                if (savedUsers && savedUsers.includes('Gysfly')) {
+                    let parsed = JSON.parse(savedUsers);
+                    if (Array.isArray(parsed)) {
+                        parsed = parsed.map(u => {
+                            if (u.name && u.name.includes('Gysfly')) {
+                                u.name = u.name.replace(/Gysfly/gi, 'de Agente');
+                            }
+                            return u;
+                        });
+                        localStorage.setItem('gysfly_users', JSON.stringify(parsed));
+                    }
+                }
+            } catch(e) {
+                console.error("Error cleaning legacy storage names:", e);
+            }
+
             const getValidArray = (key, defaultVal) => {
                 try {
                     const val = localStorage.getItem(key);
@@ -1792,7 +2277,7 @@
                 { 
                     id: 1, 
                     name: 'Christian Durán', 
-                    email: 'christian@gysfly.com', 
+                    email: 'christian@agente.com', 
                     phone: '+34 600 123 456', 
                     status: 'Viaje Activo', 
                     volume: 4850,
@@ -1811,7 +2296,7 @@
                 { 
                     id: 2, 
                     name: 'Laura Mendoza', 
-                    email: 'laura@gysfly.com', 
+                    email: 'laura@agente.com', 
                     phone: '+34 600 987 654', 
                     status: 'Reserva Confirmada', 
                     volume: 3200,
@@ -1829,7 +2314,7 @@
                 { 
                     id: 3, 
                     name: 'Carlos Gómez', 
-                    email: 'carlos@gysfly.com', 
+                    email: 'carlos@agente.com', 
                     phone: '+34 611 222 333', 
                     status: 'Cotización Pendiente', 
                     volume: 6700,
@@ -1847,7 +2332,7 @@
                 { 
                     id: 4, 
                     name: 'Sofía Reyes', 
-                    email: 'sofia@gysfly.com', 
+                    email: 'sofia@agente.com', 
                     phone: '+34 622 444 555', 
                     status: 'Inactivo', 
                     volume: 0,
@@ -1865,7 +2350,7 @@
             clients = getValidArray('gysfly_clients', defaultClients);
             clients = clients.map(c => {
                 if (!c.name) c.name = 'Viajero Sin Nombre';
-                if (!c.email) c.email = 'correo@gysfly.com';
+                if (!c.email) c.email = 'correo@agente.com';
                 if (!c.status) c.status = 'Viaje Activo';
                 if (c.volume === undefined) c.volume = 0;
                 if (!c.tags) c.tags = [];
@@ -1903,8 +2388,8 @@
             // 4. Usuarios y Permisos (ACL)
             const defaultUsers = [
                 {
-                    name: 'Gerente Gysfly',
-                    email: 'admin@gysfly.com',
+                    name: 'Gerente de Agente',
+                    email: 'admin@agente.com',
                     password: 'admin123',
                     role: 'admin',
                     permissions: {
@@ -1917,7 +2402,7 @@
                 },
                 {
                     name: 'Agente Junior',
-                    email: 'agente@gysfly.com',
+                    email: 'agente@agente.com',
                     password: 'agente123',
                     role: 'agent',
                     permissions: {
@@ -1931,6 +2416,18 @@
             ];
             users = getValidArray('gysfly_users', defaultUsers);
             localStorage.setItem('gysfly_users', JSON.stringify(users));
+
+            // 5. Asesores (Stitch Advisors)
+            const defaultAdvisors = [
+                { id: 1, name: 'Carlos Mendoza', email: 'carlos@agente.com', gender: 'male' },
+                { id: 2, name: 'Ana Silva', email: 'ana@agente.com', gender: 'female' },
+                { id: 3, name: 'Laura Mendoza', email: 'laura@agente.com', gender: 'female' },
+                { id: 4, name: 'Elena Rojas', email: 'elena@agente.com', gender: 'female' }
+            ];
+            advisors = getValidArray('gysfly_advisors', defaultAdvisors);
+            // Migrate legacy advisors without gender field
+            advisors = advisors.map(a => ({ ...a, gender: a.gender || detectGenderFromName(a.name) }));
+            localStorage.setItem('gysfly_advisors', JSON.stringify(advisors));
         }
 
         function saveDatabase() {
@@ -1938,6 +2435,7 @@
             localStorage.setItem('gysfly_tasks', JSON.stringify(tasks));
             localStorage.setItem('gysfly_campaigns', JSON.stringify(campaigns));
             localStorage.setItem('gysfly_users', JSON.stringify(users));
+            localStorage.setItem('gysfly_advisors', JSON.stringify(advisors));
             if(currentUser) {
                 localStorage.setItem('gysfly_current_user', JSON.stringify(currentUser));
             }
@@ -1953,6 +2451,7 @@
                 localStorage.removeItem('gysfly_tasks');
                 localStorage.removeItem('gysfly_campaigns');
                 localStorage.removeItem('gysfly_users');
+                localStorage.removeItem('gysfly_advisors');
                 localStorage.removeItem('gysfly_current_user');
                 localStorage.removeItem('gysfly_session'); // Force login
                 showNotification('Base de Datos', 'Base de datos restaurada al estado de fábrica. Inicia sesión nuevamente.', 'warning');
@@ -1993,6 +2492,7 @@
                         
                         // Apply Access Control and Render UI
                         applyUserPermissions();
+                        populateAdvisorsDropdowns();
                         renderUI();
                         initCharts();
                     }, 500);
@@ -2037,11 +2537,11 @@
             const avatarEl = document.getElementById('header-user-avatar');
             
             if(nameEl) nameEl.innerText = currentUser.name;
-            if(roleEl) roleEl.innerText = currentUser.role === 'admin' ? 'Gerente / Admin' : 'Agente Gysfly';
+            if(roleEl) roleEl.innerText = currentUser.role === 'admin' ? 'Gerente / Admin' : 'Agente';
             
             if(avatarEl) {
                 // Get initials (up to 2 characters)
-                const parts = (currentUser.name || 'Gerente Gysfly').trim().split(/\s+/);
+                const parts = (currentUser.name || 'Gerente de Agente').trim().split(/\s+/);
                 const initials = parts.map(p => p[0]).join('').slice(0, 2).toUpperCase();
                 avatarEl.innerText = initials || 'GF';
             }
@@ -2121,6 +2621,7 @@
             // Refresh settings lists if view is active
             if(currentView === 'ajustes') {
                 renderUsersList();
+                renderAdvisorsList();
             }
         }
 
@@ -2163,7 +2664,7 @@
             document.getElementById('pwd-new').value = '';
             document.getElementById('pwd-confirm').value = '';
             
-            showNotification('Seguridad Gysfly', '¡Tu contraseña ha sido actualizada correctamente!', 'success');
+            showNotification('Seguridad de la Cuenta', '¡Tu contraseña ha sido actualizada correctamente!', 'success');
         }
 
         // USER CREATION & ACL MANAGEMENT
@@ -2226,7 +2727,7 @@
                 return;
             }
             
-            if(email === 'admin@gysfly.com') {
+            if(email === 'admin@agente.com') {
                 showNotification('Acción Denegada', 'No es posible eliminar el Administrador de fábrica original.', 'danger');
                 return;
             }
@@ -2238,6 +2739,224 @@
             saveDatabase();
             renderUsersList();
             showNotification('Acceso Retirado', 'El usuario ha sido eliminado de la base de datos.', 'success');
+        }
+
+        // ─────────────────────────────────────────────────────────────────────
+        // GENDER-AWARE AVATAR ENGINE
+        // ─────────────────────────────────────────────────────────────────────
+
+        /** Diverse, high-quality male advisor portraits */
+        const MALE_AVATARS = [
+            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
+            'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
+            'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face',
+            'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&h=150&fit=crop&crop=face',
+            'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&h=150&fit=crop&crop=face',
+            'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&crop=face',
+            'https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=150&h=150&fit=crop&crop=face',
+            'https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?w=150&h=150&fit=crop&crop=face'
+        ];
+
+        /** Diverse, high-quality female advisor portraits */
+        const FEMALE_AVATARS = [
+            'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&crop=face',
+            'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
+            'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face',
+            'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=150&h=150&fit=crop&crop=face',
+            'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=150&h=150&fit=crop&crop=face',
+            'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150&h=150&fit=crop&crop=face',
+            'https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?w=150&h=150&fit=crop&crop=face',
+            'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=face'
+        ];
+
+        /** Spanish common male first names for auto-detection */
+        const MALE_NAMES = new Set([
+            'carlos','jorge','miguel','pedro','jose','juan','luis','roberto','diego',
+            'alejandro','fernando','manuel','andres','mario','sergio','daniel','david',
+            'rafael','antonio','francisco','alberto','hector','gabriel','eduardo',
+            'ivan','oscar','raul','rodrigo','pablo','mauricio','arturo','hugo'
+        ]);
+
+        /** Spanish common female first names for auto-detection */
+        const FEMALE_NAMES = new Set([
+            'ana','maria','laura','elena','sofia','isabel','luisa','carla','valentina',
+            'gabriela','andrea','claudia','patricia','rosa','monica','adriana','natalia',
+            'paola','jessica','daniela','camila','veronica','fernanda','alejandra',
+            'beatriz','silvia','martha','lorena','cristina','diana','yolanda','irene'
+        ]);
+
+        /**
+         * Detect gender from a full name using first-name heuristics.
+         * Returns 'male', 'female', or 'neutral'.
+         */
+        function detectGenderFromName(fullName) {
+            if (!fullName) return 'neutral';
+            const first = fullName.trim().split(/\s+/)[0].toLowerCase()
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, ''); // strip accents
+            if (MALE_NAMES.has(first)) return 'male';
+            if (FEMALE_NAMES.has(first)) return 'female';
+            // Heuristic: Spanish female names often end in 'a'
+            if (first.endsWith('a') || first.endsWith('ia')) return 'female';
+            return 'male'; // default fallback
+        }
+
+        /**
+         * Returns a deterministic, gender-correct avatar URL for an advisor.
+         * Uses the advisor's id as a stable seed so the same person always
+         * gets the same photo.
+         */
+        function getAdvisorAvatar(advisor) {
+            const gender = advisor.gender || detectGenderFromName(advisor.name);
+            const pool = (gender === 'female') ? FEMALE_AVATARS : MALE_AVATARS;
+            const seed = advisor.id || 0;
+            return pool[seed % pool.length];
+        }
+
+        // STITCH ADVISORS MANAGEMENT ENGINE
+        function populateAdvisorsDropdowns() {
+            // Populate filter advisor dropdown in viajeros view
+            const filterAdvisor = document.getElementById('filter-advisor');
+            if (filterAdvisor) {
+                const currentValue = filterAdvisor.value;
+                filterAdvisor.innerHTML = '<option class="bg-surface-container text-white" value="all">Cualquier Asesor</option>';
+                advisors.forEach(adv => {
+                    filterAdvisor.innerHTML += `<option class="bg-surface-container text-white" value="${adv.name}">${adv.name}</option>`;
+                });
+                // Restore previous selection if still available
+                if (Array.from(filterAdvisor.options || []).some(o => o.value === currentValue)) {
+                    filterAdvisor.value = currentValue;
+                }
+            }
+            
+            // Populate client advisor dropdown in Magic Add Modal
+            const clientAdvisor = document.getElementById('client-advisor');
+            if (clientAdvisor) {
+                clientAdvisor.innerHTML = '';
+                advisors.forEach(adv => {
+                    clientAdvisor.innerHTML += `<option value="${adv.name}">${adv.name}</option>`;
+                });
+            }
+        }
+
+        function renderAdvisorsList() {
+            const listEl = document.getElementById('settings-advisors-list');
+            if (!listEl) return;
+            
+            listEl.innerHTML = '';
+            
+            if (advisors.length === 0) {
+                listEl.innerHTML = `
+                    <div class="text-center py-4 text-on-surface-variant/40 text-[10px] italic">
+                        No hay asesores registrados. Añade uno arriba.
+                    </div>
+                `;
+                return;
+            }
+
+            advisors.forEach(adv => {
+                const avatarUrl = getAdvisorAvatar(adv);
+                const genderIcon = (adv.gender === 'female') ? 'female' : 'male';
+                const genderColor = (adv.gender === 'female') ? 'text-pink-400' : 'text-blue-400';
+                listEl.innerHTML += `
+                    <div class="flex items-center justify-between p-2 px-3 bg-surface-container-low/50 border border-glass-stroke/50 rounded-xl hover:border-primary/20 transition-all duration-300">
+                        <div class="flex items-center gap-2.5">
+                            <img src="${avatarUrl}" class="w-9 h-9 rounded-full border border-glass-stroke object-cover flex-shrink-0" alt="${adv.name}" onerror="this.src='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face'"/>
+                            <div>
+                                <div class="flex items-center gap-1">
+                                    <p class="text-xs font-semibold text-white">${adv.name}</p>
+                                    <span class="material-symbols-outlined text-[12px] ${genderColor}">${genderIcon}</span>
+                                </div>
+                                <p class="text-[9px] text-on-surface-variant/60">${adv.email}</p>
+                            </div>
+                        </div>
+                        <button onclick="deleteAdvisor(${adv.id})" class="w-7 h-7 rounded-lg hover:bg-danger/20 text-on-surface-variant hover:text-danger flex items-center justify-center transition-all" title="Eliminar Asesor">
+                            <span class="material-symbols-outlined text-[16px]">delete</span>
+                        </button>
+                    </div>
+                `;
+            });
+        }
+        
+        function handleCreateAdvisor(event) {
+            event.preventDefault();
+            const nameInput = document.getElementById('adv-name');
+            const emailInput = document.getElementById('adv-email');
+            const genderInput = document.getElementById('adv-gender');
+            
+            const name = nameInput.value.trim();
+            const email = emailInput.value.trim();
+            const gender = genderInput ? genderInput.value : detectGenderFromName(name);
+            
+            if (!name || !email) return;
+            
+            // Check for duplicate advisor names
+            if (advisors.some(adv => adv.name.toLowerCase() === name.toLowerCase())) {
+                showNotification('Acción Denegada', `El asesor "${name}" ya se encuentra registrado en el sistema.`, 'warning');
+                return;
+            }
+            
+            const newId = advisors.length ? Math.max(...advisors.map(a => a.id)) + 1 : 1;
+            const newAdv = { id: newId, name, email, gender };
+            
+            advisors.push(newAdv);
+            saveDatabase();
+            
+            nameInput.value = '';
+            emailInput.value = '';
+            // Reset gender selector
+            selectAdvisorGender('male');
+            
+            showNotification('Asesor Registrado', `Se ha dado de alta a "${name}" en el portal.`, 'success');
+            renderAdvisorsList();
+            populateAdvisorsDropdowns();
+        }
+
+        /** Toggle gender buttons and update preview avatar */
+        function selectAdvisorGender(gender) {
+            const genderInput = document.getElementById('adv-gender');
+            const maleBtn = document.getElementById('adv-gender-male');
+            const femaleBtn = document.getElementById('adv-gender-female');
+            const preview = document.getElementById('adv-avatar-preview');
+            if (genderInput) genderInput.value = gender;
+            const pool = (gender === 'female') ? FEMALE_AVATARS : MALE_AVATARS;
+            // Pick a random avatar from the pool for preview
+            const idx = Math.floor(Math.random() * pool.length);
+            if (preview) { preview.src = pool[idx]; }
+            if (maleBtn && femaleBtn) {
+                if (gender === 'male') {
+                    maleBtn.className = 'flex-1 py-1.5 text-[10px] font-bold rounded-lg border border-primary/60 bg-primary/20 text-primary transition-all';
+                    femaleBtn.className = 'flex-1 py-1.5 text-[10px] font-bold rounded-lg border border-glass-stroke/50 bg-transparent text-on-surface-variant/60 transition-all';
+                } else {
+                    femaleBtn.className = 'flex-1 py-1.5 text-[10px] font-bold rounded-lg border border-secondary/60 bg-secondary/20 text-secondary transition-all';
+                    maleBtn.className = 'flex-1 py-1.5 text-[10px] font-bold rounded-lg border border-glass-stroke/50 bg-transparent text-on-surface-variant/60 transition-all';
+                }
+            }
+        }
+
+        /** Live-preview avatar when typing the advisor name (auto-detects gender) */
+        function previewAdvisorAvatar(nameVal) {
+            const preview = document.getElementById('adv-avatar-preview');
+            const genderInput = document.getElementById('adv-gender');
+            if (!preview || nameVal.trim().length < 2) return;
+            const detectedGender = detectGenderFromName(nameVal);
+            // Auto-select gender button to match detection
+            selectAdvisorGender(detectedGender);
+            if (genderInput) genderInput.value = detectedGender;
+        }
+        
+        function deleteAdvisor(id) {
+            const advToDelete = advisors.find(a => a.id === id);
+            if (!advToDelete) return;
+            
+            const confirmDel = confirm(`¿Estás seguro de que deseas eliminar permanentemente al asesor "${advToDelete.name}" de la agencia?`);
+            if (!confirmDel) return;
+            
+            advisors = advisors.filter(a => a.id !== id);
+            saveDatabase();
+            
+            showNotification('Asesor Retirado', `El asesor "${advToDelete.name}" ha sido eliminado.`, 'success');
+            renderAdvisorsList();
+            populateAdvisorsDropdowns();
         }
 
         function renderUsersList() {
@@ -2282,6 +3001,466 @@
             });
         }
 
+        // STITCH PASSENGERS EXPANDER CONTROL
+        function toggleStitchPasajeros() {
+            const container = document.getElementById('stitch-pasajeros-container');
+            const btn = document.getElementById('stitch-pasajeros-toggle-btn');
+            const btnIcon = btn ? btn.querySelector('span.material-symbols-outlined') : null;
+            const btnLabel = btn ? btn.querySelector('span:not(.material-symbols-outlined)') : null;
+            
+            if (container.classList.contains('hidden')) {
+                container.classList.remove('hidden');
+                container.style.opacity = '0';
+                container.style.transform = 'scale(0.96)';
+                setTimeout(() => {
+                    container.style.maxHeight = '800px';
+                    container.style.marginTop = '16px';
+                    container.style.opacity = '1';
+                    container.style.transform = 'scale(1)';
+                    if (btnIcon) { btnIcon.style.transform = 'rotate(180deg)'; btnIcon.textContent = 'unfold_less'; }
+                    if (btnLabel) btnLabel.textContent = 'Colapsar';
+                }, 10);
+            } else {
+                container.style.maxHeight = '0px';
+                container.style.marginTop = '0px';
+                container.style.opacity = '0';
+                container.style.transform = 'scale(0.96)';
+                if (btnIcon) { btnIcon.style.transform = 'rotate(0deg)'; btnIcon.textContent = 'unfold_more'; }
+                if (btnLabel) btnLabel.textContent = 'Expandir';
+                setTimeout(() => { container.classList.add('hidden'); }, 500);
+            }
+        }
+
+        // TOP DESTINO WIDGET — calculates real top destination from CRM clients
+        function computeDestinationStats() {
+            const clients = JSON.parse(localStorage.getItem('gysfly_clients') || '[]');
+            const destMap = {};
+            clients.forEach(c => {
+                const dest = (c.destino || c.destination || c.ciudad || '').trim();
+                if (!dest) return;
+                if (!destMap[dest]) destMap[dest] = { count: 0, revenue: 0 };
+                destMap[dest].count++;
+                destMap[dest].revenue += parseFloat(c.monto || c.amount || c.precio || 0) || 0;
+            });
+            const sorted = Object.entries(destMap).sort((a, b) => b[1].count - a[1].count);
+            return { sorted, total: clients.length };
+        }
+
+        function updateTopDestinoWidget() {
+            const { sorted, total } = computeDestinationStats();
+            const nameEl = document.getElementById('top-destino-name');
+            const subEl = document.getElementById('top-destino-sub');
+            const countEl = document.getElementById('top-destino-count');
+            const revenueEl = document.getElementById('top-destino-revenue');
+
+            if (!nameEl) return;
+
+            if (sorted.length === 0) {
+                nameEl.textContent = 'Sin destinos aún';
+                if (subEl) subEl.textContent = 'Registra viajeros con destino para ver analíticas';
+                if (countEl) countEl.textContent = '0 viajeros';
+                if (revenueEl) revenueEl.textContent = '$0';
+                return;
+            }
+
+            const [topName, topData] = sorted[0];
+            const pct = total > 0 ? Math.round((topData.count / total) * 100) : 0;
+
+            nameEl.textContent = topName;
+            if (subEl) subEl.textContent = `Destino preferido · ${pct}% de todos los viajeros`;
+            if (countEl) countEl.textContent = topData.count + ' viajero' + (topData.count !== 1 ? 's' : '');
+            if (revenueEl) revenueEl.textContent = '$' + topData.revenue.toLocaleString('es-MX', { minimumFractionDigits: 0 });
+        }
+
+        function openTopDestinoModal() {
+            const { sorted, total } = computeDestinationStats();
+            const modal = document.getElementById('modal-top-destino');
+            if (!modal) return;
+
+            if (sorted.length === 0) {
+                document.getElementById('modal-destino-title').textContent = 'Sin datos';
+                document.getElementById('modal-destino-pasajeros').textContent = '0';
+                document.getElementById('modal-destino-ingresos').textContent = '$0';
+                document.getElementById('modal-destino-share').textContent = '0%';
+                document.getElementById('modal-destino-bars').innerHTML = `<p class="text-xs text-on-surface-variant/50 text-center py-4">No hay viajeros registrados con destino aún.<br>Agrega destinos al registrar pasajeros.</p>`;
+            } else {
+                const [topName, topData] = sorted[0];
+                const pct = total > 0 ? Math.round((topData.count / total) * 100) : 0;
+                document.getElementById('modal-destino-title').textContent = topName;
+                document.getElementById('modal-destino-pasajeros').textContent = topData.count;
+                document.getElementById('modal-destino-ingresos').textContent = '$' + topData.revenue.toLocaleString('es-MX', { minimumFractionDigits: 0 });
+                document.getElementById('modal-destino-share').textContent = pct + '%';
+
+                const colors = ['#6366F1','#F59E0B','#10B981','#d0bcff','#F87171','#38BDF8'];
+                const maxCount = sorted[0][1].count;
+                const barsHtml = sorted.slice(0, 8).map(([name, data], i) => {
+                    const barW = maxCount > 0 ? Math.round((data.count / maxCount) * 100) : 0;
+                    const barPct = total > 0 ? Math.round((data.count / total) * 100) : 0;
+                    const color = colors[i % colors.length];
+                    return `<div>
+                        <div class="flex items-center justify-between text-[11px] mb-1">
+                            <span class="font-semibold text-white flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full inline-block flex-shrink-0" style="background:${color};"></span>
+                                ${name}
+                            </span>
+                            <span class="text-on-surface-variant/60">${data.count} · ${barPct}%</span>
+                        </div>
+                        <div class="w-full rounded-full h-1.5 overflow-hidden" style="background: rgba(255,255,255,0.06);">
+                            <div class="h-full rounded-full transition-all duration-700" style="width: ${barW}%; background: ${color};"></div>
+                        </div>
+                    </div>`;
+                }).join('');
+                document.getElementById('modal-destino-bars').innerHTML = barsHtml;
+            }
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeTopDestinoModal() {
+            const modal = document.getElementById('modal-top-destino');
+            if (modal) { modal.classList.add('hidden'); modal.classList.remove('flex'); }
+        }
+
+        // Close modal on backdrop click
+        document.getElementById('modal-top-destino')?.addEventListener('click', function(e) {
+            if (e.target === this) closeTopDestinoModal();
+        });
+
+        // STITCH ADVISORS PERFORMANCE ENGINE (Calculate actual metrics from localStorage)
+        function updateAdvisorPerformanceWidget() {
+            const container = document.getElementById('dashboard-advisors-performance');
+            if (!container) return;
+
+            // Group clients and sum volume by advisor
+            const advisorPerformance = {};
+            advisors.forEach(a => {
+                advisorPerformance[a.name] = { id: a.id, email: a.email, count: 0, revenue: 0 };
+            });
+
+            clients.forEach(c => {
+                const advName = c.advisor || 'Carlos Mendoza';
+                if (!advisorPerformance[advName]) {
+                    // Fallback in case advisor is not in advisors list
+                    advisorPerformance[advName] = { id: 999, email: `${advName.toLowerCase().replace(/ /g, '')}@agente.com`, count: 0, revenue: 0 };
+                }
+                advisorPerformance[advName].count++;
+                advisorPerformance[advName].revenue += parseFloat(c.volume || 0);
+            });
+
+            // Sort by revenue descending
+            const sortedAdvisors = Object.entries(advisorPerformance).sort((a, b) => b[1].revenue - a[1].revenue);
+            const maxRevenue = sortedAdvisors.length > 0 ? sortedAdvisors[0][1].revenue : 1;
+
+            container.innerHTML = '';
+            if (sortedAdvisors.length === 0) {
+                container.innerHTML = `<div class="text-center py-4 text-on-surface-variant/40 text-[10px] italic">No hay asesores asignados.</div>`;
+                return;
+            }
+
+            const colors = ['bg-primary', 'bg-secondary', 'bg-on-surface-variant/40'];
+
+            sortedAdvisors.forEach(([name, data], idx) => {
+                const percent = maxRevenue > 0 ? Math.round((data.revenue / maxRevenue) * 100) : 0;
+                // Find the full advisor object to get gender-aware avatar
+                const advObj = advisors.find(a => a.name === name) || { id: data.id || idx, name, gender: detectGenderFromName(name) };
+                const avatar = getAdvisorAvatar(advObj);
+                const barColor = colors[idx % colors.length];
+                
+                container.innerHTML += `
+                    <div onclick="openAdvisorPerformanceModal(${data.id || 0}, '${name.replace(/'/g, "\\'")}')" class="flex items-center gap-3 p-1.5 rounded-xl hover:bg-white/5 cursor-pointer transition-all duration-300 group">
+                        <img src="${avatar}" class="w-8 h-8 rounded-full border border-glass-stroke object-cover group-hover:scale-105 transition-transform" alt="${name}"/>
+                        <div class="flex-1">
+                            <div class="flex justify-between text-[11px] font-semibold text-white mb-0.5">
+                                <span class="group-hover:text-primary transition-colors">${name}</span>
+                                <span>${formatDollars(data.revenue)}</span>
+                            </div>
+                            <div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+                                <div class="${barColor} h-full rounded-full transition-all duration-500" style="width: ${percent}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function openAdvisorPerformanceModal(advisorId, advisorName) {
+            const modal = document.getElementById('modal-advisor-performance');
+            if (!modal) return;
+
+            let adv = advisors.find(a => a.id === advisorId);
+            if (!adv) {
+                // If it's a fallback or deleted advisor, search by name
+                adv = advisors.find(a => a.name === advisorName) || { name: advisorName, email: `${advisorName.toLowerCase().replace(/ /g, '')}@agente.com` };
+            }
+
+            // Group clients assigned to this advisor
+            const assignedClients = clients.filter(c => (c.advisor || 'Carlos Mendoza') === adv.name);
+            const totalVol = assignedClients.reduce((acc, c) => acc + c.volume, 0);
+
+            // Gender-aware avatar for modal
+            const avatar = getAdvisorAvatar(adv);
+
+            // Render text
+            document.getElementById('modal-advisor-avatar').src = avatar;
+            document.getElementById('modal-advisor-name').innerText = adv.name;
+            document.getElementById('modal-advisor-email').innerText = adv.email;
+            document.getElementById('modal-advisor-revenue').innerText = formatDollars(totalVol);
+            document.getElementById('modal-advisor-clients-count').innerText = assignedClients.length;
+
+            // Render status breakdown progress bars
+            const statusCounts = { 'Viaje Activo': 0, 'Reserva Confirmada': 0, 'Cotización Pendiente': 0, 'Inactivo': 0 };
+            assignedClients.forEach(c => {
+                if (statusCounts[c.status] !== undefined) statusCounts[c.status]++;
+            });
+
+            const statusDistributionDiv = document.getElementById('modal-advisor-status-distribution');
+            statusDistributionDiv.innerHTML = '';
+            
+            const statuses = [
+                { name: 'Viaje Activo', label: 'Viaje Activo', color: 'bg-primary' },
+                { name: 'Reserva Confirmada', label: 'Reserva Confirmada', color: 'bg-success' },
+                { name: 'Cotización Pendiente', label: 'Cotización', color: 'bg-warning' },
+                { name: 'Inactivo', label: 'Inactivos', color: 'bg-on-surface-variant/40' }
+            ];
+
+            statuses.forEach(s => {
+                const count = statusCounts[s.name] || 0;
+                const pct = assignedClients.length > 0 ? Math.round((count / assignedClients.length) * 100) : 0;
+                statusDistributionDiv.innerHTML += `
+                    <div>
+                        <div class="flex justify-between text-[9px] text-on-surface-variant/60 font-semibold mb-0.5">
+                            <span>${s.label} (${count})</span>
+                            <span>${pct}%</span>
+                        </div>
+                        <div class="w-full bg-surface-container rounded-full h-1 overflow-hidden">
+                            <div class="${s.color} h-full rounded-full transition-all" style="width: ${pct}%"></div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Render Travelers List
+            const listContainer = document.getElementById('modal-advisor-travelers-list');
+            listContainer.innerHTML = '';
+
+            if (assignedClients.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="text-center py-8 text-on-surface-variant/40 text-[11px] italic">
+                        <span class="material-symbols-outlined text-[24px] block mb-1">person_search</span>
+                        No hay viajeros asignados a este asesor.
+                    </div>
+                `;
+            } else {
+                const defaultPhoto = "https://lh3.googleusercontent.com/aida-public/AB6AXuCkpLaAAaPtwUCGEQryYwILaELQNTTgUZKaXvS7kqdGA3pdQkUqqZMbFbYloBftlkWuCF_P0AGPQeQHzl66jjnEioJP_DhIYJkO_A9oWkSiRxOrbmDfm9RXz4gtLAdYHgqENocO3U5PlGLUgL3yAwve5io2Us5gE0PINJYc_0zDEQUsKZ_eCDh7qheZ0NOLBKOSZqvGrOTWPbz4rHHOYPyjQKsnse2mny3H9WeiNOFoQa-fo9PD0nk-kJNX01s4WoL0ITmN4pydbJvs";
+                assignedClients.forEach(c => {
+                    let badgeClass = getStatusBadgeClass(c.status);
+                    listContainer.innerHTML += `
+                        <div onclick="closeAdvisorPerformanceModal(); openClientProfileModal(${c.id});" class="p-2.5 bg-surface-container-low/50 border border-glass-stroke/50 hover:border-primary/30 rounded-xl flex items-center justify-between cursor-pointer group transition-all duration-300 animate-fade-in">
+                            <div class="flex items-center gap-3">
+                                <img src="${c.photo || defaultPhoto}" class="w-8 h-8 rounded-full border border-glass-stroke object-cover" alt="${c.name}"/>
+                                <div>
+                                    <p class="text-xs font-semibold text-white group-hover:text-primary transition-colors">${c.name}</p>
+                                    <p class="text-[9px] text-on-surface-variant/60">Destino: ${c.destination || 'Bali'}</p>
+                                </div>
+                            </div>
+                            <span class="${badgeClass} text-[9px] font-bold px-2 py-0.5 rounded-full border">${c.status}</span>
+                        </div>
+                    `;
+                });
+            }
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeAdvisorPerformanceModal() {
+            const modal = document.getElementById('modal-advisor-performance');
+            if (modal) { modal.classList.add('hidden'); modal.classList.remove('flex'); }
+        }
+
+        // RISING DESTINATIONS ENGINE (Dynamic rankings & interactives)
+        function updateRisingDestinationsWidget() {
+            const container = document.getElementById('dashboard-rising-destinations');
+            if (!container) return;
+
+            // Group clients and sum volume by destination
+            const destinationStats = {};
+            clients.forEach(c => {
+                const dest = (c.destination || c.destino || '').trim();
+                if (!dest) return;
+
+                if (!destinationStats[dest]) {
+                    destinationStats[dest] = { count: 0, revenue: 0, activeCount: 0 };
+                }
+                destinationStats[dest].count++;
+                destinationStats[dest].revenue += parseFloat(c.volume || 0);
+                if (c.status === 'Viaje Activo' || c.status === 'Reserva Confirmada') {
+                    destinationStats[dest].activeCount++;
+                }
+            });
+
+            // Sort destinations by traveler count descending
+            const sortedDestinations = Object.entries(destinationStats).sort((a, b) => b[1].count - a[1].count);
+
+            container.innerHTML = '';
+            if (sortedDestinations.length === 0) {
+                container.innerHTML = `<div class="text-center py-4 text-on-surface-variant/40 text-[10px] italic">No hay destinos registrados.</div>`;
+                return;
+            }
+
+            // Description tag mappings
+            const destSubtitles = {
+                'bali': 'Playa y Cultura Espiritual',
+                'parís': 'Cultura y Escapada Romántica',
+                'paris': 'Cultura y Escapada Romántica',
+                'maldivas': 'Resorts sobre el Agua y Buceo',
+                'tokio': 'Tecnología, Templos y Sushi',
+                'tokyo': 'Tecnología, Templos y Sushi',
+                'singapur': 'Arquitectura Moderna y Compras',
+                'roma': 'Coliseo, Historia y Gastronomía'
+            };
+
+            sortedDestinations.slice(0, 4).forEach(([name, data], idx) => {
+                const subtitle = destSubtitles[name.toLowerCase()] || 'Aventura de Lujo Seleccionada';
+                // Dynamic growth factor proportional to the number of clients and active share
+                const growth = Math.round(8 + (data.activeCount * 5) + (data.revenue % 10));
+
+                container.innerHTML += `
+                    <div onclick="openDestinationInsightsModal('${name.replace(/'/g, "\\'")}')" class="flex items-center justify-between p-2 rounded-xl hover:bg-white/5 cursor-pointer transition-all duration-300 group">
+                        <div class="flex items-center gap-3">
+                            <div class="w-6 h-6 rounded-lg bg-surface-container flex items-center justify-center font-bold text-xs text-primary group-hover:bg-primary group-hover:text-on-primary transition-all">
+                                ${idx + 1}
+                            </div>
+                            <div>
+                                <p class="text-xs font-semibold text-white group-hover:text-primary transition-colors">${name}</p>
+                                <p class="text-[9px] text-on-surface-variant/60">${subtitle}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-0.5 text-success bg-success/15 px-2 py-0.5 rounded-full text-[10px] font-bold">
+                            <span class="material-symbols-outlined text-[12px]">arrow_upward</span>
+                            <span>${growth}%</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function openDestinationInsightsModal(destinationName) {
+            const modal = document.getElementById('modal-destination-insights');
+            if (!modal) return;
+
+            // Get clients for this destination
+            const destClients = clients.filter(c => (c.destination || '').toLowerCase().trim() === destinationName.toLowerCase().trim());
+            const totalRevenue = destClients.reduce((acc, c) => acc + c.volume, 0);
+
+            // Map destinations to beautiful travel photos of landscapes/architectures
+            const destinationImages = {
+                'bali': 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=600&q=80',
+                'parís': 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=600&q=80',
+                'paris': 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=600&q=80',
+                'maldivas': 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=600&q=80',
+                'tokio': 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=600&q=80',
+                'tokyo': 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=600&q=80',
+                'singapur': 'https://images.unsplash.com/photo-1525625293386-3f8f99389edd?auto=format&fit=crop&w=600&q=80',
+                'roma': 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=600&q=80'
+            };
+            const coverUrl = destinationImages[destinationName.toLowerCase().trim()] || 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=600&q=80';
+            const coverEl = document.getElementById('modal-destination-cover');
+            if (coverEl) {
+                coverEl.style.backgroundImage = `url('${coverUrl}')`;
+            }
+
+            document.getElementById('modal-destination-title-text').innerText = destinationName;
+            document.getElementById('modal-destination-revenue-text').innerText = formatDollars(totalRevenue);
+            document.getElementById('modal-destination-clients-text').innerText = destClients.length;
+
+            // Render Travelers List
+            const listContainer = document.getElementById('modal-destination-travelers-list');
+            listContainer.innerHTML = '';
+
+            const defaultPhoto = "https://lh3.googleusercontent.com/aida-public/AB6AXuCkpLaAAaPtwUCGEQryYwILaELQNTTgUZKaXvS7kqdGA3pdQkUqqZMbFbYloBftlkWuCF_P0AGPQeQHzl66jjnEioJP_DhIYJkO_A9oWkSiRxOrbmDfm9RXz4gtLAdYHgqENocO3U5PlGLUgL3yAwve5io2Us5gE0PINJYc_0zDEQUsKZ_eCDh7qheZ0NOLBKOSZqvGrOTWPbz4rHHOYPyjQKsnse2mny3H9WeiNOFoQa-fo9PD0nk-kJNX01s4WoL0ITmN4pydbJvs";
+
+            destClients.forEach(c => {
+                let badgeClass = getStatusBadgeClass(c.status);
+                listContainer.innerHTML += `
+                    <div onclick="closeDestinationInsightsModal(); openClientProfileModal(${c.id});" class="p-2 bg-surface-container-low/50 border border-glass-stroke/50 hover:border-success/30 rounded-xl flex items-center justify-between cursor-pointer group transition-all duration-300">
+                        <div class="flex items-center gap-2">
+                            <img src="${c.photo || defaultPhoto}" class="w-6 h-6 rounded-full border border-glass-stroke object-cover" alt="${c.name}"/>
+                            <span class="text-xs font-semibold text-white group-hover:text-success transition-colors">${c.name}</span>
+                        </div>
+                        <span class="${badgeClass} text-[8px] font-bold px-1.5 py-0.5 rounded-full border">${c.status}</span>
+                    </div>
+                `;
+            });
+
+            // Initialize/Update dynamic Chart.js chart for states
+            const statusCounts = { 'Viaje Activo': 0, 'Reserva Confirmada': 0, 'Cotización Pendiente': 0, 'Inactivo': 0 };
+            destClients.forEach(c => {
+                if (statusCounts[c.status] !== undefined) statusCounts[c.status]++;
+            });
+
+            const canvas = document.getElementById('destinationInsightsChart');
+            if (canvas) {
+                // Destroy previous instance to avoid visual overlap
+                if (chartInstances.destinationInsightsChart) {
+                    chartInstances.destinationInsightsChart.destroy();
+                }
+
+                const ctx = canvas.getContext('2d');
+                chartInstances.destinationInsightsChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Activo', 'Confirmado', 'Cotización', 'Inactivo'],
+                        datasets: [{
+                            data: [
+                                statusCounts['Viaje Activo'],
+                                statusCounts['Reserva Confirmada'],
+                                statusCounts['Cotización Pendiente'],
+                                statusCounts['Inactivo']
+                            ],
+                            backgroundColor: [
+                                '#6366F1', // Indigo Neon (Primary)
+                                '#10B981', // Emerald (Success)
+                                '#F59E0B', // Amber (Warning)
+                                'rgba(255,255,255,0.15)' // Muted dark
+                            ],
+                            borderWidth: 1.5,
+                            borderColor: '#090D16'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'bottom',
+                                labels: { color: '#e4e1ed', font: { family: 'Outfit', size: 9 }, padding: 8 }
+                            }
+                        },
+                        cutout: '65%'
+                    }
+                });
+            }
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeDestinationInsightsModal() {
+            const modal = document.getElementById('modal-destination-insights');
+            if (modal) { modal.classList.add('hidden'); modal.classList.remove('flex'); }
+        }
+
+        // Close performance & insights modals on backdrop click
+        document.getElementById('modal-advisor-performance')?.addEventListener('click', function(e) {
+            if (e.target === this) closeAdvisorPerformanceModal();
+        });
+        document.getElementById('modal-destination-insights')?.addEventListener('click', function(e) {
+            if (e.target === this) closeDestinationInsightsModal();
+        });
+
         // NAVIGATION SYSTEM (View Swapper)
         function switchView(viewName) {
             const views = ['dashboard', 'clientes', 'campanas', 'analiticas', 'inbox', 'hoy', 'ajustes'];
@@ -2302,15 +3481,16 @@
 
             // Update title
             const titles = {
-                dashboard: 'GYSFLY TRAVELS — Consola de Control de la Agencia',
-                clientes: 'GYSFLY TRAVELS — Base de Datos e Importador de Viajeros',
-                campanas: 'GYSFLY TRAVELS — Campañas Directas y Boletines',
-                analiticas: 'GYSFLY TRAVELS — Consola de Analíticas de Viajeros',
-                inbox: 'GYSFLY TRAVELS — Inbox de Solicitudes y Vouchers',
-                hoy: 'GYSFLY TRAVELS — Tareas y Planificador Diario',
-                ajustes: 'GYSFLY TRAVELS — Ajustes del Sistema y Respaldos'
+                dashboard: 'Consola de Control de la Agencia',
+                clientes: 'Base de Datos e Importador de Viajeros',
+                campanas: 'Campañas Directas y Boletines',
+                analiticas: 'Consola de Analíticas de Viajeros',
+                inbox: 'Inbox de Solicitudes y Vouchers',
+                hoy: 'Tareas y Planificador Diario',
+                ajustes: 'Ajustes del Sistema y Respaldos'
             };
-            document.getElementById('view-title').innerText = titles[viewName] || 'GYSFLY TRAVELS — Portal Administrativo';
+            const subtitle = titles[viewName] || 'Portal Administrativo';
+            document.getElementById('view-title').innerHTML = `<span class="animated-brand-title">PANEL DE AGENTE</span> — ${subtitle}`;
 
             renderUI();
             if (viewName === 'analiticas') {
@@ -2319,6 +3499,7 @@
                 updateCharts();
             } else if (viewName === 'ajustes') {
                 renderUsersList();
+                renderAdvisorsList();
             } else if (viewName === 'campanas') {
                 updateCampaignStats();
                 updateCampaignChart();
@@ -2344,6 +3525,8 @@
 
             // 1. Update stats cards counters
             document.getElementById('stat-total-clients').innerText = clients.length + ' Viajeros';
+            const bannerCount = document.getElementById('banner-passengers-count');
+            if (bannerCount) bannerCount.innerText = clients.length + ' pasajeros activos';
             document.getElementById('stat-total-volume').innerText = formatDollars(totalVol);
             document.getElementById('stat-storage-ratio').innerText = quotaRatioPercent + '% de la meta mensual';
             document.getElementById('stat-volume-bar').style.width = Math.min(100, quotaRatioPercent) + '%';
@@ -2470,6 +3653,17 @@
             // Calculate campaign segment size
             calculateSegmentSize(document.getElementById('campaign-segment').value);
             renderCampaignsHistory();
+
+            // 6. Update dynamic widgets
+            updateTopDestinoWidget();
+            updateAdvisorPerformanceWidget();
+            updateRisingDestinationsWidget();
+
+            // 7. Notify Premium Iframe to sync
+            const iframe = document.querySelector('iframe[src="stitch_pasajeros.html"]');
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage('refresh', '*');
+            }
         }
 
         // CLIENTS DATABASE VIEW ENGINE (Interactive CRUD & Profile clicks)
@@ -2499,9 +3693,11 @@
             
             const advisorFilter = document.getElementById('filter-advisor') ? document.getElementById('filter-advisor').value : 'all';
             if (advisorFilter !== 'all') {
-                if (advisorFilter === 'carlos') filtered = filtered.filter(c => c.id === 1 || c.id === 3);
-                else if (advisorFilter === 'ana') filtered = filtered.filter(c => c.id === 2 || c.id === 4);
-                else if (advisorFilter === 'laura') filtered = filtered.filter(c => c.id === 2);
+                filtered = filtered.filter(c => {
+                    let clientAdv = c.advisor || 'Carlos Mendoza';
+                    if (!c.advisor && (c.id === 2 || c.id === 4)) clientAdv = 'Ana Silva';
+                    return clientAdv.toLowerCase() === advisorFilter.toLowerCase();
+                });
             }
             
             // Search (support search by name, email, country, destination, postal_code)
@@ -2543,8 +3739,8 @@
                     }
 
                     // Assign advisor and mock travel date based on data
-                    let advisor = 'Carlos Mendoza';
-                    if (c.id === 2 || c.id === 4) advisor = 'Ana Silva';
+                    let advisor = c.advisor || 'Carlos Mendoza';
+                    if (!c.advisor && (c.id === 2 || c.id === 4)) advisor = 'Ana Silva';
                     
                     let travelDate = '12 Oct 2023';
                     if (c.id === 1) travelDate = '12 Oct 2023';
@@ -2814,16 +4010,13 @@
         }
 
         function generateRealTravelDocument(client, documentName) {
-            const docWindow = window.open("", "_blank", "width=800,height=900");
-            if (!docWindow) {
-                showNotification('Permisos Requeridos', 'El navegador bloqueó la ventana emergente. Por favor, permite ventanas emergentes para emitir el PDF.', 'danger');
-                return;
-            }
-            
-            let title = "Documento de Viaje - Gysfly Travels";
-            let badgeText = "GYSFLY TRAVELS";
-            let isFlight = documentName.toLowerCase().includes("billete") || documentName.toLowerCase().includes("vuelo");
-            let isHotel = documentName.toLowerCase().includes("voucher") || documentName.toLowerCase().includes("hotel");
+            let badgeText = "PANEL DE AGENTE";
+            const docNameLower = documentName.toLowerCase();
+            let isFlight = docNameLower.includes("billete") || docNameLower.includes("vuelo") || docNameLower.includes("iberia");
+            let isHotel = docNameLower.includes("voucher") || docNameLower.includes("hotel") || docNameLower.includes("reserva");
+            let isItinerary = docNameLower.includes("itinerario") || docNameLower.includes("ruta");
+            let isQuote = docNameLower.includes("presupuesto") || docNameLower.includes("cotizacion") || docNameLower.includes("cotización");
+            let isInsurance = docNameLower.includes("seguro");
             
             let contentHtml = "";
             const amount = client.volume ? `$${client.volume.toLocaleString('en-US')} USD` : "$3,500 USD";
@@ -2831,12 +4024,11 @@
             const dateStr = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
             
             if (isFlight) {
-                title = `Billete Aéreo VIP - ${client.name}`;
                 badgeText = "CABINA BUSINESS CLASS";
                 contentHtml = `
                     <div class="ticket-header">
                         <div>
-                            <h1 class="brand">GYSFLY TRAVELS</h1>
+                            <h1 class="brand">PANEL DE AGENTE</h1>
                             <p class="brand-sub">Luxury Worldwide Flights</p>
                         </div>
                         <div class="ticket-badge">${badgeText}</div>
@@ -2864,16 +4056,15 @@
                                 <p>Madrid, España</p>
                             </div>
                             <div class="route-arrow">
-                                <span class="material-symbols-outlined text-[32px] text-gold">flight_takeoff</span>
                                 <div class="line"></div>
                             </div>
-                            <div class="route-city text-right">
+                            <div class="route-city" style="text-align: right;">
                                 <h3>${getAirportCode(client.destination)}</h3>
                                 <p>${client.destination}</p>
                             </div>
                         </div>
                         
-                        <div class="grid-4 mt-6">
+                        <div class="grid-4" style="margin-top: 24px;">
                             <div>
                                 <span class="label">FECHA</span>
                                 <p class="val">${dateStr}</p>
@@ -2894,22 +4085,19 @@
                     </div>
                     
                     <div class="ticket-footer">
-                        <div class="barcode-container">
-                            <div class="barcode"></div>
-                            <span class="barcode-text">*${localizer}*</span>
-                        </div>
+                        <div class="barcode"></div>
+                        <span class="barcode-text">*${localizer}*</span>
                         <div class="legal-notice">
-                            <p><strong>INFORMACIÓN DE EMBARQUE:</strong> Presentarse en el mostrador de Gysfly Travels 3 horas antes de la salida. La franquicia de equipaje de Business Class incluye 2 piezas de 32kg cada una y acceso gratuito a la sala Lounge VIP. Buen viaje.</p>
+                            <p><strong>INFORMACIÓN DE EMBARQUE:</strong> Presentarse en el mostrador de Panel de Agente 3 horas antes de la salida. La franquicia de equipaje de Business Class incluye 2 piezas de 32kg cada una y acceso gratuito a la sala Lounge VIP. Buen viaje.</p>
                         </div>
                     </div>
                 `;
             } else if (isHotel) {
-                title = `Voucher de Alojamiento VIP - ${client.name}`;
                 badgeText = "BONO DE HOTEL EXCLUSIVO";
                 contentHtml = `
                     <div class="ticket-header hotel-bg">
                         <div>
-                            <h1 class="brand">GYSFLY TRAVELS</h1>
+                            <h1 class="brand">PANEL DE AGENTE</h1>
                             <p class="brand-sub">Luxury Resorts & Spas</p>
                         </div>
                         <div class="ticket-badge hotel-badge">${badgeText}</div>
@@ -2932,23 +4120,20 @@
                         </div>
                         
                         <div class="hotel-details-block">
-                            <div class="flex items-center gap-3">
-                                <span class="material-symbols-outlined text-[36px] text-gold" style="font-size:32px;">holiday_village</span>
-                                <div>
-                                    <h3 class="hotel-title">Luxury Water Villa Resort</h3>
-                                    <p class="hotel-sub">${client.destination} — Ubicación Preferente Gysfly</p>
-                                </div>
+                            <div>
+                                <h3 class="hotel-title">Luxury Water Villa Resort</h3>
+                                <p class="hotel-sub">${client.destination} — Ubicación Preferente</p>
                             </div>
                         </div>
                         
-                        <div class="grid-3 mt-6">
+                        <div class="grid-3" style="margin-top: 24px;">
                             <div>
                                 <span class="label">RÉGIMEN</span>
                                 <p class="val">Todo Incluido Premium</p>
                             </div>
                             <div>
                                 <span class="label">TIPO DE HABITACIÓN</span>
-                                <p class="val">Villa sobre el Agua con Piscina Privada</p>
+                                <p class="val">Villa sobre el Agua con Piscina</p>
                             </div>
                             <div>
                                 <span class="label">TRANSFER INCLUIDO</span>
@@ -2959,23 +4144,44 @@
                     
                     <div class="ticket-footer">
                         <div class="legal-notice" style="border-top: none; padding-top: 0;">
-                            <p><strong>REGLAS DEL VOUCHER:</strong> Al llegar al establecimiento, presente este voucher impreso o en su dispositivo móvil junto con el pasaporte de los viajeros. La reserva incluye mayordomo las 24 horas y atenciones especiales Gysfly Platinum a la llegada.</p>
+                            <p><strong>REGLAS DEL VOUCHER:</strong> Al llegar al establecimiento, presente este voucher impreso o en su dispositivo móvil junto con el pasaporte de los viajeros. La reserva incluye mayordomo las 24 horas y atenciones especiales Platinum a la llegada.</p>
                         </div>
                     </div>
                 `;
             } else {
-                title = `Ficha Técnica de Viajero - ${client.name}`;
+                let docTypeTitle = "Ficha Técnica del Viajero";
+                let docSubTitle = "Traveler Official Profile";
                 badgeText = "FICHA TÉCNICA OFICIAL";
+                
+                if (isItinerary) {
+                    docTypeTitle = "Itinerario de Viaje Premium";
+                    docSubTitle = "Exclusive Travel Route";
+                    badgeText = "ITINERARIO CONFIRMADO";
+                } else if (isQuote) {
+                    docTypeTitle = "Presupuesto de Viaje";
+                    docSubTitle = "Travel Quotation";
+                    badgeText = "COTIZACIÓN EMITIDA";
+                } else if (isInsurance) {
+                    docTypeTitle = "Póliza de Seguro Internacional";
+                    docSubTitle = "Worldwide Insurance Cover";
+                    badgeText = "SEGURO ACTIVO";
+                } else if (!documentName.toLowerCase().includes("ficha")) {
+                    docTypeTitle = documentName.replace('.pdf', '').replace(/_/g, ' ');
+                    docSubTitle = "Documento Oficial del Panel";
+                    badgeText = "DOCUMENTO ADJUNTO";
+                }
+                
                 contentHtml = `
                     <div class="ticket-header profile-bg">
                         <div>
-                            <h1 class="brand">GYSFLY TRAVELS</h1>
-                            <p class="brand-sub">Traveler Official Profile</p>
+                            <h1 class="brand">PANEL DE AGENTE</h1>
+                            <p class="brand-sub">${docSubTitle}</p>
                         </div>
                         <div class="ticket-badge profile-badge">${badgeText}</div>
                     </div>
                     
                     <div class="ticket-body">
+                        <h2 style="font-size: 18px; font-weight: bold; margin-bottom: 24px; color: #000; text-transform: uppercase; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px;">${docTypeTitle}</h2>
                         <div class="grid-3">
                             <div>
                                 <span class="label">NOMBRE VIAJERO</span>
@@ -2992,7 +4198,7 @@
                         </div>
                         
                         <div class="profile-info-block">
-                            <h4 style="color: #ffffff; font-size: 13px; font-weight: bold; margin-bottom: 8px;">Detalles Generales del Cliente</h4>
+                            <h4 style="color: #000000; font-size: 13px; font-weight: bold; margin-bottom: 8px;">Detalles Generales del Viaje</h4>
                             <table class="profile-table">
                                 <tr>
                                     <td><strong>País de Residencia:</strong></td>
@@ -3001,424 +4207,90 @@
                                     <td>${client.postal_code || '28001'}</td>
                                 </tr>
                                 <tr>
-                                    <td><strong>Destino Favorito:</strong></td>
+                                    <td><strong>Destino Seleccionado:</strong></td>
                                     <td>${client.destination || 'Bali'}</td>
                                     <td><strong>Estado del Viaje:</strong></td>
                                     <td>${client.status}</td>
                                 </tr>
                                 <tr>
-                                    <td><strong>Gasto Acumulado:</strong></td>
+                                    <td><strong>Gasto Estimado:</strong></td>
                                     <td>${amount}</td>
-                                    <td><strong>Costo de Proveedores:</strong></td>
+                                    <td><strong>Costo Operativo:</strong></td>
                                     <td>$${(client.cost !== undefined ? client.cost : Math.round(client.volume * 0.7)).toLocaleString('en-US')} USD</td>
                                 </tr>
                             </table>
                         </div>
                         
-                        <div class="mt-6">
-                            <span class="label">NOTAS DE LA AGENCIA</span>
-                            <p class="val" style="font-weight: normal; font-size: 11px; color: #e2e8f0; line-height: 1.5; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); margin-top: 4px;">
-                                ${client.notes || 'No se han registrado observaciones adicionales.'}
+                        <div style="margin-top: 24px;">
+                            <span class="label">NOTAS O REQUERIMIENTOS ESPECIALES</span>
+                            <p class="val" style="font-weight: normal; font-size: 11px; color: #4b5563; line-height: 1.5; background: #f9fafb; padding: 12px; border-radius: 12px; border: 1px solid #e5e7eb; margin-top: 4px;">
+                                ${client.notes || 'No se han registrado requerimientos u observaciones adicionales para este documento.'}
                             </p>
                         </div>
                     </div>
                     
                     <div class="ticket-footer">
-                        <p style="font-size: 9px; color: rgba(255,255,255,0.4); text-align: center; width: 100%;">Gysfly Travels S.L. • Registro de Ficha técnica segura en local • Copia de seguridad encriptada</p>
+                        <p style="font-size: 9px; color: #6b7280; text-align: center; width: 100%;">Panel de Agente S.L. • Documento generado automáticamente • Válido para los servicios descritos</p>
                     </div>
                 `;
             }
             
-            // Write full HTML content to document preview popup window
-            docWindow.document.write(`
-                <!DOCTYPE html>
-                <html lang="es">
-                <head>
-                    <meta charset="UTF-8">
-                    <title>${title}</title>
-                    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Material+Symbols+Outlined&display=swap" rel="stylesheet">
+            // Build the PDF-ready HTML container
+            const printContainer = document.createElement('div');
+            printContainer.innerHTML = `
+                <div style="font-family: Arial, sans-serif; background: #ffffff; color: #000000; width: 100%; box-sizing: border-box;">
                     <style>
-                        * {
-                            box-sizing: border-box;
-                            margin: 0;
-                            padding: 0;
-                        }
-                        body {
-                            font-family: 'Outfit', sans-serif;
-                            background-color: #0b0f17;
-                            color: #ffffff;
-                            padding: 40px 20px;
-                            display: flex;
-                            flex-direction: column;
-                            align-items: center;
-                            min-height: 100vh;
-                        }
-                        .print-container {
-                            background: linear-gradient(135deg, #131a26 0%, #0d131f 100%);
-                            border: 1px solid rgba(197, 160, 89, 0.3);
-                            border-radius: 24px;
-                            width: 100%;
-                            max-width: 700px;
-                            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-                            overflow: hidden;
-                            position: relative;
-                        }
-                        .controls {
-                            display: flex;
-                            gap: 12px;
-                            margin-bottom: 24px;
-                            width: 100%;
-                            max-width: 700px;
-                            justify-content: flex-end;
-                        }
-                        .btn {
-                            padding: 10px 20px;
-                            border-radius: 12px;
-                            font-size: 12px;
-                            font-weight: bold;
-                            cursor: pointer;
-                            display: flex;
-                            align-items: center;
-                            gap: 6px;
-                            transition: all 0.2s;
-                            border: none;
-                        }
-                        .btn-print {
-                            background: linear-gradient(135deg, #c5a059 0%, #a37f37 100%);
-                            color: #0b0f17;
-                        }
-                        .btn-print:hover {
-                            opacity: 0.95;
-                            transform: translateY(-1px);
-                        }
-                        .btn-close {
-                            background: rgba(255, 255, 255, 0.08);
-                            color: #ffffff;
-                            border: 1px solid rgba(255, 255, 255, 0.12);
-                        }
-                        .btn-close:hover {
-                            background: rgba(255, 255, 255, 0.15);
-                        }
-                        .ticket-header {
-                            background: linear-gradient(90deg, #1a2333 0%, #151d2a 100%);
-                            padding: 24px 32px;
-                            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-                            display: flex;
-                            justify-content: space-between;
-                            align-items: center;
-                        }
-                        .brand {
-                            font-size: 22px;
-                            font-weight: 700;
-                            letter-spacing: 2px;
-                            background: linear-gradient(135deg, #f5d085 0%, #c5a059 100%);
-                            -webkit-background-clip: text;
-                            -webkit-text-fill-color: transparent;
-                        }
-                        .brand-sub {
-                            font-size: 9px;
-                            text-transform: uppercase;
-                            letter-spacing: 4px;
-                            color: rgba(255, 255, 255, 0.4);
-                            margin-top: 2px;
-                        }
-                        .ticket-badge {
-                            font-size: 9px;
-                            font-weight: 700;
-                            letter-spacing: 1px;
-                            padding: 6px 12px;
-                            border-radius: 8px;
-                            background: rgba(197, 160, 89, 0.15);
-                            color: #f5d085;
-                            border: 1px solid rgba(197, 160, 89, 0.3);
-                        }
-                        .hotel-bg {
-                            background: linear-gradient(90deg, #0e271a 0%, #081d11 100%);
-                        }
-                        .hotel-badge {
-                            background: rgba(16, 185, 129, 0.15);
-                            color: #34d399;
-                            border: 1px solid rgba(16, 185, 129, 0.3);
-                        }
-                        .profile-bg {
-                            background: linear-gradient(90deg, #17253d 0%, #0f1a2e 100%);
-                        }
-                        .profile-badge {
-                            background: rgba(59, 130, 246, 0.15);
-                            color: #60a5fa;
-                            border: 1px solid rgba(59, 130, 246, 0.3);
-                        }
-                        .ticket-body {
-                            padding: 32px;
-                        }
-                        .grid-3 {
-                            display: grid;
-                            grid-template-columns: repeat(3, 1fr);
-                            gap: 16px;
-                        }
-                        .grid-4 {
-                            display: grid;
-                            grid-template-columns: repeat(4, 1fr);
-                            gap: 16px;
-                        }
-                        .label {
-                            font-size: 8px;
-                            text-transform: uppercase;
-                            color: rgba(255, 255, 255, 0.4);
-                            font-weight: 600;
-                            letter-spacing: 1px;
-                            display: block;
-                        }
-                        .val {
-                            font-size: 13px;
-                            font-weight: 600;
-                            color: #ffffff;
-                            margin-top: 4px;
-                        }
-                        .route-block {
-                            display: flex;
-                            align-items: center;
-                            justify-content: space-between;
-                            margin-top: 28px;
-                            padding: 20px;
-                            background: rgba(255, 255, 255, 0.02);
-                            border: 1px solid rgba(255, 255, 255, 0.04);
-                            border-radius: 16px;
-                        }
-                        .route-city h3 {
-                            font-size: 32px;
-                            font-weight: 700;
-                            letter-spacing: 1px;
-                            color: #ffffff;
-                        }
-                        .route-city p {
-                            font-size: 10px;
-                            color: rgba(255, 255, 255, 0.5);
-                            margin-top: 2px;
-                        }
-                        .route-arrow {
-                            flex-grow: 1;
-                            display: flex;
-                            flex-direction: column;
-                            align-items: center;
-                            position: relative;
-                            margin: 0 20px;
-                        }
-                        .route-arrow .line {
-                            height: 1px;
-                            border-top: 1px dashed rgba(197, 160, 89, 0.4);
-                            width: 100%;
-                            position: absolute;
-                            top: 50%;
-                            z-index: 1;
-                        }
-                        .route-arrow span {
-                            position: relative;
-                            z-index: 2;
-                            background: #111823;
-                            padding: 0 8px;
-                        }
-                        .text-gold {
-                            color: #f5d085;
-                        }
-                        .hotel-details-block {
-                            margin-top: 28px;
-                            padding: 20px;
-                            background: rgba(16, 185, 129, 0.03);
-                            border: 1px solid rgba(16, 185, 129, 0.08);
-                            border-radius: 16px;
-                        }
-                        .hotel-title {
-                            font-size: 18px;
-                            font-weight: 700;
-                            color: #ffffff;
-                        }
-                        .hotel-sub {
-                            font-size: 11px;
-                            color: rgba(255, 255, 255, 0.5);
-                            margin-top: 2px;
-                        }
-                        .profile-info-block {
-                            margin-top: 28px;
-                            padding: 20px;
-                            background: rgba(59, 130, 246, 0.03);
-                            border: 1px solid rgba(59, 130, 246, 0.08);
-                            border-radius: 16px;
-                        }
-                        .profile-table {
-                            width: 100%;
-                            border-collapse: collapse;
-                            font-size: 11px;
-                            color: rgba(255, 255, 255, 0.8);
-                        }
-                        .profile-table td {
-                            padding: 6px 4px;
-                        }
-                        .ticket-footer {
-                            background: rgba(0, 0, 0, 0.2);
-                            padding: 24px 32px;
-                            border-top: 1px solid rgba(255, 255, 255, 0.05);
-                            display: flex;
-                            flex-direction: column;
-                            align-items: center;
-                            gap: 16px;
-                        }
-                        .barcode-container {
-                            text-align: center;
-                        }
-                        .barcode {
-                            height: 45px;
-                            width: 250px;
-                            background: linear-gradient(90deg, 
-                                #ffffff 0%, #ffffff 3%, 
-                                #000000 3%, #000000 5%, 
-                                #ffffff 5%, #ffffff 6%, 
-                                #000000 6%, #000000 10%, 
-                                #ffffff 10%, #ffffff 11%, 
-                                #000000 11%, #000000 13%,
-                                #ffffff 13%, #ffffff 16%,
-                                #000000 16%, #000000 20%,
-                                #ffffff 20%, #ffffff 23%,
-                                #000000 23%, #000000 24%,
-                                #ffffff 24%, #ffffff 28%,
-                                #000000 28%, #000000 34%,
-                                #ffffff 34%, #ffffff 37%,
-                                #000000 37%, #000000 42%,
-                                #ffffff 42%, #ffffff 45%,
-                                #000000 45%, #000000 46%,
-                                #ffffff 46%, #ffffff 50%,
-                                #000000 50%, #000000 53%,
-                                #ffffff 53%, #ffffff 55%,
-                                #000000 55%, #000000 60%,
-                                #ffffff 60%, #ffffff 63%,
-                                #000000 63%, #000000 67%,
-                                #ffffff 67%, #ffffff 69%,
-                                #000000 69%, #000000 75%,
-                                #ffffff 75%, #ffffff 78%,
-                                #000000 78%, #000000 84%,
-                                #ffffff 84%, #ffffff 87%,
-                                #000000 87%, #000000 91%,
-                                #ffffff 91%, #ffffff 94%,
-                                #000000 94%, #000000 97%,
-                                #ffffff 97%, #ffffff 100%
-                            );
-                            border-radius: 4px;
-                        }
-                        .barcode-text {
-                            font-size: 9px;
-                            color: rgba(255, 255, 255, 0.4);
-                            letter-spacing: 4px;
-                            margin-top: 6px;
-                            display: block;
-                        }
-                        .legal-notice {
-                            font-size: 9px;
-                            color: rgba(255, 255, 255, 0.45);
-                            text-align: justify;
-                            line-height: 1.4;
-                            border-top: 1px solid rgba(255, 255, 255, 0.05);
-                            padding-top: 16px;
-                        }
-                        @media print {
-                            body {
-                                background-color: #ffffff !important;
-                                color: #000000 !important;
-                                padding: 0 !important;
-                            }
-                            .controls {
-                                display: none !important;
-                            }
-                            .print-container {
-                                border: none !important;
-                                box-shadow: none !important;
-                                max-width: 100% !important;
-                                width: 100% !important;
-                                background: #ffffff !important;
-                                color: #000000 !important;
-                            }
-                            .ticket-header {
-                                background: #f3f4f6 !important;
-                                border-bottom: 2px solid #000000 !important;
-                            }
-                            .brand {
-                                -webkit-text-fill-color: #000000 !important;
-                                color: #000000 !important;
-                            }
-                            .brand-sub {
-                                color: #4b5563 !important;
-                            }
-                            .ticket-badge {
-                                background: #ffffff !important;
-                                color: #000000 !important;
-                                border: 1.5px solid #000000 !important;
-                            }
-                            .label {
-                                color: #4b5563 !important;
-                            }
-                            .val {
-                                color: #000000 !important;
-                            }
-                            .route-block {
-                                background: #f9fafb !important;
-                                border: 1px solid #e5e7eb !important;
-                            }
-                            .route-city h3, .route-city p {
-                                color: #000000 !important;
-                            }
-                            .route-arrow span {
-                                background: #ffffff !important;
-                                color: #000000 !important;
-                            }
-                            .hotel-details-block {
-                                background: #f9fafb !important;
-                                border: 1px solid #e5e7eb !important;
-                            }
-                            .hotel-title, .hotel-sub {
-                                color: #000000 !important;
-                            }
-                            .profile-info-block {
-                                background: #f9fafb !important;
-                                border: 1px solid #e5e7eb !important;
-                            }
-                            .profile-table {
-                                color: #000000 !important;
-                            }
-                            .barcode {
-                                background: #000000 !important;
-                                filter: invert(0) !important;
-                            }
-                            .barcode-text {
-                                color: #000000 !important;
-                            }
-                            .legal-notice {
-                                color: #4b5563 !important;
-                                border-top: 1px solid #e5e7eb !important;
-                            }
-                        }
+                        .ticket-header { background: #f3f4f6; padding: 24px 32px; border-bottom: 2px solid #000000; display: flex; justify-content: space-between; align-items: center; }
+                        .hotel-bg { background: #0f172a; }
+                        .profile-bg { background: #f8fafc; }
+                        .brand { font-size: 22px; font-weight: 700; letter-spacing: 2px; color: #000000; margin: 0; }
+                        .brand-sub { font-size: 9px; text-transform: uppercase; letter-spacing: 4px; color: #4b5563; margin-top: 2px; margin-bottom: 0; }
+                        .ticket-badge { font-size: 9px; font-weight: 700; letter-spacing: 1px; padding: 6px 12px; border-radius: 8px; background: #ffffff; color: #000000; border: 1.5px solid #000000; }
+                        .hotel-badge { border-color: #34d399; color: #065f46; background: #d1fae5; }
+                        .profile-badge { border-color: #3b82f6; color: #1e40af; background: #dbeafe; }
+                        .ticket-body { padding: 32px; }
+                        .grid-3 { display: table; width: 100%; table-layout: fixed; }
+                        .grid-3 > div { display: table-cell; width: 33.33%; padding-right: 16px; }
+                        .grid-4 { display: table; width: 100%; table-layout: fixed; }
+                        .grid-4 > div { display: table-cell; width: 25%; padding-right: 16px; }
+                        .label { font-size: 8px; text-transform: uppercase; color: #4b5563; font-weight: 600; letter-spacing: 1px; display: block; }
+                        .val { font-size: 13px; font-weight: 600; color: #000000; margin-top: 4px; margin-bottom: 0; }
+                        .route-block { display: table; width: 100%; margin-top: 28px; padding: 20px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 16px; }
+                        .route-city { display: table-cell; width: 40%; vertical-align: middle; }
+                        .route-arrow { display: table-cell; width: 20%; vertical-align: middle; text-align: center; position: relative; }
+                        .route-arrow .line { height: 1px; border-top: 1px dashed #000000; width: 100%; display: block; }
+                        .route-city h3 { font-size: 32px; font-weight: 700; letter-spacing: 1px; color: #000000; margin: 0; }
+                        .route-city p { font-size: 10px; color: #6b7280; margin-top: 2px; margin-bottom: 0; }
+                        .hotel-details-block, .profile-info-block { margin-top: 28px; padding: 20px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 16px; }
+                        .hotel-title { font-size: 18px; font-weight: 700; color: #000000; margin: 0; }
+                        .hotel-sub { font-size: 11px; color: #6b7280; margin-top: 2px; margin-bottom: 0; }
+                        .profile-table { width: 100%; border-collapse: collapse; font-size: 11px; color: #000000; }
+                        .profile-table td { padding: 6px 4px; }
+                        .ticket-footer { background: #f9fafb; padding: 24px 32px; border-top: 1px solid #e5e7eb; text-align: center; }
+                        .barcode { height: 45px; width: 100%; max-width: 250px; background: repeating-linear-gradient(90deg, #000 0, #000 2px, #fff 2px, #fff 4px, #000 4px, #000 5px, #fff 5px, #fff 8px, #000 8px, #000 12px, #fff 12px, #fff 14px, #000 14px, #000 16px, #fff 16px, #fff 18px, #000 18px, #000 22px, #fff 22px, #fff 26px, #000 26px, #000 28px); border-radius: 4px; margin: 0 auto; }
+                        .barcode-text { font-size: 9px; color: #6b7280; letter-spacing: 4px; margin-top: 6px; display: block; }
+                        .legal-notice { font-size: 9px; color: #4b5563; text-align: justify; line-height: 1.4; padding-top: 16px; margin: 0; }
                     </style>
-                </head>
-                <body>
-                    <div class="controls">
-                        <button onclick="window.print()" class="btn btn-print">
-                            <span class="material-symbols-outlined text-[14px]">print</span>
-                            <span>Imprimir / Guardar PDF</span>
-                        </button>
-                        <button onclick="window.close()" class="btn btn-close">
-                            <span class="material-symbols-outlined text-[14px]">close</span>
-                            <span>Cerrar Vista</span>
-                        </button>
-                    </div>
-                    
-                    <div class="print-container">
+                    <div style="border: 1px solid #e5e7eb; border-radius: 24px; overflow: hidden;">
                         ${contentHtml}
                     </div>
-                    <script>
-                        setTimeout(() => { window.print(); }, 450);
-                    <\/script>
-                </body>
-                </html>
-            `);
-            docWindow.document.close();
+                </div>
+            `;
+            
+            // Apply html2pdf
+            if (typeof html2pdf !== 'undefined') {
+                const opt = {
+                    margin:       10,
+                    filename:     documentName.endsWith('.pdf') ? documentName : documentName + '.pdf',
+                    image:        { type: 'jpeg', quality: 0.98 },
+                    html2canvas:  { scale: 2 },
+                    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+                html2pdf().set(opt).from(printContainer).save();
+            } else {
+                // Fallback to triggering an HTML download if the library didn't load
+                triggerDownload(printContainer.innerHTML, documentName + '.html', 'text/html;charset=utf-8;');
+            }
         }
 
         // IMPORT / EXCEL / CSV / DATA DRAG & DROP ENGINE
@@ -3478,7 +4350,7 @@
                                 clients.unshift({
                                     id: newId,
                                     name: row.nombre,
-                                    email: row.correo || `${row.nombre.toLowerCase().replace(/ /g, '')}@gysfly.com`,
+                                    email: row.correo || `${row.nombre.toLowerCase().replace(/ /g, '')}@agente.com`,
                                     phone: row.telefono || '+34 600 000 000',
                                     status: row.estado || 'Cotización Pendiente',
                                     volume: volume,
@@ -3522,7 +4394,7 @@
                                 clients.unshift({
                                     id: newId,
                                     name: row.name || row.nombre,
-                                    email: row.email || row.correo || 'correo@gysfly.com',
+                                    email: row.email || row.correo || 'correo@agente.com',
                                     phone: row.phone || row.telefono || '+34 600 000 000',
                                     status: row.status || row.estado || 'Cotización Pendiente',
                                     volume: volume,
@@ -3594,7 +4466,7 @@
 
         // DATABASE DOWNLOAD / EXPORT
         function exportToCSV() {
-            // Excel-ready CSV headers for Gysfly Travels
+            // Excel-ready CSV headers for Panel de Agente
             let csvContent = "Nombre,Correo,Telefono,Estado,Gasto_Dolares,Costo_Proveedores,Pais,Codigo_Postal,Destino,Etiquetas,Notas\n";
             
             clients.forEach(c => {
@@ -3608,22 +4480,22 @@
                 csvContent += `"${c.name}","${c.email}","${c.phone}","${c.status}",${c.volume},${costVal},"${countryVal}","${zipVal}","${destVal}","${tagsStr}","${notesClean}"\n`;
             });
             
-            triggerDownload(csvContent, 'CRM_Gysfly_Viajeros_Excel.csv', 'text/csv;charset=utf-8;');
+            triggerDownload(csvContent, 'Base_Datos_Viajeros.csv', 'text/csv;charset=utf-8;');
             showNotification('Exportación Éxito', 'Base de datos de viajeros compatible con Excel descargada.', 'success');
         }
 
         function exportToJSON() {
             const jsonString = JSON.stringify(clients, null, 2);
-            triggerDownload(jsonString, 'CRM_Gysfly_Viajeros.json', 'application/json;charset=utf-8;');
+            triggerDownload(jsonString, 'Base_Datos_Viajeros.json', 'application/json;charset=utf-8;');
             showNotification('Exportación Éxito', 'Fichero JSON descargado correctamente.', 'success');
         }
 
         function downloadCSVTemplate() {
             const template = "Nombre,Correo,Telefono,Estado,Gasto_Dolares,Costo_Proveedores,Pais,Codigo_Postal,Destino,Etiquetas,Notas\n" +
-                             "Christian Duran,christian@gysfly.com,+34 600 123 456,Viaje Activo,4850,3395,España,28001,Bali,VIP;Playa,Notas de prueba de Christian\n" +
-                             "Laura Mendoza,laura@gysfly.com,+34 600 987 654,Reserva Confirmada,3200,2240,México,11000,París,Luna de Miel;Europa,Viaje de aniversario";
+                             "Christian Duran,christian@agente.com,+34 600 123 456,Viaje Activo,4850,3395,España,28001,Bali,VIP;Playa,Notas de prueba de Christian\n" +
+                             "Laura Mendoza,laura@agente.com,+34 600 987 654,Reserva Confirmada,3200,2240,México,11000,París,Luna de Miel;Europa,Viaje de aniversario";
                               
-            triggerDownload(template, 'Plantilla_Viajeros_Gysfly.csv', 'text/csv;charset=utf-8;');
+            triggerDownload(template, 'Plantilla_Viajeros.csv', 'text/csv;charset=utf-8;');
             showNotification('Descarga Plantilla', 'Rellena las filas en Excel e impórtalas al sistema.', 'success');
         }
 
@@ -3823,7 +4695,7 @@
         
         function openMagicAddModal(type = 'cliente') {
             const assigneeSelect = document.getElementById('task-assignee');
-            assigneeSelect.innerHTML = '<option value="Sistema">Sistema (Gysfly Cloud)</option>';
+            assigneeSelect.innerHTML = '<option value="Sistema">Sistema (Agent Cloud)</option>';
             clients.forEach(c => {
                 assigneeSelect.innerHTML += `<option value="${c.name}">${c.name}</option>`;
             });
@@ -3858,7 +4730,7 @@
                 taskToggle.classList.add('text-on-surface-variant');
                 document.getElementById('magic-modal-title').innerHTML = `
                     <span class="material-symbols-outlined text-primary">person_add</span>
-                    <span>Registrar Cliente Gysfly</span>
+                    <span>Registrar Nuevo Cliente</span>
                 `;
             } else {
                 clientForm.classList.add('hidden');
@@ -3908,6 +4780,7 @@
             const destination = document.getElementById('client-destination').value.trim() || 'Bali';
             const tagsText = document.getElementById('client-tags').value;
             const notes = document.getElementById('client-notes').value.trim() || 'Ficha de viajero creada en el panel administrativo.';
+            const advisor = document.getElementById('client-advisor') ? document.getElementById('client-advisor').value : 'Carlos Mendoza';
             
             const tagsArr = tagsText ? tagsText.split(',').map(t => t.trim()) : ['Nuevo'];
             const newId = clients.length ? Math.max(...clients.map(c => c.id)) + 1 : 1;
@@ -3923,6 +4796,7 @@
                 country,
                 postal_code,
                 destination,
+                advisor,
                 tags: tagsArr,
                 notes,
                 files: [
@@ -3972,8 +4846,8 @@
         // EMAIL COMPOSER MODAL
         function openEmailModal(email) {
             document.getElementById('email-to').value = email;
-            document.getElementById('email-subject').value = 'Servicio de Datos — CRM GYSFLY';
-            document.getElementById('email-body').value = 'Estimado cliente, nos comunicamos desde la dirección gerencial de Gysfly para informarle que...';
+            document.getElementById('email-subject').value = 'Servicio de Datos — Panel de Agente';
+            document.getElementById('email-body').value = 'Estimado cliente, nos comunicamos desde la dirección gerencial del Panel de Agente para informarle que...';
             document.getElementById('modal-email').classList.remove('hidden');
             document.getElementById('modal-email').classList.add('flex');
         }
@@ -3987,7 +4861,7 @@
             event.preventDefault();
             const to = document.getElementById('email-to').value;
             
-            showNotification('Enviando Correo', `Conectando con servidor de correo Gysfly...`, 'warning');
+            showNotification('Enviando Correo', `Conectando con servidor de correo...`, 'warning');
             
             setTimeout(() => {
                 showNotification('Correo Enviado', `Correo gerencial enviado a ${to}.`, 'success');
@@ -4104,7 +4978,7 @@
                 } else if(progress >= 65 && progress < 90) {
                     progressStatus.innerText = 'Generando certificado de seguro de viaje internacional...';
                 } else if(progress >= 90) {
-                    progressStatus.innerText = 'Escribiendo reserva en el registro general de Gysfly Travels...';
+                    progressStatus.innerText = 'Escribiendo reserva en el registro general de Panel de Agente...';
                 }
             }, 250);
         }
@@ -4112,11 +4986,11 @@
         // CAMPAIGNS MARKETING ENGINE
         const templates = {
             newsletter: {
-                subject: 'Novedades de Destino: Explora el Sudeste Asiático con Gysfly Travels',
+                subject: 'Novedades de Destino: Explora el Sudeste Asiático con Panel de Agente',
                 body: 'Estimado viajero, nos complace presentarte nuestra guía exclusiva para recorrer Bali y Tailandia esta temporada. Hemos concertado alianzas con resorts de 5 estrellas en Ubud y Seminyak con tarifas preferenciales y transfers de lujo incluidos. Contacta con tu agente asignado para diseñar tu itinerario a medida.'
             },
             promo: {
-                subject: 'Promo Exclusiva: Vuelo Business directo a Maldivas con Gysfly Travels',
+                subject: 'Promo Exclusiva: Vuelo Business directo a Maldivas con Panel de Agente',
                 body: '¡Hola! Tenemos plazas exclusivas con un 20% de descuento en cabina Business para vuelos directos a Maldivas saliendo este próximo mes. Además, tu reserva incluye el acceso VIP a salas Lounge en aeropuertos de escala y traslados en hidroavión al resort. ¡Cupos muy limitados!'
             },
             update: {
@@ -4162,7 +5036,7 @@
             const segment = document.getElementById('campaign-segment').value;
             
             const segmentMapping = {
-                all: 'Todos los viajeros (Gysfly DB)',
+                all: 'Todos los viajeros (Base de Datos)',
                 activo: 'Solo viajeros con "Viaje Activo"',
                 confirmado: 'Solo viajeros con "Reserva Confirmada"',
                 cotizacion: 'Solo viajeros con "Cotización Pendiente"',
@@ -4223,14 +5097,14 @@
             if(progressBar) progressBar.style.width = '0%';
             if(percentText) percentText.innerText = '0%';
             if(statusText) statusText.innerText = 'Iniciando cola de envíos SMTP...';
-            if(consoleLog) consoleLog.innerHTML = `<p class="text-on-surface-variant/40">[INFO] Inicializando despachador masivo GYSFLY Travels...</p>`;
+            if(consoleLog) consoleLog.innerHTML = `<p class="text-on-surface-variant/40">[INFO] Inicializando despachador masivo Panel de Agente...</p>`;
             if(closeBtn) closeBtn.setAttribute('disabled', 'true');
             
             // Simulating steps
             const logSteps = [
-                { time: 500, log: '[INFO] Conectando con servidor de correo Gysfly SMTP (smtp.gysfly.com:465)...', progress: 10, status: 'Conectando con servidor SMTP...' },
+                { time: 500, log: '[INFO] Conectando con servidor de correo SMTP (smtp.panelagente.com:465)...', progress: 10, status: 'Conectando con servidor SMTP...' },
                 { time: 1000, log: '[OK] Conexión establecida. Protocolo SSL/TLS activo (Certificado válido).', progress: 20, status: 'Estableciendo canal seguro...' },
-                { time: 1500, log: '[INFO] Autenticando credenciales de la agencia (reservas@gysfly.com)...', progress: 30, status: 'Autenticando en servidor...' },
+                { time: 1500, log: '[INFO] Autenticando credenciales de la agencia (reservas@agente.com)...', progress: 30, status: 'Autenticando en servidor...' },
                 { time: 2000, log: `[OK] Autenticación completada. Iniciando envío del lote para ${filteredClients.length} viajeros (${recipientsCount} destinatarios simulados).`, progress: 40, status: 'Transmitiendo lote de correos...' }
             ];
             
@@ -4709,7 +5583,159 @@
             
             // Update charts based on filtered travelers
             updateChartsWithFilteredData(filtered);
+            
+            // Update Stitch premium visual modules
+            updateStitchTrends(filtered);
+            updateStitchDonut(filtered);
         }
+        // =============================================
+        // STITCH PREMIUM MODULES: Trends Bar + Donut
+        // =============================================
+
+        function updateStitchTrends(filteredClients) {
+            var barsContainer = document.getElementById('stitch-trends-bars');
+            if (!barsContainer) return;
+
+            var months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+            var periodEl = document.getElementById('stitch-trends-period');
+            var period = periodEl ? parseInt(periodEl.value) : 6;
+            var currentMonth = new Date().getMonth();
+
+            // Create monthly revenue buckets
+            var monthlyRevenue = [];
+            var monthlyCount = [];
+            for (var p = 0; p < period; p++) { monthlyRevenue.push(0); monthlyCount.push(0); }
+
+            filteredClients.forEach(function(c) {
+                var bucket = ((c.id || 0) * 7 + 3) % period;
+                monthlyRevenue[bucket] += (c.volume || 0);
+                monthlyCount[bucket]++;
+            });
+
+            var maxVal = Math.max.apply(null, monthlyRevenue.concat([1]));
+
+            // Update Y axis labels
+            for (var i = 1; i <= 4; i++) {
+                var el = document.getElementById('stitch-y-' + i);
+                if (el) {
+                    var val = Math.round(maxVal * (i / 4));
+                    el.innerText = val >= 1000 ? '$' + (val / 1000).toFixed(0) + 'k' : '$' + val;
+                }
+            }
+
+            // Build bars HTML
+            var barsHTML = '';
+            var trendPoints = [];
+            var chartH = 220; // approximate chart height in px
+
+            for (var j = 0; j < period; j++) {
+                var mIdx = ((currentMonth - period + 1 + j) % 12 + 12) % 12;
+                var heightPct = Math.max(4, (monthlyRevenue[j] / maxVal) * 100);
+                var isActive = (j === period - 1);
+                var barBg = isActive ? 'bg-primary/40' : 'bg-surface-container-high';
+                var labelClass = isActive ? 'text-primary font-bold' : 'text-on-surface-variant';
+                var valDisplay = monthlyRevenue[j] >= 1000 ? '$' + (monthlyRevenue[j] / 1000).toFixed(1) + 'k' : '$' + monthlyRevenue[j];
+                var countDisplay = monthlyCount[j] + ' viajero' + (monthlyCount[j] !== 1 ? 's' : '');
+
+                // Calculate SVG point position (percentage-based)
+                var xPct = ((j + 0.5) / period) * 100;
+                var yPct = 100 - heightPct;
+                trendPoints.push(xPct.toFixed(1) + '% ' + yPct.toFixed(1) + '%');
+
+                barsHTML += '<div class="flex-1 flex flex-col items-center group cursor-pointer">';
+                barsHTML += '<div class="w-full max-w-[28px] ' + barBg + ' group-hover:bg-primary/25 rounded-t-md transition-all duration-300 relative" style="height: ' + heightPct + '%">';
+                barsHTML += '<div class="absolute -top-12 left-1/2 -translate-x-1/2 bg-surface-bright/95 backdrop-blur-sm text-on-surface text-[10px] py-1.5 px-3 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-200 whitespace-nowrap shadow-xl z-30 border border-glass-stroke pointer-events-none">';
+                barsHTML += '<span class="font-bold">' + valDisplay + '</span><br>';
+                barsHTML += '<span class="text-on-surface-variant text-[9px]">' + countDisplay + '</span>';
+                barsHTML += '</div>';
+                if (isActive) {
+                    barsHTML += '<div class="absolute -top-3 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-primary border-2 border-background-base shadow-lg shadow-primary/40 animate-pulse"></div>';
+                }
+                barsHTML += '</div>';
+                barsHTML += '<span class="text-[11px] ' + labelClass + ' mt-3">' + months[mIdx] + '</span>';
+                barsHTML += '</div>';
+            }
+
+            barsContainer.innerHTML = barsHTML;
+
+            // Update SVG trend line
+            var svgEl = document.getElementById('stitch-trend-svg');
+            if (svgEl) {
+                var svgW = svgEl.clientWidth || 600;
+                var svgH = svgEl.clientHeight || 200;
+                var pointStr = '';
+                for (var k = 0; k < period; k++) {
+                    var px = ((k + 0.5) / period) * svgW;
+                    var py = svgH - ((monthlyRevenue[k] / maxVal) * svgH * 0.92);
+                    pointStr += px.toFixed(0) + ',' + py.toFixed(0) + ' ';
+                }
+                var trendLine = document.getElementById('stitch-trend-line');
+                var trendGlow = document.getElementById('stitch-trend-line-glow');
+                if (trendLine) trendLine.setAttribute('points', pointStr.trim());
+                if (trendGlow) trendGlow.setAttribute('points', pointStr.trim());
+            }
+        }
+
+        function updateStitchDonut(filteredClients) {
+            var donutRing = document.getElementById('stitch-donut-ring');
+            var totalEl = document.getElementById('stitch-donut-total');
+            var legendEl = document.getElementById('stitch-donut-legend');
+            if (!donutRing || !totalEl || !legendEl) return;
+
+            // Group clients by country
+            var countryGroups = {};
+            filteredClients.forEach(function(c) {
+                var country = c.country || 'Sin País';
+                countryGroups[country] = (countryGroups[country] || 0) + 1;
+            });
+
+            var colors = ['#6366F1', '#d0bcff', '#F59E0B', '#10B981', '#EF4444', '#8B5CF6', '#f472b6'];
+            var entries = Object.entries(countryGroups).sort(function(a, b) { return b[1] - a[1]; });
+            var total = Math.max(filteredClients.length, 1);
+
+            // Build conic-gradient
+            var gradientParts = [];
+            var cumPercent = 0;
+            entries.forEach(function(entry, i) {
+                var count = entry[1];
+                var pct = (count / total) * 100;
+                var color = colors[i % colors.length];
+                gradientParts.push(color + ' ' + cumPercent.toFixed(1) + '% ' + (cumPercent + pct).toFixed(1) + '%');
+                cumPercent += pct;
+            });
+            if (gradientParts.length === 0) {
+                gradientParts.push('#34343d 0% 100%');
+            }
+
+            donutRing.style.background = 'conic-gradient(from 0deg, ' + gradientParts.join(', ') + ')';
+
+            // Update total display
+            if (filteredClients.length >= 1000) {
+                totalEl.innerText = (filteredClients.length / 1000).toFixed(1) + 'k';
+            } else {
+                totalEl.innerText = filteredClients.length;
+            }
+
+            // Build legend (top 5 countries)
+            var legendHTML = '';
+            var maxEntries = Math.min(entries.length, 5);
+            for (var i = 0; i < maxEntries; i++) {
+                var country = entries[i][0];
+                var count = entries[i][1];
+                var pct = Math.round((count / total) * 100);
+                var color = colors[i % colors.length];
+                legendHTML += '<div class="flex items-center justify-between text-xs">';
+                legendHTML += '<div class="flex items-center gap-2">';
+                legendHTML += '<div class="w-3 h-3 rounded-full flex-shrink-0" style="background: ' + color + ';"></div>';
+                legendHTML += '<span class="text-white">' + country + '</span>';
+                legendHTML += '</div>';
+                legendHTML += '<span class="text-on-surface-variant font-semibold">' + pct + '%</span>';
+                legendHTML += '</div>';
+            }
+
+            legendEl.innerHTML = legendHTML;
+        }
+
     </script>
 </body>
 </html>

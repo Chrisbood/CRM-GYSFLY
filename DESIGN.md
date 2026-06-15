@@ -1,6 +1,6 @@
-# Sistema de Diseño de CRM GYSFLY
+# Sistema de Diseño de Panel de Agente
 
-CRM GYSFLY es una plataforma premium de gestión de relaciones con clientes (CRM) y tareas, que combina la elegancia minimalista, la concentración y la fluidez de **Things 3** con la potencia visual de analíticas interactivas, bases de datos avanzadas de clientes y herramientas de campañas de marketing.
+El Panel de Agente es una plataforma premium de gestión de relaciones con clientes (CRM) y tareas, que combina la elegancia minimalista, la concentración y la fluidez de **Things 3** con la potencia visual de analíticas interactivas, bases de datos avanzadas de clientes y herramientas de campañas de marketing.
 
 ---
 

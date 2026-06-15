@@ -20,6 +20,7 @@ global.document = {
             getContext: function() { return {}; },
             style: {},
             setAttribute: function() {},
+            addEventListener: function() {},
             value: ''
         };
         dummyElement.parentElement = dummyElement;

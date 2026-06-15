@@ -1,7 +1,7 @@
 {
-  "name": "crm-gysfly-travels",
+  "name": "crm-agent-panel",
   "version": "2.0.0",
-  "description": "Enterprise B2B CRM Platform for Gysfly Travels, inspired by Ezus.io standard",
+  "description": "Enterprise B2B CRM Platform for Agent Panel, inspired by Ezus.io standard",
   "main": "index.html",
   "scripts": {
     "start": "bash start.sh"

@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Panel de Agente - Gestión de Pasajeros</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-card": "#111827",
+                        "primary-container": "#8083ff",
+                        "surface-dim": "#13131b",
+                        "on-secondary-container": "#c4abff",
+                        "surface-variant": "#34343d",
+                        "tertiary": "#ffb783",
+                        "surface-container": "#1f1f27",
+                        "surface-container-lowest": "#0d0d15",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "on-primary-fixed": "#07006c",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-low": "#1b1b23",
+                        "success": "#10B981",
+                        "primary": "#c0c1ff",
+                        "outline-variant": "#464554",
+                        "on-primary-container": "#0d0096",
+                        "background-base": "#090D16",
+                        "on-secondary-fixed-variant": "#5516be",
+                        "on-secondary": "#3c0091",
+                        "on-tertiary-fixed-variant": "#703700",
+                        "on-tertiary-fixed": "#301400",
+                        "surface-bright": "#393841",
+                        "tertiary-fixed-dim": "#ffb783",
+                        "on-tertiary-container": "#452000",
+                        "outline": "#908fa0",
+                        "inverse-surface": "#e4e1ed",
+                        "error": "#ffb4ab",
+                        "on-background": "#e4e1ed",
+                        "secondary": "#d0bcff",
+                        "surface": "#13131b",
+                        "secondary-fixed": "#e9ddff",
+                        "warning": "#F59E0B",
+                        "background": "#13131b",
+                        "on-error": "#690005",
+                        "on-surface-variant": "#c7c4d7",
+                        "on-secondary-fixed": "#23005c",
+                        "tertiary-container": "#d97721",
+                        "error-container": "#93000a",
+                        "secondary-fixed-dim": "#d0bcff",
+                        "border-muted": "#1F2937",
+                        "on-tertiary": "#4f2500",
+                        "on-surface": "#e4e1ed",
+                        "primary-fixed": "#e1e0ff",
+                        "danger": "#EF4444",
+                        "secondary-container": "#571bc1",
+                        "inverse-primary": "#494bd6",
+                        "glass-stroke": "rgba(255, 255, 255, 0.08)",
+                        "on-primary": "#1000a9",
+                        "tertiary-fixed": "#ffdcc5",
+                        "surface-container-high": "#292932",
+                        "surface-container-highest": "#34343d",
+                        "inverse-on-surface": "#303038",
+                        "surface-tint": "#c0c1ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "32px",
+                        "container-max": "1440px",
+                        "unit": "4px",
+                        "gutter": "24px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-xl": ["Outfit"],
+                        "label-caps": ["Outfit"],
+                        "headline-xl-mobile": ["Outfit"],
+                        "body-sm": ["Outfit"],
+                        "headline-md": ["Outfit"],
+                        "body-md": ["Outfit"]
+                    },
+                    "fontSize": {
+                        "headline-xl": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-xl-mobile": ["28px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "body-sm": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "headline-md": ["18px", { "lineHeight": "1.4", "fontWeight": "500" }],
+                        "body-md": ["15px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: linear-gradient(145deg, rgba(19, 19, 27, 0.7) 0%, rgba(13, 13, 21, 0.9) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-stroke, rgba(255, 255, 255, 0.08));
+        }
+        
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1); 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #34343d; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #464554; 
+        }
+
+        /* Animated gradient text and glow for the project name */
+        @keyframes brandGlow {
+            0% {
+                background-position: 0% 50%;
+                filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.3));
+            }
+            50% {
+                background-position: 100% 50%;
+                filter: drop-shadow(0 0 15px rgba(139, 92, 246, 0.6));
+            }
+            100% {
+                background-position: 0% 50%;
+                filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.3));
+            }
+        }
+
+        .animated-brand-title {
+            background: linear-gradient(
+                90deg,
+                #6366F1 0%,
+                #a78bfa 25%,
+                #f472b6 50%,
+                #a78bfa 75%,
+                #6366F1 100%
+            );
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: brandGlow 6s ease infinite;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body class="bg-background-base text-on-surface font-body-md font-body-md h-screen w-full flex overflow-hidden selection:bg-primary selection:text-on-primary animate-fade-in">
+<!-- DESKTOP SIDENAV (From JSON) -->
+<aside id="desktop-sidenav" class="hidden md:flex flex-col h-screen py-margin-desktop space-y-6 bg-surface-container-lowest/90 backdrop-blur-2xl border-r border-glass-stroke shadow-2xl shadow-black fixed left-0 top-0 w-64 z-50">
+<!-- Header -->
+<div class="px-6 flex items-center gap-3">
+    <div class="w-8 h-8 bg-gradient-to-tr from-primary to-primary-container rounded-lg flex items-center justify-center shadow-md">
+        <svg class="w-5 h-5 text-white" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="logoGradStitchSidebar" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#ffffff" />
+                    <stop offset="100%" stop-color="#c0c1ff" />
+                </linearGradient>
+            </defs>
+            <path d="M15 45L85 15L55 85L45 55L15 45Z" fill="url(#logoGradStitchSidebar)" stroke="rgba(255,255,255,0.4)" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M85 15L45 55" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+    </div>
+    <div>
+        <h1 class="font-headline-md text-headline-md font-bold leading-tight animated-brand-title">PANEL DE AGENTE</h1>
+        <p class="text-[9px] text-on-surface-variant uppercase tracking-wider opacity-60">Consola de Viajes</p>
+    </div>
+</div>
+<!-- CTA -->
+<div class="px-4 mt-4">
+<button class="w-full bg-primary text-on-primary font-body-md text-body-md py-2.5 rounded-xl hover:bg-white/90 hover:translate-y-[-2px] transition-all duration-300 shadow-lg shadow-primary/20 flex justify-center items-center gap-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+                Nueva Reserva
+            </button>
+</div>
+<!-- Navigation Links -->
+<nav class="flex-1 flex flex-col gap-1 mt-6">
+<!-- Inbox -->
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:text-on-surface hover:bg-white/5 hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">inbox</span>
+<span class="font-body-sm text-body-sm">Inbox</span>
+</a>
+<!-- Hoy -->
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:text-on-surface hover:bg-white/5 hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">today</span>
+<span class="font-body-sm text-body-sm">Hoy</span>
+</a>
+<!-- Clientes (ACTIVE TAB - Maps to Passenger Management) -->
+<a class="flex items-center gap-3 bg-primary/10 text-primary border-l-4 border-primary px-4 py-3 rounded-r-xl translate-y-[-2px] transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+<span class="font-body-sm text-body-sm font-medium">Clientes</span>
+</a>
+<!-- Analíticas de Viajes -->
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:text-on-surface hover:bg-white/5 hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">travel_explore</span>
+<span class="font-body-sm text-body-sm">Analíticas de Viajes</span>
+</a>
+<!-- Ajustes -->
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:text-on-surface hover:bg-white/5 hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-sm text-body-sm">Ajustes</span>
+</a>
+</nav>
+<!-- Footer Links -->
+<div class="mt-auto">
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:text-on-surface hover:bg-white/5 hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">contact_support</span>
+<span class="font-body-sm text-body-sm">Soporte</span>
+</a>
+</div>
+</aside>
+<!-- MOBILE TOPNAV (From JSON fallback structural elements) -->
+<header id="mobile-header" class="md:hidden flex justify-between items-center w-full px-margin-mobile py-4 bg-background-base/80 backdrop-blur-xl border-b border-glass-stroke shadow-sm shadow-primary/5 docked full-width top-0 sticky z-40">
+<h1 class="font-headline-md text-headline-md font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary animated-brand-title">PANEL DE AGENTE</h1>
+<div class="flex gap-4 items-center">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">search</span>
+</button>
+<img alt="User profile" class="w-8 h-8 rounded-full border border-glass-stroke object-cover" data-alt="A close up studio portrait of a professional woman with dark hair, wearing glasses and a dark blazer. The lighting is soft and cinematic, fitting a premium corporate aesthetic. The background is a subtle, dark obsidian gradient to match the UI theme." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5jklhbYXVfi1WYL0djt7Xclly0CpJsz4y9pNF-pwNtpGhsd2xyqM1JIi3RtcrXhf995lHs3hXxhN9r1n4b-xuzXdZNY_k-ojr8cTWtRWnh9G6Wv9hjUHEBfZh_RAGX73HkqV-Oh427x5yj8pfoRkkI1diLPynTbGeGzWIosZXPYHNBbz_weOL7AYjD1t758QGyHKXZzgFxalWiYZlPf4JqiCBNUvb3wtMWl4O4yoqytdFKVgVnYevMcYSFFqb31fYJ47yB_6ZR6o-"/>
+</div>
+</header>
+<!-- MAIN CANVAS -->
+<main id="main-content" class="flex-1 flex flex-col md:ml-64 h-full relative overflow-hidden">
+<!-- Scrollable Content Area -->
+<div class="flex-1 overflow-y-auto px-margin-mobile md:px-margin-desktop py-6 md:py-margin-desktop">
+<!-- Page Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+<div>
+<h2 class="font-headline-xl-mobile md:font-headline-xl text-headline-xl-mobile md:text-headline-xl text-on-surface mb-2">Gestión de Pasajeros</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Monitorea y administra el flujo de viajeros activos e históricos.</p>
+</div>
+<!-- Desktop Actions -->
+<div class="hidden md:flex items-center gap-4">
+<button onclick="if(window.parent && window.parent.exportToCSV) window.parent.exportToCSV();" class="flex items-center gap-2 px-4 py-2 rounded-lg border border-glass-stroke text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all duration-300 font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                        Exportar Excel
+                    </button>
+<!-- Magic Add Button (Desktop) -->
+<button onclick="if(window.parent && window.parent.openMagicAddModal) window.parent.openMagicAddModal('cliente');" class="group flex items-center justify-center w-10 h-10 rounded-full bg-primary text-on-primary hover:bg-primary-container shadow-lg shadow-primary/20 transition-all duration-300 hover:scale-105 active:scale-95">
+<span class="material-symbols-outlined transition-transform duration-300 group-hover:rotate-90">add</span>
+</button>
+</div>
+</div>
+<!-- Filters Section (Glassmorphism Bento Grid style) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+<div class="glass-panel p-4 rounded-xl flex flex-col gap-2 relative group hover:-translate-y-1 transition-transform duration-300">
+<label class="font-label-caps text-label-caps text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">calendar_month</span> Mes de Viaje
+                    </label>
+<select id="filter-mes-stitch" onchange="renderStitchPassengers()" class="bg-transparent border-none text-on-surface font-body-md text-body-md focus:ring-0 p-0 cursor-pointer appearance-none">
+<option class="bg-surface-container text-on-surface" value="all">Todos los meses</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none group-hover:text-primary transition-colors">expand_more</span>
+</div>
+<div class="glass-panel p-4 rounded-xl flex flex-col gap-2 relative group hover:-translate-y-1 transition-transform duration-300">
+<label class="font-label-caps text-label-caps text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">location_on</span> Destino
+                    </label>
+<select id="filter-destino-stitch" onchange="renderStitchPassengers()" class="bg-transparent border-none text-on-surface font-body-md text-body-md focus:ring-0 p-0 cursor-pointer appearance-none">
+<option class="bg-surface-container text-on-surface" value="all">Todos los destinos</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none group-hover:text-primary transition-colors">expand_more</span>
+</div>
+<div class="glass-panel p-4 rounded-xl flex flex-col gap-2 relative group hover:-translate-y-1 transition-transform duration-300">
+<label class="font-label-caps text-label-caps text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">support_agent</span> Asesor
+                    </label>
+<select id="filter-advisor-stitch" onchange="renderStitchPassengers()" class="bg-transparent border-none text-on-surface font-body-md text-body-md focus:ring-0 p-0 cursor-pointer appearance-none">
+<option class="bg-surface-container text-on-surface" value="all">Cualquier Asesor</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none group-hover:text-primary transition-colors">expand_more</span>
+</div>
+</div>
+<!-- Mobile Export Action -->
+<div class="md:hidden mb-6 flex justify-end">
+<button onclick="if(window.parent && window.parent.exportToCSV) window.parent.exportToCSV();" class="flex items-center gap-2 px-4 py-2 rounded-lg border border-glass-stroke text-on-surface-variant hover:text-on-surface bg-surface-container-low font-body-sm text-body-sm w-full justify-center">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                    Exportar Excel
+                </button>
+</div>
+<!-- Data Table Card -->
+<div class="glass-panel rounded-xl overflow-hidden shadow-xl shadow-black/40">
+<div class="overflow-x-auto">
+<table class="w-full text-left whitespace-nowrap">
+<thead class="bg-surface-container/50 border-b border-glass-stroke">
+<tr>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Pasajero</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Destino Actual</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Asesor Asignado</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Fecha de Viaje</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Estado</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider text-right">Acciones</th>
+</tr>
+</thead>
+<tbody id="passengers-table-body" class="divide-y divide-glass-stroke">
+<!-- Dynamic Rows -->
+</tbody>
+</table>
+</div>
+<!-- Table Footer / Pagination -->
+<div class="px-6 py-4 border-t border-glass-stroke flex justify-between items-center bg-surface-container-lowest/50">
+<span id="stitch-passengers-count-label" class="font-body-sm text-[13px] text-on-surface-variant">Mostrando 0 de 0 pasajeros</span>
+<div class="flex gap-2">
+<button onclick="changePage(-1)" class="w-8 h-8 rounded-lg border border-glass-stroke flex items-center justify-center text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<div id="stitch-pagination-numbers" class="flex gap-2">
+<!-- Dynamic numbers -->
+</div>
+<button onclick="changePage(1)" class="w-8 h-8 rounded-lg border border-glass-stroke flex items-center justify-center text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Spacer for mobile FAB -->
+<div class="h-24 md:hidden"></div>
+</div>
+<!-- MOBILE MAGIC ADD FAB -->
+<button onclick="if(window.parent && window.parent.openMagicAddModal) window.parent.openMagicAddModal('cliente');" class="md:hidden fixed bottom-6 right-6 w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg shadow-primary/30 flex items-center justify-center z-50 hover:scale-105 active:scale-95 transition-all duration-300 group">
+<span class="material-symbols-outlined text-[28px] group-hover:rotate-45 transition-transform duration-300">add</span>
+</button>
+<!-- Ambient Glow Elements (Background) -->
+<div class="fixed top-[-10%] right-[-5%] w-[40vw] h-[40vw] bg-primary/5 rounded-full blur-[100px] pointer-events-none -z-10"></div>
+<div class="fixed bottom-[-10%] left-[-5%] w-[30vw] h-[30vw] bg-secondary/5 rounded-full blur-[100px] pointer-events-none -z-10"></div>
+</main>
+
+<script>
+    // State management for passenger table
+    let clients = [];
+    let advisors = [];
+    let currentPage = 1;
+    const itemsPerPage = 5;
+
+    // Load data from parent or localStorage
+    function loadData() {
+        try {
+            clients = JSON.parse(localStorage.getItem('gysfly_clients') || '[]');
+            advisors = JSON.parse(localStorage.getItem('gysfly_advisors') || '[]');
+        } catch(e) {
+            console.error("Error loading localStorage data inside iframe:", e);
+        }
+    }
+
+    // Dynamic month translation helper
+    function getMonthYearString(dateStr) {
+        if (!dateStr) return "Sin Fecha";
+        const parts = dateStr.split('/');
+        if (parts.length === 3) {
+            const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+            const monthIdx = parseInt(parts[1], 10) - 1;
+            const year = parts[2];
+            if (monthIdx >= 0 && monthIdx < 12) {
+                return `${monthNames[monthIdx]} ${year}`;
+            }
+        }
+        return "Otro";
+    }
+
+    // Populate dropdown options based on current active database content
+    function populateFilters() {
+        const mesSelect = document.getElementById('filter-mes-stitch');
+        const destSelect = document.getElementById('filter-destino-stitch');
+        const advSelect = document.getElementById('filter-advisor-stitch');
+
+        if (!mesSelect || !destSelect || !advSelect) return;
+
+        // Remember selections
+        const currentMes = mesSelect.value;
+        const currentDest = destSelect.value;
+        const currentAdv = advSelect.value;
+
+        // Reset
+        mesSelect.innerHTML = '<option class="bg-surface-container text-on-surface" value="all">Todos los meses</option>';
+        destSelect.innerHTML = '<option class="bg-surface-container text-on-surface" value="all">Todos los destinos</option>';
+        advSelect.innerHTML = '<option class="bg-surface-container text-on-surface" value="all">Cualquier Asesor</option>';
+
+        // 1. Months
+        const uniqueMonths = new Set();
+        clients.forEach(c => {
+            if (c.date) uniqueMonths.add(getMonthYearString(c.date));
+        });
+        uniqueMonths.forEach(m => {
+            mesSelect.innerHTML += `<option class="bg-surface-container text-on-surface" value="${m}">${m}</option>`;
+        });
+
+        // 2. Destinations
+        const uniqueDestinations = new Set();
+        clients.forEach(c => {
+            const dest = c.destination || c.destino;
+            if (dest) uniqueDestinations.add(dest.trim());
+        });
+        uniqueDestinations.forEach(d => {
+            destSelect.innerHTML += `<option class="bg-surface-container text-on-surface" value="${d.toLowerCase()}">${d}</option>`;
+        });
+
+        // 3. Advisors
+        advisors.forEach(a => {
+            advSelect.innerHTML += `<option class="bg-surface-container text-on-surface" value="${a.name}">${a.name}</option>`;
+        });
+
+        // Restore values
+        if (Array.from(mesSelect.options).some(o => o.value === currentMes)) mesSelect.value = currentMes;
+        if (Array.from(destSelect.options).some(o => o.value === currentDest)) destSelect.value = currentDest;
+        if (Array.from(advSelect.options).some(o => o.value === currentAdv)) advSelect.value = currentAdv;
+    }
+
+    // Render passengers to dynamic table with paginated, filtered data
+    function renderStitchPassengers() {
+        loadData();
+        const tbody = document.getElementById('passengers-table-body');
+        const countLabel = document.getElementById('stitch-passengers-count-label');
+        if (!tbody) return;
+
+        const mesVal = document.getElementById('filter-mes-stitch').value;
+        const destVal = document.getElementById('filter-destino-stitch').value;
+        const advVal = document.getElementById('filter-advisor-stitch').value;
+
+        // Apply filters
+        let filtered = [...clients];
+
+        if (mesVal !== 'all') {
+            filtered = filtered.filter(c => getMonthYearString(c.date) === mesVal);
+        }
+        if (destVal !== 'all') {
+            filtered = filtered.filter(c => {
+                const d = c.destination || c.destino || '';
+                return d.toLowerCase().includes(destVal);
+            });
+        }
+        if (advVal !== 'all') {
+            filtered = filtered.filter(c => (c.advisor || 'Carlos Mendoza') === advVal);
+        }
+
+        // Pagination
+        const totalItems = filtered.length;
+        const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
+        if (currentPage > totalPages) currentPage = totalPages;
+        if (currentPage < 1) currentPage = 1;
+
+        const startIdx = (currentPage - 1) * itemsPerPage;
+        const endIdx = Math.min(startIdx + itemsPerPage, totalItems);
+        const pageItems = filtered.slice(startIdx, endIdx);
+
+        // Update count label
+        if (countLabel) {
+            countLabel.textContent = `Mostrando ${totalItems > 0 ? startIdx + 1 : 0} a ${endIdx} de ${totalItems} pasajero${totalItems !== 1 ? 's' : ''}`;
+        }
+
+        // Render rows
+        tbody.innerHTML = '';
+        if (pageItems.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="6" class="px-6 py-12 text-center text-on-surface-variant/40 font-medium text-xs">
+                        <span class="material-symbols-outlined text-[36px] mb-2 block">person_search</span>
+                        No se encontraron pasajeros con los filtros seleccionados.
+                    </td>
+                </tr>
+            `;
+            renderPaginationControls(totalPages);
+            return;
+        }
+
+        const defaultPhoto = "https://lh3.googleusercontent.com/aida-public/AB6AXuCkpLaAAaPtwUCGEQryYwILaELQNTTgUZKaXvS7kqdGA3pdQkUqqZMbFbYloBftlkWuCF_P0AGPQeQHzl66jjnEioJP_DhIYJkO_A9oWkSiRxOrbmDfm9RXz4gtLAdYHgqENocO3U5PlGLUgL3yAwve5io2Us5gE0PINJYc_0zDEQUsKZ_eCDh7qheZ0NOLBKOSZqvGrOTWPbz4rHHOYPyjQKsnse2mny3H9WeiNOFoQa-fo9PD0nk-kJNX01s4WoL0ITmN4pydbJvs";
+
+        pageItems.forEach(c => {
+            // Badges
+            let badgeClass = "bg-primary/10 text-primary border border-primary/20";
+            let statusDot = "bg-primary";
+            const st = c.status || 'Reserva Confirmada';
+            
+            if (st === 'Viaje Activo' || st === 'En Ruta') {
+                badgeClass = "bg-primary/15 text-primary border border-primary/25 active-glow";
+                statusDot = "bg-primary";
+            } else if (st === 'Reserva Confirmada' || st === 'Confirmado') {
+                badgeClass = "bg-success/15 text-success border border-success/25";
+                statusDot = "bg-success";
+            } else if (st === 'Cotización Pendiente' || st === 'Cotización' || st === 'Pendiente') {
+                badgeClass = "bg-warning/15 text-warning border border-warning/25";
+                statusDot = "bg-warning";
+            } else if (st === 'Inactivo' || st === 'Finalizado') {
+                badgeClass = "bg-white/5 text-on-surface-variant/70 border border-glass-stroke";
+                statusDot = "bg-on-surface-variant/40";
+            }
+
+            // Photo
+            let photoUrl = c.photo || defaultPhoto;
+
+            // Destination icon
+            let isHotelDest = (c.destination || "").toLowerCase().includes("resort") || (c.destination || "").toLowerCase().includes("hotel");
+            let destIcon = isHotelDest ? "hotel" : "flight_takeoff";
+
+            tbody.innerHTML += `
+                <tr onclick="if(window.parent && window.parent.openClientProfileModal) window.parent.openClientProfileModal(${c.id});" class="hover:bg-white/5 transition-colors duration-200 group cursor-pointer">
+                    <td class="px-6 py-4">
+                        <div class="flex items-center gap-3">
+                            <div class="relative flex-shrink-0">
+                                <img alt="${c.name}" class="w-10 h-10 rounded-full border border-glass-stroke object-cover" src="${photoUrl}"/>
+                                <div class="absolute -bottom-0.5 -right-0.5 w-3 h-3 ${statusDot} rounded-full border-2 border-background-base"></div>
+                            </div>
+                            <div>
+                                <p class="font-body-sm text-body-sm font-medium text-on-surface group-hover:text-primary transition-colors">${c.name}</p>
+                                <p class="font-body-sm text-[12px] text-on-surface-variant">${c.email}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 font-body-sm text-body-sm text-on-surface flex items-center gap-2 mt-2">
+                        <span class="material-symbols-outlined text-[16px] text-primary">${destIcon}</span>
+                        ${c.destination || 'Bali'}
+                    </td>
+                    <td class="px-6 py-4 font-body-sm text-body-sm text-on-surface-variant">
+                        ${c.advisor || 'Carlos Mendoza'}
+                    </td>
+                    <td class="px-6 py-4 font-body-sm text-body-sm text-on-surface">
+                        ${c.date || 'Sin Fecha'}
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wide ${badgeClass}">
+                            ${st}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 text-right" onclick="event.stopPropagation();">
+                        <button onclick="if(window.parent && window.parent.openClientProfileModal) window.parent.openClientProfileModal(${c.id});" class="text-on-surface-variant hover:text-primary transition-colors p-1" title="Ver ficha técnica">
+                            <span class="material-symbols-outlined text-[20px]">visibility</span>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+
+        renderPaginationControls(totalPages);
+    }
+
+    function renderPaginationControls(totalPages) {
+        const numbersDiv = document.getElementById('stitch-pagination-numbers');
+        if (!numbersDiv) return;
+
+        numbersDiv.innerHTML = '';
+        for (let i = 1; i <= totalPages; i++) {
+            const isActive = i === currentPage;
+            const activeClass = isActive ? "border-primary bg-primary/10 text-primary font-bold" : "border-glass-stroke text-on-surface-variant hover:bg-white/5 hover:text-on-surface";
+            numbersDiv.innerHTML += `
+                <button onclick="goToPage(${i})" class="w-8 h-8 rounded-lg border ${activeClass} flex items-center justify-center font-body-sm text-body-sm transition-colors">
+                    ${i}
+                </button>
+            `;
+        }
+    }
+
+    function goToPage(page) {
+        currentPage = page;
+        renderStitchPassengers();
+    }
+
+    function changePage(direction) {
+        currentPage += direction;
+        renderStitchPassengers();
+    }
+
+    // Refresh everything
+    function loadAndRender() {
+        loadData();
+        populateFilters();
+        renderStitchPassengers();
+    }
+
+    // Iframe isolation detection & setup
+    document.addEventListener("DOMContentLoaded", function() {
+        loadAndRender();
+
+        if (window.self !== window.top) {
+            // Hide sidenav
+            const sidenav = document.getElementById("desktop-sidenav");
+            if (sidenav) sidenav.style.display = "none";
+            
+            // Hide mobile header
+            const mobHeader = document.getElementById("mobile-header");
+            if (mobHeader) mobHeader.style.display = "none";
+            
+            // Adjust main content margin & padding
+            const mainContent = document.getElementById("main-content");
+            if (mainContent) {
+                mainContent.style.marginLeft = "0";
+                mainContent.classList.remove("md:ml-64");
+            }
+            
+            // Hide floating mobile FAB
+            const fab = document.querySelector("button.md\\:hidden.fixed");
+            if (fab) fab.style.display = "none";
+            
+            // Adjust container spacing inside main body
+            const wrapper = document.querySelector("main > div");
+            if (wrapper) {
+                wrapper.classList.remove("py-6", "md:py-margin-desktop");
+                wrapper.classList.add("py-2");
+            }
+        }
+    });
+
+    // Listen to refresh events from parent CRM
+    window.addEventListener('message', function(event) {
+        if (event.data === 'refresh') {
+            loadAndRender();
+        }
+    });
+</script>
+</body></html>
