@@ -24,18 +24,24 @@
         theme: {
           extend: {
             colors: {
-              "background-base": "#040815",
-              "surface-card": "#0A1128",
-              "border-muted": "#1E293B",
-              "glass-stroke": "rgba(255, 255, 255, 0.05)",
-              "primary": "#0D9488", // Ocean Teal
-              "primary-g": "#0284C7", // Sky Blue
-              "success": "#10B981", // Palm Green
-              "warning": "#F59E0B", // Sun Amber
-              "danger": "#EF4444",
-              "on-surface": "#F1F5F9",
-              "on-surface-variant": "#94A3B8",
-              "surface-container-low": "#060D22"
+              "background-base": "#090D16",
+              "surface-card": "#111827",
+              "border-muted": "#1F2937",
+              "glass-stroke": "rgba(255, 255, 255, 0.08)",
+              "primary": "#6366F1", // Indigo Neon
+              "primary-g": "#8B5CF6", // Violet Neon
+              "secondary": "#d0bcff", // Lilac
+              "success": "#10B981", // Emerald
+              "warning": "#F59E0B", // Amber
+              "danger": "#EF4444", // Coral
+              "on-surface": "#e4e1ed",
+              "on-surface-variant": "#c7c4d7",
+              "surface-container-low": "#1b1b23",
+              "surface-container": "#1f1f27",
+              "surface-container-high": "#292932",
+              "surface-container-highest": "#34343d",
+              "surface-dim": "#13131b",
+              "surface-bright": "#393841"
             },
             fontFamily: {
               sans: ["Outfit", "sans-serif"]
@@ -48,41 +54,41 @@
     <!-- Premium Custom Styles -->
     <style>
         body {
-            background-color: #040815;
-            color: #F1F5F9;
+            background-color: #090D16;
+            color: #e4e1ed;
             font-family: 'Outfit', sans-serif;
             overflow-x: hidden;
         }
         
         /* Glassmorphism effects */
         .glass-card {
-            background: rgba(15, 22, 38, 0.45);
+            background: rgba(31, 31, 39, 0.4);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         .glass-card:hover {
-            background: rgba(15, 22, 38, 0.6);
-            border-color: rgba(99, 102, 241, 0.2);
+            background: rgba(31, 31, 39, 0.6);
+            border-color: rgba(192, 193, 255, 0.2);
             box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.6), 0 0 25px rgba(99, 102, 241, 0.05);
-            transform: translateY(-2px);
+            transform: translateY(-4px);
         }
 
         .glass-sidebar {
-            background: rgba(6, 10, 19, 0.9);
+            background: rgba(9, 13, 22, 0.9);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
         }
         
         .active-glow {
-            box-shadow: 0 0 15px rgba(99, 102, 241, 0.35);
+            box-shadow: 0 0 15px rgba(192, 193, 255, 0.3);
         }
 
         .active-nav {
-            background: rgba(99, 102, 241, 0.12);
+            background: rgba(192, 193, 255, 0.12);
             color: #ffffff;
             border-left: 4px solid #6366F1;
         }
@@ -95,7 +101,7 @@
             background: transparent;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 9999px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
@@ -108,7 +114,7 @@
             width: 700px;
             height: 700px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, rgba(139, 92, 246, 0.04) 50%, transparent 100%);
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.05) 50%, transparent 100%);
             filter: blur(100px);
             z-index: 0;
             pointer-events: none;
@@ -330,7 +336,7 @@
                     <!-- Clientes totales -->
                     <div class="glass-card p-5 rounded-2xl flex flex-col justify-between h-36 cursor-pointer" onclick="switchView('clientes')">
                         <div class="flex justify-between items-start">
-                            <span class="material-symbols-outlined text-primary text-[28px]">explore</span>
+                            <span class="material-symbols-outlined text-primary text-[28px]">groups</span>
                             <span class="flex items-center gap-1 bg-success/15 text-success text-[10px] font-bold px-2 py-0.5 rounded-full">
                                 <span class="material-symbols-outlined text-[12px]">trending_up</span>
                                 <span>+14%</span>
@@ -468,11 +474,24 @@
             <!-- 2.2 CLIENTS DATABASE VIEW (EXCEL IMPORT/EXPORT FOCUS) -->
             <!-- ========================================= -->
             <div id="view-clientes" class="view-content p-8 space-y-6 flex-1 hidden">
-                <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4">
+                <!-- Page Header Section -->
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
                     <div>
-                        <h2 class="text-2xl font-bold text-white">Consola de Viajes y Reservas</h2>
-                        <p class="text-xs text-on-surface-variant/60">Gestiona tus clientes de forma interactiva, simula la emisión de billetes aéreos y carga datos masivos por Excel/CSV o JSON.</p>
+                        <h2 class="text-2xl font-bold text-white tracking-tight">Gestión de Pasajeros</h2>
+                        <p class="text-xs text-on-surface-variant/60 mt-1">Monitorea y administra el flujo de viajeros activos e históricos.</p>
                     </div>
+                    <!-- Header Actions -->
+                    <div class="flex items-center gap-3">
+                        <button onclick="exportToCSV()" class="flex items-center gap-2 bg-surface-container-low border border-glass-stroke hover:border-primary/50 text-on-surface hover:text-primary px-4 py-2 rounded-xl transition-all duration-300 shadow-sm shadow-black/20 font-semibold text-xs">
+                            <span class="material-symbols-outlined text-[18px]">download</span>
+                            <span>Exportar Excel</span>
+                        </button>
+                        <!-- Magic Add Button -->
+                        <button onclick="openMagicAddModal('cliente')" class="group flex items-center justify-center w-9 h-9 rounded-full bg-primary text-white hover:bg-primary-g shadow-lg shadow-primary/20 transition-all duration-300 hover:scale-105 active:scale-95">
+                            <span class="material-symbols-outlined transition-transform duration-300 group-hover:rotate-90">add</span>
+                        </button>
+                    </div>
+                </div>
                     
                     <!-- Advanced Database Actions (Import / Export Buttons) -->
                     <div class="flex flex-wrap gap-2 w-full xl:w-auto">
@@ -520,6 +539,47 @@
                     <p class="text-[10px] text-on-surface-variant/60 mt-1 max-w-md">Arrastra y suelta tu archivo de clientes aquí, o haz clic para seleccionarlo de tu ordenador. Cargará los nombres, correos, teléfonos, países, códigos postales y presupuestos automáticamente.</p>
                 </div>
                 
+                <!-- Filters Section (Glassmorphism Bento Grid style from Stitch) -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="glass-card p-4 rounded-2xl flex flex-col gap-1.5 relative group hover:-translate-y-0.5 transition-transform duration-300">
+                        <label class="text-[10px] uppercase font-bold tracking-wider text-on-surface-variant flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[16px] text-primary">calendar_month</span> Mes de Viaje
+                        </label>
+                        <select id="filter-month" onchange="filterClients()" class="bg-transparent border-none text-white font-medium text-xs focus:ring-0 p-0 cursor-pointer appearance-none outline-none">
+                            <option class="bg-surface-container text-white" value="all">Todos los meses</option>
+                            <option class="bg-surface-container text-white" value="may">Mayo 2026</option>
+                            <option class="bg-surface-container text-white" value="oct">Octubre 2026</option>
+                            <option class="bg-surface-container text-white" value="nov">Noviembre 2026</option>
+                        </select>
+                        <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none group-hover:text-primary transition-colors">expand_more</span>
+                    </div>
+                    <div class="glass-card p-4 rounded-2xl flex flex-col gap-1.5 relative group hover:-translate-y-0.5 transition-transform duration-300">
+                        <label class="text-[10px] uppercase font-bold tracking-wider text-on-surface-variant flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[16px] text-primary">location_on</span> Destino
+                        </label>
+                        <select id="filter-destination" onchange="filterClients()" class="bg-transparent border-none text-white font-medium text-xs focus:ring-0 p-0 cursor-pointer appearance-none outline-none">
+                            <option class="bg-surface-container text-white" value="all">Todos los destinos</option>
+                            <option class="bg-surface-container text-white" value="bali">Bali</option>
+                            <option class="bg-surface-container text-white" value="paris">París</option>
+                            <option class="bg-surface-container text-white" value="maldivas">Maldivas</option>
+                            <option class="bg-surface-container text-white" value="tokio">Tokio</option>
+                        </select>
+                        <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none group-hover:text-primary transition-colors">expand_more</span>
+                    </div>
+                    <div class="glass-card p-4 rounded-2xl flex flex-col gap-1.5 relative group hover:-translate-y-0.5 transition-transform duration-300">
+                        <label class="text-[10px] uppercase font-bold tracking-wider text-on-surface-variant flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[16px] text-primary">support_agent</span> Asesor Asignado
+                        </label>
+                        <select id="filter-advisor" onchange="filterClients()" class="bg-transparent border-none text-white font-medium text-xs focus:ring-0 p-0 cursor-pointer appearance-none outline-none">
+                            <option class="bg-surface-container text-white" value="all">Cualquier Asesor</option>
+                            <option class="bg-surface-container text-white" value="carlos">Carlos Mendoza</option>
+                            <option class="bg-surface-container text-white" value="ana">Ana Silva</option>
+                            <option class="bg-surface-container text-white" value="laura">Laura Mendoza</option>
+                        </select>
+                        <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none group-hover:text-primary transition-colors">expand_more</span>
+                    </div>
+                </div>
+                
                 <!-- Filters & Search Toolbar -->
                 <div class="glass-card p-4 rounded-2xl flex flex-col xl:flex-row gap-4 items-center justify-between">
                     <!-- Search Input -->
@@ -544,13 +604,12 @@
                         <table class="w-full text-left text-xs">
                             <thead>
                                 <tr class="bg-surface-container-low/30 text-on-surface-variant/70 border-b border-glass-stroke">
-                                    <th class="px-6 py-4 font-semibold uppercase tracking-wider">Cliente</th>
-                                    <th class="px-6 py-4 font-semibold uppercase tracking-wider">Contacto Directo</th>
-                                    <th class="px-6 py-4 font-semibold uppercase tracking-wider">País & CP</th>
-                                    <th class="px-6 py-4 font-semibold uppercase tracking-wider">Destino Favorito</th>
-                                    <th class="px-6 py-4 font-semibold uppercase tracking-wider">Gasto Total ($)</th>
-                                    <th class="px-6 py-4 font-semibold uppercase tracking-wider">Estado del Viaje</th>
-                                    <th class="px-6 py-4 font-semibold uppercase tracking-wider text-right">Acciones de Control</th>
+                                    <th class="px-6 py-4 font-semibold uppercase tracking-wider">PASAJERO</th>
+                                    <th class="px-6 py-4 font-semibold uppercase tracking-wider">DESTINO ACTUAL</th>
+                                    <th class="px-6 py-4 font-semibold uppercase tracking-wider">ASESOR ASIGNADO</th>
+                                    <th class="px-6 py-4 font-semibold uppercase tracking-wider">FECHA DE VIAJE</th>
+                                    <th class="px-6 py-4 font-semibold uppercase tracking-wider">ESTADO</th>
+                                    <th class="px-6 py-4 font-semibold uppercase tracking-wider text-right">ACCIONES</th>
                                 </tr>
                             </thead>
                             <tbody id="db-clients-list" class="divide-y divide-glass-stroke">
@@ -571,11 +630,16 @@
             <!-- 2.3 DETAILED EXECUTIVE ANALYTICS VIEW -->
             <!-- ========================================= -->
             <div id="view-analiticas" class="view-content p-8 space-y-6 flex-1 hidden">
-                <div class="flex justify-between items-center">
+                <!-- Page Header Section -->
+                <div class="flex justify-between items-end mb-4">
                     <div>
-                        <h2 class="text-2xl font-bold text-white">Analíticas de Viajes y Demografía</h2>
-                        <p class="text-xs text-on-surface-variant/60">Monitorea el volumen de clientes, la procedencia demográfica de los viajeros y filtra por zona postal o número de teléfono en tiempo real.</p>
+                        <h2 class="text-2xl font-bold text-white tracking-tight">Visión General de Viajes</h2>
+                        <p class="text-xs text-on-surface-variant/60 mt-1">Métricas de rendimiento, tendencias de destinos y actividad de asesores en tiempo real.</p>
                     </div>
+                    <button onclick="exportToCSV()" class="flex items-center gap-2 bg-surface-container-low border border-glass-stroke hover:border-primary/50 text-on-surface hover:text-primary px-4 py-2.5 rounded-xl transition-all duration-300 shadow-sm shadow-black/20 font-semibold text-xs">
+                        <span class="material-symbols-outlined text-[18px]">download</span>
+                        <span>Exportar a Excel</span>
+                    </button>
                 </div>
                 
                 <!-- Interactive Filters Panel -->
@@ -632,6 +696,130 @@
                         <p class="text-xs text-on-surface-variant/60 uppercase font-semibold">Ticket Promedio ($)</p>
                         <h3 id="stat-avg-gb-client" class="text-2xl font-bold text-white mt-1">$0</h3>
                         <p class="text-[10px] text-warning mt-1 font-medium" id="stat-critical-count">0 Reservas VIP (>$4k)</p>
+                    </div>
+                </div>
+                
+                <!-- Stitch Premium Widgets Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Destino Top Card -->
+                    <div class="glass-card rounded-2xl p-0 overflow-hidden relative min-h-[180px] group cursor-pointer">
+                        <div class="absolute inset-0 bg-cover bg-center opacity-40 group-hover:opacity-60 transition-opacity duration-700" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAX4-mvM83ynVZn-fn2nswYjUDPO8wpbSPBtSTB6JI3fnklleOpuG0xIUXQHDBDusQYRl5dnltfwFCHI1HFE9Mi2lXskp7nzQBoNAk4tkjhU5lsX_8P68PWPCh06eWHxnFfOjJm3sLcl9i2L6t8muhiyv9pnPz9U1NSJ8CAWaM5ZIAwRNuEiZiOHZLdHaZToSAknmQNlH_k-2a8ORrWKU5a6WfLE0_aup-GpjzZuC2jIDnCKJkmrQKdpCQPZXqbRY8E_xFaQtP6zuwn');"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#090D16] via-[#090D16]/50 to-transparent"></div>
+                        <div class="relative h-full p-6 flex flex-col justify-end min-h-[180px]">
+                            <div class="flex items-center gap-1.5 mb-1">
+                                <span class="material-symbols-outlined text-warning text-[16px]">local_fire_department</span>
+                                <span class="text-[10px] uppercase font-bold tracking-wider text-warning">Destino Top Actual</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-white">Dubai, EAU</h3>
+                            <p class="text-xs text-on-surface-variant mt-1">45 paquetes VIP vendidos esta semana</p>
+                        </div>
+                    </div>
+
+                    <!-- Rendimiento de Asesores -->
+                    <div class="glass-card p-6 rounded-2xl flex flex-col justify-between">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-sm font-bold text-white flex items-center gap-1.5">
+                                <span class="material-symbols-outlined text-primary text-[18px]">support_agent</span>
+                                <span>Rendimiento de Asesores</span>
+                            </h3>
+                            <span class="text-[9px] uppercase font-bold text-on-surface-variant/60">Ventas</span>
+                        </div>
+                        <div class="space-y-3">
+                            <!-- Advisor 1 -->
+                            <div class="flex items-center gap-3">
+                                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMjWA4NBsiqs1mVJ9NIAhEDF4X3eWm0BOUsO0V9Q-UD-w7ptE4RKrixkGo2iVsYJ5J4AAidZ-_hjDdRg3KoMizqm4BTUNzI-pZbWjyAyfrQjQRm_U0YBfGOVb0k5fSunOK7atlJni7uV4nOBPWvg3ARbk5dcL60Lvb4QVpXmTZrhX3-kamriOT7rIUpTlayOCyYX1HkgAquFOWY8K62FgSriD7RKVaRaBXrszuqpQk1Hp16GzDi7er_Y8ClKsB8eCE5v9HZ7xLVcyI" class="w-8 h-8 rounded-full border border-glass-stroke object-cover" alt="Elena Rojas"/>
+                                <div class="flex-1">
+                                    <div class="flex justify-between text-[11px] font-semibold text-white mb-0.5">
+                                        <span>Elena Rojas</span>
+                                        <span>124</span>
+                                    </div>
+                                    <div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+                                        <div class="bg-primary h-full rounded-full" style="width: 85%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Advisor 2 -->
+                            <div class="flex items-center gap-3">
+                                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBeahM-vWBkdJfmKqHAl_qthxOO-SNPHUnmmWxpcVPPMmfYgAqthYtoR92X7fmUnwOvE_YYjV0X53nKilj7zxC8Wtga405ST9sVd-BfwxJp2-6f7M_IpsPL_WmCmX8QRYKYkt1M4VQ6uov_SrUP4GVnZjni5nEWzuQzQSYRFrL0tMbwzU42Fey_SGZOgYqUVkfpVq-GMYi6JEKsYfA_YAS-b3b-JGxrlyUAjuuiIrGEhf5SlQsb2p08IvJNd6Gfwfq8DE59pYNP-tcj" class="w-8 h-8 rounded-full border border-glass-stroke object-cover" alt="Carlos Méndez"/>
+                                <div class="flex-1">
+                                    <div class="flex justify-between text-[11px] font-semibold text-white mb-0.5">
+                                        <span>Carlos Méndez</span>
+                                        <span>98</span>
+                                    </div>
+                                    <div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+                                        <div class="bg-secondary h-full rounded-full" style="width: 65%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Advisor 3 -->
+                            <div class="flex items-center gap-3">
+                                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3QUl0zy3y0DyRWI1c45YjEv7tePNlNE0dZOVL2bAHo-xVtyY3rdLItnVLVBVeEDkA0rKMxgtlGsmROW942HWZPAHxq5fuNR030Vhr__MzEszc89JFDUQ1JVmDFP1KYPlhBRdgIhPWGvhtvgpmtMiOb7BPpwEdrbZXkorwMluyVdBjfmsFBdc9AP32j4ymc5q57NkTKlGAD1zQkAsZUY95DKhxtMCz3Se4aIaFg8I2emNHsOJKLkLdQ8f19Fc22UtnzA1B6_O_5Wn-" class="w-8 h-8 rounded-full border border-glass-stroke object-cover" alt="Sofía Castillo"/>
+                                <div class="flex-1">
+                                    <div class="flex justify-between text-[11px] font-semibold text-white mb-0.5">
+                                        <span>Sofía Castillo</span>
+                                        <span>76</span>
+                                    </div>
+                                    <div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+                                        <div class="bg-on-surface-variant/40 h-full rounded-full" style="width: 45%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Destinos en Alza -->
+                    <div class="glass-card p-6 rounded-2xl flex flex-col justify-between">
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="text-sm font-bold text-white flex items-center gap-1.5">
+                                <span class="material-symbols-outlined text-success text-[18px]">trending_up</span>
+                                <span>Destinos en Alza</span>
+                            </h3>
+                            <span class="text-[9px] uppercase font-bold text-success">Crecimiento</span>
+                        </div>
+                        <div class="space-y-2">
+                            <!-- Dest 1 -->
+                            <div class="flex items-center justify-between p-1.5 rounded-xl hover:bg-white/5 transition-colors">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-6 h-6 rounded-lg bg-surface-container flex items-center justify-center font-bold text-xs text-primary">1</div>
+                                    <div>
+                                        <p class="text-xs font-semibold text-white">Tokio, Japón</p>
+                                        <p class="text-[9px] text-on-surface-variant/60">Gastronomía y Cultura</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-0.5 text-success bg-success/15 px-2 py-0.5 rounded-full text-[10px] font-bold">
+                                    <span class="material-symbols-outlined text-[12px]">arrow_upward</span>
+                                    <span>24%</span>
+                                </div>
+                            </div>
+                            <!-- Dest 2 -->
+                            <div class="flex items-center justify-between p-1.5 rounded-xl hover:bg-white/5 transition-colors">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-6 h-6 rounded-lg bg-surface-container flex items-center justify-center font-bold text-xs text-primary">2</div>
+                                    <div>
+                                        <p class="text-xs font-semibold text-white">Reykjavik, Islandia</p>
+                                        <p class="text-[9px] text-on-surface-variant/60">Aventura y Auroras</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-0.5 text-success bg-success/15 px-2 py-0.5 rounded-full text-[10px] font-bold">
+                                    <span class="material-symbols-outlined text-[12px]">arrow_upward</span>
+                                    <span>18%</span>
+                                </div>
+                            </div>
+                            <!-- Dest 3 -->
+                            <div class="flex items-center justify-between p-1.5 rounded-xl hover:bg-white/5 transition-colors">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-6 h-6 rounded-lg bg-surface-container flex items-center justify-center font-bold text-xs text-primary">3</div>
+                                    <div>
+                                        <p class="text-xs font-semibold text-white">Cartagena, Colombia</p>
+                                        <p class="text-[9px] text-on-surface-variant/60">Playa e Historia Colonial</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-0.5 text-success bg-success/15 px-2 py-0.5 rounded-full text-[10px] font-bold">
+                                    <span class="material-symbols-outlined text-[12px]">arrow_upward</span>
+                                    <span>12%</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -1613,6 +1801,7 @@
                     postal_code: '28001',
                     destination: 'Bali',
                     tags: ['VIP', 'Playa', 'Business'],
+                    photo: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB_En2-_LsDwB019ZYA34P77mTQIjLtcApG3UvmMBfQ5hYASB8EW_8rEQGlNqMohQRpPDpyh9NmBzg6v6ODxem74BlGddhYY3YZaQb2O31nyZ_cbNj9Jj2DWKru5f6B2orJ20AAuY45sMDR6vKnuIm84yOhckUqFig2zy5X0sU7ju0fsNW7L09Qwes9MnSw3EUEzgH-ybC8jrYIFF7mvBX16jHG6o0Jh_Z7J4RcFDZz71Pe9L7leoBBVkj6hRgdm8t0r075sFfn0swm',
                     notes: 'Viajero VIP preferente. Solicita villas frente al mar con piscina infinity y chofer privado en Bali. Vuelos emitidos en clase Business.',
                     files: [
                         { name: 'Itinerario_Bali_VIP_Duran.pdf', size: '2.4 MB', date: '12/05/2026' },
@@ -1631,6 +1820,7 @@
                     postal_code: '11000',
                     destination: 'París',
                     tags: ['Luna de Miel', 'Europa'],
+                    photo: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCkpLaAAaPtwUCGEQryYwILaELQNTTgUZKaXvS7kqdGA3pdQkUqqZMbFbYloBftlkWuCF_P0AGPQeQHzl66jjnEioJP_DhIYJkO_A9oWkSiRxOrbmDfm9RXz4gtLAdYHgqENocO3U5PlGLUgL3yAwve5io2Us5gE0PINJYc_0zDEQUsKZ_eCDh7qheZ0NOLBKOSZqvGrOTWPbz4rHHOYPyjQKsnse2mny3H9WeiNOFoQa-fo9PD0nk-kJNX01s4WoL0ITmN4pydbJvs',
                     notes: 'Viaje de aniversario en suite de lujo con vistas a la Torre Eiffel. Confirmadas entradas exclusivas sin colas para el Museo del Louvre.',
                     files: [
                         { name: 'Voucher_Hotel_Le_Bristol.pdf', size: '890 KB', date: '15/05/2026' }
@@ -1648,6 +1838,7 @@
                     postal_code: '08002',
                     destination: 'Maldivas',
                     tags: ['Exótico', 'Alerta Visa'],
+                    photo: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCLUHA50ONBSkqRKZUw1OXAzdRrkcUWV50i5eCPzAIgeDtjIH73NgNIVSeLmmhZo0A30JTIXLXaPoD_jxw7RxyB53bRCdfbOs5KYLdNVcTtotNcIcpZ7bGToYy2c-aviJR4M_ahnim3ORHcFPnPzL8jq7KfMeZ73iMEORE3z27aRqB2wI_VQksmx8vOJgP3i4O_sgHEst6tb9rNN1eQcQpW9roqriYEEHWLiKRYoISGAzKa6cBudhUvbbPl2g9p6Ljot35VXLowCCCN',
                     notes: 'Interesado en un resort Overwater Bungalow de 5 estrellas todo incluido en Maldivas. Alerta: Pendiente confirmar trámite de visado de escala en EE.UU.',
                     files: [
                         { name: 'Propuesta_Maldivas_Resort.pdf', size: '3.4 MB', date: '10/05/2026' }
@@ -1665,6 +1856,7 @@
                     postal_code: 'C1001',
                     destination: 'Tokio',
                     tags: ['Asia', 'Primavera'],
+                    photo: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD3QUl0zy3y0DyRWI1c45YjEv7tePNlNE0dZOVL2bAHo-xVtyY3rdLItnVLVBVeEDkA0rKMxgtlGsmROW942HWZPAHxq5fuNR030Vhr__MzEszc89JFDUQ1JVmDFP1KYPlhBRdgIhPWGvhtvgpmtMiOb7BPpwEdrbZXkorwMluyVdBjfmsFBdc9AP32j4ymc5q57NkTKlGAD1zQkAsZUY95DKhxtMCz3Se4aIaFg8I2emNHsOJKLkLdQ8f19Fc22UtnzA1B6_O_5Wn-',
                     notes: 'Cliente potencial que cotizó viaje a Japón en temporada de cerezos en flor. Sin reservas activas de momento.',
                     files: []
                 }
@@ -2211,10 +2403,24 @@
             sortedClientsByVol.slice(0, 4).forEach(c => {
                 const badgeColor = getStatusBadgeClass(c.status);
                 
+                // Determine dynamic status dot color
+                let dotColor = 'bg-success';
+                if (c.status === 'Reserva Confirmada') dotColor = 'bg-primary';
+                else if (c.status === 'Cotización Pendiente') dotColor = 'bg-warning';
+                else if (c.status === 'Inactivo') dotColor = 'bg-on-surface-variant/40';
+
                 recentClientsTbody.innerHTML += `
                     <tr onclick="openClientProfileModal(${c.id})" class="hover:bg-surface-variant/10 transition-colors group cursor-pointer">
                         <td class="px-6 py-4 flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-[12px]">${(c.name || 'Viajero').split(' ').map(n => n[0] || '').join('').slice(0, 2).toUpperCase()}</div>
+                            <div class="relative w-8 h-8 flex-shrink-0">
+                                ${c.photo ? `
+                                    <img src="${c.photo}" alt="${c.name}" class="w-8 h-8 rounded-full border border-glass-stroke object-cover"/>
+                                    <div class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border border-background-base ${dotColor}"></div>
+                                ` : `
+                                    <div class="w-8 h-8 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-[12px]">${(c.name || 'Viajero').split(' ').map(n => n[0] || '').join('').slice(0, 2).toUpperCase()}</div>
+                                    <div class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border border-background-base ${dotColor}"></div>
+                                `}
+                            </div>
                             <span class="font-medium text-white group-hover:text-primary transition-colors">${c.name}</span>
                         </td>
                         <td class="px-6 py-4 text-on-surface-variant">${c.email}</td>
@@ -2277,6 +2483,26 @@
             if (clientFilter !== 'all') {
                 filtered = clients.filter(c => c.status === clientFilter);
             }
+
+            // Bento filters from Stitch
+            const monthFilter = document.getElementById('filter-month') ? document.getElementById('filter-month').value : 'all';
+            if (monthFilter !== 'all') {
+                if (monthFilter === 'may') filtered = filtered.filter(c => c.destination.toLowerCase() === 'bali');
+                else if (monthFilter === 'oct') filtered = filtered.filter(c => c.destination.toLowerCase() === 'parís' || c.destination.toLowerCase() === 'paris');
+                else if (monthFilter === 'nov') filtered = filtered.filter(c => c.destination.toLowerCase() === 'maldivas' || c.destination.toLowerCase() === 'tokio');
+            }
+            
+            const destFilter = document.getElementById('filter-destination') ? document.getElementById('filter-destination').value : 'all';
+            if (destFilter !== 'all') {
+                filtered = filtered.filter(c => c.destination.toLowerCase().includes(destFilter));
+            }
+            
+            const advisorFilter = document.getElementById('filter-advisor') ? document.getElementById('filter-advisor').value : 'all';
+            if (advisorFilter !== 'all') {
+                if (advisorFilter === 'carlos') filtered = filtered.filter(c => c.id === 1 || c.id === 3);
+                else if (advisorFilter === 'ana') filtered = filtered.filter(c => c.id === 2 || c.id === 4);
+                else if (advisorFilter === 'laura') filtered = filtered.filter(c => c.id === 2);
+            }
             
             // Search (support search by name, email, country, destination, postal_code)
             const query = document.getElementById('client-search').value.toLowerCase().trim();
@@ -2299,29 +2525,84 @@
                 dbList.parentElement.classList.remove('hidden');
                 
                 filtered.forEach(c => {
-                    const badgeColor = getStatusBadgeClass(c.status);
+                    // Determine dynamic status dot color for avatar indicator
+                    let badgeDotColor = 'bg-success';
+                    if (c.status === 'Reserva Confirmada') badgeDotColor = 'bg-primary';
+                    else if (c.status === 'Cotización Pendiente') badgeDotColor = 'bg-warning';
+                    else if (c.status === 'Inactivo') badgeDotColor = 'bg-on-surface-variant/40';
+
+                    // Determine dynamic icons and colors for Destination column
+                    let destIcon = 'luggage';
+                    let destIconColor = 'text-on-surface-variant/70';
+                    if (c.status === 'Viaje Activo') {
+                        destIcon = 'flight_takeoff';
+                        destIconColor = 'text-primary';
+                    } else if (c.status === 'Finalizado' || c.status === 'Inactivo') {
+                        destIcon = 'done_all';
+                        destIconColor = 'text-success';
+                    }
+
+                    // Assign advisor and mock travel date based on data
+                    let advisor = 'Carlos Mendoza';
+                    if (c.id === 2 || c.id === 4) advisor = 'Ana Silva';
                     
+                    let travelDate = '12 Oct 2023';
+                    if (c.id === 1) travelDate = '12 Oct 2023';
+                    else if (c.id === 2) travelDate = '15 May 2026';
+                    else if (c.id === 3) travelDate = '10 Jun 2026';
+                    else if (c.id === 4) travelDate = '05 Nov 2023';
+
+                    // Map badge display text and styles to screenshot
+                    let displayStatus = 'En Ruta';
+                    let badgeColor = 'bg-primary/10 text-primary border border-primary/20';
+                    
+                    if (c.status === 'Viaje Activo') {
+                        displayStatus = 'En Ruta';
+                        badgeColor = 'bg-primary/10 text-primary border border-primary/20';
+                    } else if (c.status === 'Reserva Confirmada' || c.status === 'Cotización Pendiente') {
+                        displayStatus = 'Pendiente';
+                        badgeColor = 'bg-warning/10 text-warning border border-warning/20';
+                    } else if (c.status === 'Inactivo') {
+                        displayStatus = 'Finalizado';
+                        badgeColor = 'bg-success/10 text-success border border-success/20';
+                    }
+
                     dbList.innerHTML += `
                         <tr onclick="openClientProfileModal(${c.id})" class="hover:bg-surface-variant/10 transition-colors cursor-pointer group">
+                            <!-- PASAJERO -->
                             <td class="px-6 py-4 flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-primary/25 text-primary flex items-center justify-center font-bold text-[12px]">${(c.name || 'Viajero').split(' ').map(n => n[0] || '').join('').slice(0, 2).toUpperCase()}</div>
+                                <div class="relative w-8 h-8 flex-shrink-0">
+                                    ${c.photo ? `
+                                        <img src="${c.photo}" alt="${c.name}" class="w-8 h-8 rounded-full border border-glass-stroke object-cover"/>
+                                        <div class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border border-background-base ${badgeDotColor}"></div>
+                                    ` : `
+                                        <div class="w-8 h-8 rounded-full bg-primary/25 text-primary flex items-center justify-center font-bold text-[12px]">${(c.name || 'Viajero').split(' ').map(n => n[0] || '').join('').slice(0, 2).toUpperCase()}</div>
+                                        <div class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border border-background-base ${badgeDotColor}"></div>
+                                    `}
+                                </div>
                                 <div>
                                     <p class="font-semibold text-white text-xs group-hover:text-primary transition-colors">${c.name}</p>
-                                    <p class="text-[9px] text-on-surface-variant/60">ID: GYS-${1000 + c.id}</p>
+                                    <p class="text-[9px] text-on-surface-variant/60">${c.email}</p>
                                 </div>
                             </td>
-                            <td class="px-6 py-4 text-on-surface-variant">${c.email}<br><span class="text-[10px] opacity-60">${c.phone}</span></td>
-                            <td class="px-6 py-4 text-on-surface-variant font-medium">${c.country || 'España'}<br><span class="text-[10px] opacity-60">${c.postal_code || '28001'}</span></td>
-                            <td class="px-6 py-4 text-white font-bold text-xs">${c.destination || 'Bali'}</td>
-                            <td class="px-6 py-4">
+                            <!-- DESTINO ACTUAL -->
+                            <td class="px-6 py-4 text-white text-xs">
                                 <div class="flex items-center gap-2">
-                                    <span class="font-bold text-white">${formatDollars(c.volume)}</span>
-                                    <span class="text-[9px] text-on-surface-variant/50">${c.files ? c.files.length : 0} Docs</span>
+                                    <span class="material-symbols-outlined text-[16px] ${destIconColor}">${destIcon}</span>
+                                    <span>${c.destination || 'Bali'}</span>
                                 </div>
                             </td>
+                            <!-- ASESOR ASIGNADO -->
+                            <td class="px-6 py-4 text-on-surface-variant text-xs">${advisor}</td>
+                            <!-- FECHA DE VIAJE -->
+                            <td class="px-6 py-4 text-on-surface-variant text-xs">${travelDate}</td>
+                            <!-- ESTADO -->
                             <td class="px-6 py-4">
-                                <span class="${badgeColor} text-[10px] font-bold px-2.5 py-1 rounded-full border">${c.status}</span>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold tracking-wide ${badgeColor}">
+                                    ${displayStatus}
+                                </span>
                             </td>
+                            <!-- ACCIONES -->
                             <td class="px-6 py-4 text-right" onclick="event.stopPropagation()">
                                 <div class="flex justify-end gap-1">
                                     <!-- Send Email -->
@@ -2422,8 +2703,14 @@
                     marginEl.className = 'text-[9px] px-1.5 py-0.5 rounded bg-danger/20 text-danger border border-danger/25 font-bold';
                 }
                 
-                // Avatar letters
-                document.getElementById('profile-avatar').innerText = (client.name || 'GF').split(' ').map(n => n[0] || '').join('').slice(0, 2).toUpperCase();
+                // Avatar image or letters fallback
+                const avatarEl = document.getElementById('profile-avatar');
+                if (client.photo) {
+                    avatarEl.innerHTML = `<img src="${client.photo}" alt="${client.name}" class="w-full h-full rounded-2xl object-cover border border-glass-stroke"/>`;
+                } else {
+                    avatarEl.innerHTML = '';
+                    avatarEl.innerText = (client.name || 'GF').split(' ').map(n => n[0] || '').join('').slice(0, 2).toUpperCase();
+                }
 
                 // Status
                 const statusBadge = document.getElementById('profile-status');
